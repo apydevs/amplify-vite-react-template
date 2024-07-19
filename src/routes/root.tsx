@@ -1,9 +1,8 @@
 
 import { Outlet } from "react-router-dom";
-import App from "../App.tsx";
 'use client'
 
-import { useState } from 'react'
+import {SVGProps, useState} from 'react'
 import {
     Dialog,
     DialogPanel,
@@ -25,6 +24,8 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
+import ProfileButton from "../components/ProfileButton.tsx";
+
 
 const products = [
     { name: 'Property Buyers', description: 'Properties  Buyers', href: '#', icon: SquaresPlusIcon },
@@ -67,7 +68,7 @@ const navigation = {
         {
             name: 'Facebook',
             href: '#',
-            icon: (props) => (
+            icon: (props: SVGProps<SVGSVGElement>) => (
                 <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
                     <path
                         fillRule="evenodd"
@@ -80,7 +81,7 @@ const navigation = {
         {
             name: 'Instagram',
             href: '#',
-            icon: (props) => (
+            icon: (props: SVGProps<SVGSVGElement>) => (
                 <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
                     <path
                         fillRule="evenodd"
@@ -93,7 +94,7 @@ const navigation = {
         {
             name: 'X',
             href: '#',
-            icon: (props) => (
+            icon: (props: SVGProps<SVGSVGElement>) => (
                 <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
                     <path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z" />
                 </svg>
@@ -102,7 +103,7 @@ const navigation = {
         {
             name: 'GitHub',
             href: '#',
-            icon: (props) => (
+            icon: (props: SVGProps<SVGSVGElement>) => (
                 <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
                     <path
                         fillRule="evenodd"
@@ -115,7 +116,7 @@ const navigation = {
         {
             name: 'YouTube',
             href: '#',
-            icon: (props) => (
+            icon: (props: SVGProps<SVGSVGElement>) => (
                 <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
                     <path
                         fillRule="evenodd"
@@ -204,7 +205,7 @@ export default function Root() {
                         </Popover>
 
                         <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                            Features
+                            Information
                         </a>
                         <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                             Marketplace
@@ -215,7 +216,7 @@ export default function Root() {
                     </PopoverGroup>
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
                         <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                            Log in <span aria-hidden="true">&rarr;</span>
+                        <ProfileButton/>
                         </a>
                     </div>
                 </nav>
@@ -268,7 +269,7 @@ export default function Root() {
                                         href="#"
                                         className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                                     >
-                                        Features
+                                       Information
                                     </a>
                                     <a
                                         href="#"
@@ -288,7 +289,7 @@ export default function Root() {
                                         href="#"
                                         className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                                     >
-                                        Log in
+                                      <ProfileButton/>
                                     </a>
                                 </div>
                             </div>
@@ -298,13 +299,13 @@ export default function Root() {
             </header>
 
                  <div className="container max-w-7xl mx-auto mt-5">
-            <div>
-                <App/>
-            </div>
-            <div id="detail">
-                <Outlet/>
-            </div>
-           </div>
+            {/*<div>*/}
+            {/*    <App/>*/}
+            {/*</div>*/}
+                <div id="detail">
+                    <Outlet/>
+                </div>
+               </div>
 
 
             <footer aria-labelledby="footer-heading" className="bg-white border-t">

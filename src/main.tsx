@@ -19,6 +19,8 @@ import Search from "./routes/search.tsx";
 import PropertyDetails from "./routes/property-details.tsx";
 import SearchResults from "./routes/search-results.tsx";
 import Information from "./routes/information.tsx";
+import Login from "./routes/auth/login.tsx";
+import Account from "./routes/users/account.tsx";
 Amplify.configure(outputs);
 
 const router = createBrowserRouter([
@@ -28,27 +30,26 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
+                path: "/login",
+                element: <Login />,
+                errorElement: <ErrorPage />,
+            },
+
+            {
+                path: "/account",
+                element: <Account />,
+                errorElement: <ErrorPage />,
+            },
+
+            {
                 path: "/information",
                 element: <Information />,
                 errorElement: <ErrorPage />,
             },
             {
-                path: "/information/:information",
+                path: "/information/:informationId",
                 element: <Information/>,
                 errorElement: <ErrorPage />,
-                // with this data loaded before rendering
-                loader: async ({ request, params }) => {
-                    return fetch(
-                        `/fake/api/teams/${params.teamId}.json`,
-                        { signal: request.signal }
-                    );
-                },
-
-                // performing this mutation when data is submitted to it
-                action: async ({ request }) => {
-                    return updateFakeTeam(await request.formData());
-                },
-
             },
             {
                 path: "/search",
