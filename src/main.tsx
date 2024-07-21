@@ -16,8 +16,8 @@ import "./index.css";
 import { Amplify } from "aws-amplify";
 import outputs from "../amplify_outputs.json";
 import Search from "./routes/search.tsx";
-import PropertyDetails from "./routes/property-details.tsx";
-import SearchResults from "./routes/search-results.tsx";
+import PropertyDetails from "./routes/properties/property-details.tsx";
+import SearchResults from "./routes/search/search-results.tsx";
 import Information from "./routes/information.tsx";
 import Login from "./routes/auth/login.tsx";
 import Account from "./routes/users/account.tsx";
@@ -61,12 +61,11 @@ const router = createBrowserRouter([
                 path: "/search/properties",
                 element: <SearchResults />,
                 errorElement: <ErrorPage />,
-                children: [
-                    {
-                        path: "/search/properties/property/:propertyId",
-                        element: <PropertyDetails />,
-                    },
-                ],
+            },
+            {
+                path: "/search/properties/:propertyId",
+                element: <PropertyDetails />,
+                errorElement: <ErrorPage />,
             },
         ],
     },

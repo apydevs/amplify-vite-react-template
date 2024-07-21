@@ -9,10 +9,11 @@ Amplify.configure(outputs);
 function Account() {
     return (
         <>
+
             <Authenticator>
             {({signOut, user}) => (
 
-                <div>
+                <div className="container max-w-7xl mx-auto">
                   <h1>Account</h1>
 
                   <div>{user?.username}</div>

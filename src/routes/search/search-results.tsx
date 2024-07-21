@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import {useState} from 'react'
 import {
     Dialog,
     DialogBackdrop,
@@ -19,6 +19,7 @@ import {
 } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import {Link} from "react-router-dom";
 
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
@@ -119,11 +120,13 @@ const products = [
 
 
 export default function Search() {
-    const [open, setOpen] = useState(false)
-    const activeFilters = []
 
+
+    // const navigation = useNavigate();
+    const [open, setOpen] = useState(false)
+    const activeFilters: { value: number|string, label: string }[] = []
     return (
-        <div className="bg-white">
+        <div className="bg-white relative">
             {/* Mobile filter dialog */}
             <Dialog open={open} onClose={setOpen} className="relative z-40 sm:hidden">
                 <DialogBackdrop
@@ -173,10 +176,7 @@ export default function Search() {
                                                         id={`filter-mobile-${section.id}-${optionIdx}`}
                                                         name={`${section.id}[]`}
                                                         type="checkbox"
-                                                        onChange={(item) => {
 
-                                                            return option.checked ? activeFilters.pop(item) : activeFilters.push(item);
-                                                        }}
                                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                     />
                                                     <label
@@ -204,124 +204,127 @@ export default function Search() {
                 </p>
             </div>
 
-            {/* Filters */}
-            <section aria-labelledby="filter-heading">
-                <h2 id="filter-heading" className="sr-only">
-                    Filters
-                </h2>
+            <div  >
+                <section aria-labelledby="filter-heading" className="  z-50">
+                    <h2 id="filter-heading" className="sr-only">
+                        Filters
+                    </h2>
 
-                <div className="border-b border-gray-200 bg-white pb-4">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                        <Menu as="div" className="relative inline-block text-left">
-                            <div>
-                                <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                                    Sort
-                                    <ChevronDownIcon
-                                        aria-hidden="true"
-                                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                    />
-                                </MenuButton>
-                            </div>
-
-                            <MenuItems
-                                transition
-                                className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                                <div className="py-1">
-                                    {sortOptions.map((option) => (
-                                        <MenuItem key={option.name}>
-                                            <a
-                                                href={option.href}
-                                                className={classNames(
-                                                    option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                                                    'block px-4 py-2 text-sm data-[focus]:bg-gray-100',
-                                                )}
-                                            >
-                                                {option.name}
-                                            </a>
-                                        </MenuItem>
-                                    ))}
+                    <div className="border-b border-gray-200 bg-white pb-4">
+                        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                            <Menu as="div" className="relative inline-block text-left">
+                                <div>
+                                    <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                        Sort
+                                        <ChevronDownIcon
+                                            aria-hidden="true"
+                                            className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                                        />
+                                    </MenuButton>
                                 </div>
-                            </MenuItems>
-                        </Menu>
-                        <input placeholder="location search" className="rounded-xl border border-gray-700 mx-2 md:mx-10 px-5 py-1 sm:1/3 w-1/2"/>
-                        <button
-                            type="button"
-                            onClick={() => setOpen(true)}
-                            className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden"
-                        >
-                            Filters
-                        </button>
 
-                        <div className="hidden sm:block">
-                            <div className="flow-root">
-                                <PopoverGroup className="-mx-4 flex items-center divide-x divide-gray-200">
-                                    {filters.map((section, sectionIdx) => (
-                                        <Popover key={section.name} className="relative inline-block px-4 text-left">
-                                            <PopoverButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                                                <span>{section.name}</span>
-                                                {sectionIdx === 0 ? (
-                                                    <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
+                                <MenuItems
+                                    transition
+                                    className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                                >
+                                    <div className="py-1">
+                                        {sortOptions.map((option) => (
+                                            <MenuItem key={option.name}>
+                                                <a
+                                                    href={option.href}
+                                                    className={classNames(
+                                                        option.current ? 'font-medium text-gray-900' : 'text-gray-500',
+                                                        'block px-4 py-2 text-sm data-[focus]:bg-gray-100',
+                                                    )}
+                                                >
+                                                    {option.name}
+                                                </a>
+                                            </MenuItem>
+                                        ))}
+                                    </div>
+                                </MenuItems>
+                            </Menu>
+                            <input placeholder="location search" className="rounded-xl border border-gray-700 mx-2 md:mx-10 px-5 py-1 sm:1/3 w-1/2"/>
+                            <button
+                                type="button"
+                                onClick={() => setOpen(true)}
+                                className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden"
+                            >
+                                Filters
+                            </button>
+
+                            <div className="hidden sm:block">
+                                <div className="flow-root">
+                                    <PopoverGroup className="-mx-4 flex items-center divide-x divide-gray-200">
+                                        {filters.map((section, sectionIdx) => (
+                                            <Popover key={section.name} className="relative inline-block px-4 text-left">
+                                                <PopoverButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                                    <span>{section.name}</span>
+                                                    {sectionIdx === 0 ? (
+                                                        <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
                             1
                           </span>
-                                                ) : null}
-                                                <ChevronDownIcon
-                                                    aria-hidden="true"
-                                                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                                />
-                                            </PopoverButton>
+                                                    ) : null}
+                                                    <ChevronDownIcon
+                                                        aria-hidden="true"
+                                                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                                                    />
+                                                </PopoverButton>
 
-                                            <PopoverPanel
-                                                transition
-                                                className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                                            >
-                                                <form className="space-y-4">
-                                                    {section.options.map((option, optionIdx) => (
-                                                        <div key={option.value} className="flex items-center">
-                                                            <input
-                                                                defaultValue={option.value}
-                                                                defaultChecked={option.checked}
-                                                                id={`filter-${section.id}-${optionIdx}`}
-                                                                name={`${section.id}[]`}
-                                                                onChange={(item) => activeFilters.push(item)}
-                                                                type="checkbox"
-                                                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                            />
-                                                            <label
-                                                                htmlFor={`filter-${section.id}-${optionIdx}`}
-                                                                className="ml-3 whitespace-nowrap pr-6 text-sm font-medium text-gray-900"
-                                                            >
-                                                                {option.label}
-                                                            </label>
-                                                        </div>
-                                                    ))}
-                                                </form>
-                                            </PopoverPanel>
-                                        </Popover>
-                                    ))}
-                                </PopoverGroup>
+                                                <PopoverPanel
+                                                    transition
+                                                    className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                                                >
+                                                    <form className="space-y-4">
+                                                        {section.options.map((option, optionIdx) => (
+                                                            <div key={option.value} className="flex items-center">
+                                                                <input
+                                                                    defaultValue={option.value}
+                                                                    defaultChecked={option.checked}
+                                                                    id={`filter-${section.id}-${optionIdx}`}
+                                                                    name={`${section.id}[]`}
+                                                                    onChange={(item) => activeFilters.push({
+                                                                        value: item.target.value,
+                                                                        label: option.label
+                                                                    })}
+                                                                    type="checkbox"
+                                                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                                />
+                                                                <label
+                                                                    htmlFor={`filter-${section.id}-${optionIdx}`}
+                                                                    className="ml-3 whitespace-nowrap pr-6 text-sm font-medium text-gray-900"
+                                                                >
+                                                                    {option.label}
+                                                                </label>
+                                                            </div>
+                                                        ))}
+                                                    </form>
+                                                </PopoverPanel>
+                                            </Popover>
+                                        ))}
+                                    </PopoverGroup>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Active filters */}
-                <div className="bg-gray-100 w-screen">
-                    <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
-                        <h3 className="text-sm font-medium text-gray-500">
-                            Filters
-                            <span className="sr-only">, active</span>
-                        </h3>
+                    {/* Active filters */}
+                    <div className="bg-gray-100 w-screen">
+                        <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
+                            <h3 className="text-sm font-medium text-gray-500">
+                                Filters
+                                <span className="sr-only">, active</span>
+                            </h3>
 
-                        <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block" />
+                            <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block" />
 
-                        <div className="mt-2 sm:ml-4 sm:mt-0">
-                            <div className="-m-1 flex flex-wrap items-center">
-                                {activeFilters.map((activeFilter) => (
-                                    <span
-                                        key={activeFilter.value}
-                                        className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
-                                    >
+                            <div className="mt-2 sm:ml-4 sm:mt-0">
+                                <div className="-m-1 flex flex-wrap items-center">
+                                    {activeFilters.map((activeFilter) => (
+                                        <span
+                                            key={activeFilter.value}
+                                            className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
+                                        >
                     <span>{activeFilter.label}</span>
                     <button
                         type="button"
@@ -333,36 +336,42 @@ export default function Search() {
                       </svg>
                     </button>
                   </span>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-            <div className="container max-w-7xl mx-auto">
+                </section>
+            </div>
+            {/* Filters */}
+
+            <div className="mx-3 md:mx-24 mx-auto">
                 <div className="my-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {products.map((product) => (
-                        <div key={product.id} className="group relative">
-                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                        <Link  to={`/search/properties/${product.id}`} key={product.id} >
+                          <div className="group relative cursor-pointer">
+                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-96 cursor-pointer">
                                 <img
                                     alt={product.imageAlt}
                                     src={product.imageSrc}
-                                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                                    className="h-full w-full object-fill object-cover object-center lg:h-full lg:w-full cursor-pointer"
                                 />
                             </div>
                             <div className="mt-4 flex justify-between">
                                 <div>
                                     <h3 className="text-sm text-gray-700">
-                                        <a href={product.href}>
+                                        <div key={product.id}>
                                             <span aria-hidden="true" className="absolute inset-0" />
-                                            {product.name}
-                                        </a>
+                                                {product.name}
+                                        </div>
                                     </h3>
                                     <p className="mt-1 text-sm text-gray-500">{product.color}</p>
                                 </div>
                                 <p className="text-sm font-medium text-gray-900">{product.price}</p>
+
                             </div>
                         </div>
+                        </Link>
                     ))}
                 </div>
             </div>

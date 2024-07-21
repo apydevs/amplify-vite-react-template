@@ -1,5 +1,5 @@
 
-import { Outlet } from "react-router-dom";
+import {Link, Outlet} from "react-router-dom";
 'use client'
 
 import {SVGProps, useState} from 'react'
@@ -138,13 +138,14 @@ export default function Root() {
     return (
         <>
             <header className="bg-white">
-                <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+                <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
                     <div className="flex lg:flex-1">
-                        <a href="#" className="-m-1.5 p-1.5">
-                            <span className="sr-only">Yeoley</span>
+                        <Link to='/' className="-m-1.5 p-1.5 flex flex-row items-center gap-3">
+
                             <img  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                                 className="h-8 w-auto" alt="Yeoley"/>
-                        </a>
+                                 className="h-6 w-auto" alt="Yeoley"/>
+                            <span className="text-2xl font-semibold text-black">Yeoley</span>
+                        </Link>
                     </div>
                     <div className="flex lg:hidden">
                         <button
@@ -203,21 +204,22 @@ export default function Root() {
                                 </div>
                             </PopoverPanel>
                         </Popover>
-
-                        <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+                        <Link    to="/search" className="text-sm font-semibold leading-6 text-gray-900">
+                            Search Properties
+                        </Link>
+                        <Link
+                            to="/information" className="text-sm font-semibold leading-6 text-gray-900">
                             Information
-                        </a>
-                        <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                            Marketplace
-                        </a>
+                        </Link>
+
                         <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                             Company
                         </a>
                     </PopoverGroup>
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+                        <div className="text-sm font-semibold leading-6 text-gray-900">
                         <ProfileButton/>
-                        </a>
+                        </div>
                     </div>
                 </nav>
                 <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -225,14 +227,14 @@ export default function Root() {
                     <DialogPanel
                         className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                         <div className="flex items-center justify-between">
-                            <a href="#" className="-m-1.5 p-1.5">
-                                <span className="sr-only">Your Company</span>
+                            <Link to='/' className="-m-1.5 p-1.5">
+                                <span className="text-2xl font-semibold text-black">Yeoley</span>
                                 <img
-                                    alt=""
+                                    alt="Yeoley"
                                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                                     className="h-8 w-auto"
                                 />
-                            </a>
+                            </Link>
                             <button
                                 type="button"
                                 onClick={() => setMobileMenuOpen(false)}
@@ -265,18 +267,19 @@ export default function Root() {
                                             ))}
                                         </DisclosurePanel>
                                     </Disclosure>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/search"
+                                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                    >
+                                        Search Properties
+                                    </Link>
+                                    <Link
+                                        to="/information"
                                         className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                                     >
                                        Information
-                                    </a>
-                                    <a
-                                        href="#"
-                                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                                    >
-                                        Marketplace
-                                    </a>
+                                    </Link>
+
                                     <a
                                         href="#"
                                         className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
@@ -285,12 +288,11 @@ export default function Root() {
                                     </a>
                                 </div>
                                 <div className="py-6">
-                                    <a
-                                        href="#"
+                                    <div
                                         className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                                     >
                                       <ProfileButton/>
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +300,7 @@ export default function Root() {
                 </Dialog>
             </header>
 
-                 <div className="container max-w-7xl mx-auto mt-5">
+                 <div className="mx-auto">
             {/*<div>*/}
             {/*    <App/>*/}
             {/*</div>*/}
@@ -315,11 +317,12 @@ export default function Root() {
                 <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-16">
                     <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                         <div className="space-y-8">
-                            <img
-                                alt="Company name"
-                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                                className="h-7"
-                            />
+                            <Link to='/' className="-m-1.5 p-1.5 flex flex-row items-center gap-3">
+
+                                <img  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                                      className="h-8 w-auto" alt="Yeoley"/>
+                                <span className="text-2xl font-semibold text-black">Yeoley</span>
+                            </Link>
                             <p className="text-sm leading-6 text-gray-600">
                                 Making the world a better place through constructing elegant hierarchies.
                             </p>
