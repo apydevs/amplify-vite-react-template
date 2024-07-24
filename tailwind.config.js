@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -9,7 +10,8 @@ export default {
     extend: {},
   },
   plugins: [
-    require('flowbite/plugin')
+    require('flowbite/plugin'),
+    require('@butterfail/tailwindcss-inverted-radius')
   ]
 }
 

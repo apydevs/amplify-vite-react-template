@@ -140,11 +140,11 @@ export default function Root() {
             <header className="bg-white">
                 <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
                     <div className="flex lg:flex-1">
-                        <Link to='/' className="-m-1.5 p-1.5 flex flex-row items-center gap-3">
-
-                            <img  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                                 className="h-6 w-auto" alt="Yeoley"/>
-                            <span className="text-2xl font-semibold text-black">Yeoley</span>
+                        <Link to='/' className="-m-1.5 p-1.5 flex flex-row items-baseline ">
+                            <svg  className="text-black w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                <path fill="currentColor" d="M272 49.7V464H112l0-371.2L272 49.7zM320 464V42.4C320 19 301 0 277.6 0c-3.7 0-7.4 .5-11 1.5L99.5 46.4C78.6 52.1 64 71.1 64 92.8V464H24c-13.3 0-24 10.7-24 24s10.7 24 24 24H64 96h16H272h48V464zM224 288c13.2 0 24-14.4 24-32s-10.8-32-24-32s-24 14.4-24 32s10.7 32 24 32zM352 112H456c4.4 0 8 3.6 8 8V488c0 13.3 10.7 24 24 24h64c13.3 0 24-10.7 24-24s-10.7-24-24-24H512V120c0-30.9-25.1-56-56-56H352v48z"></path>
+                            </svg>
+                            <span className="text-[24pt] font-semibold text-black">Yeoley</span>
                         </Link>
                     </div>
                     <div className="flex lg:hidden">
@@ -317,12 +317,14 @@ export default function Root() {
                 <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-16">
                     <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                         <div className="space-y-8">
-                            <Link to='/' className="-m-1.5 p-1.5 flex flex-row items-center gap-3">
-
-                                <img  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                                      className="h-8 w-auto" alt="Yeoley"/>
-                                <span className="text-2xl font-semibold text-black">Yeoley</span>
-                            </Link>
+                            <div className="flex lg:flex-1">
+                                <Link to='/' className="-m-1.5 p-1.5 flex flex-row items-baseline " >
+                                    <svg  className="text-black w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                        <path fill="currentColor" d="M272 49.7V464H112l0-371.2L272 49.7zM320 464V42.4C320 19 301 0 277.6 0c-3.7 0-7.4 .5-11 1.5L99.5 46.4C78.6 52.1 64 71.1 64 92.8V464H24c-13.3 0-24 10.7-24 24s10.7 24 24 24H64 96h16H272h48V464zM224 288c13.2 0 24-14.4 24-32s-10.8-32-24-32s-24 14.4-24 32s10.7 32 24 32zM352 112H456c4.4 0 8 3.6 8 8V488c0 13.3 10.7 24 24 24h64c13.3 0 24-10.7 24-24s-10.7-24-24-24H512V120c0-30.9-25.1-56-56-56H352v48z"></path>
+                                    </svg>
+                                    <span className="text-[24pt] font-semibold text-black">Yeoley</span>
+                                </Link>
+                            </div>
                             <p className="text-sm leading-6 text-gray-600">
                                 Making the world a better place through constructing elegant hierarchies.
                             </p>

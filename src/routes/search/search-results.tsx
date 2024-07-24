@@ -348,6 +348,8 @@ export default function Search() {
             <div className="mx-3 md:mx-24 mx-auto">
                 <div className="my-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {products.map((product) => (
+
+                        // <PropertyCard ></PropertyCard>
                         <Link  to={`/search/properties/${product.id}`} key={product.id} >
                           <div className="group relative cursor-pointer">
                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-96 cursor-pointer">

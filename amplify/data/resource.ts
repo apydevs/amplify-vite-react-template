@@ -7,13 +7,56 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization((allow) => [allow.publicApiKey()]),
-});
+    Todo: a
+        .model({
+            content: a.string(),
+        })
+        .authorization((allow) => [allow.publicApiKey()]),
 
+    Property: a
+        .model({
+            id: a.id(),
+            title: a.string(),
+            slug: a.string(),
+            valuation: a.float(),
+            min: a.float(),
+            max: a.float(),
+            description: a.string(),
+            address: a.string(),
+            town: a.string(),
+            city: a.string(),
+            county: a.string(),
+            postcode: a.string(),
+            country: a.string(),
+            bedrooms: a.integer(),
+            bathrooms: a.integer(),
+            garages: a.integer(),
+            area_size: a.integer(),
+            year_built: a.integer(),
+            views: a.integer(),
+            is_featured: a.boolean(),
+            is_published: a.boolean(),
+            is_sold: a.boolean(),
+            is_yeoley_plus: a.boolean(),
+            user_id: a.id(),  // Assuming `a.id()` is a valid type definition in your library
+            created_at: a.datetime(),
+            updated_at: a.datetime(),
+            type: a.string(),
+            longitude: a.float(),
+            latitude: a.float(),
+            valuation_type: a.string(),
+            prefix: a.string(),
+            tenure: a.string(),
+            current_epc_rating: a.string(),
+            potential_epc_rating: a.string(),
+            epc_date: a.string(),
+            layout: a.string(),
+            content: a.string(),
+        })
+        .authorization((allow) => [allow.publicApiKey()]),
+
+
+});
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({

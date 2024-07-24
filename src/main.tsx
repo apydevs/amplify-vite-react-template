@@ -21,6 +21,8 @@ import SearchResults from "./routes/search/search-results.tsx";
 import Information from "./routes/information.tsx";
 import Login from "./routes/auth/login.tsx";
 import Account from "./routes/users/account.tsx";
+import PropertyImageGallery from "./routes/properties/propertyImageGallery.tsx";
+import Homepage from "./routes/homepage.tsx";
 Amplify.configure(outputs);
 
 const router = createBrowserRouter([
@@ -29,6 +31,11 @@ const router = createBrowserRouter([
         element: <Root />,
         errorElement: <ErrorPage />,
         children: [
+            {
+                path: "/",
+                element: <Homepage />,
+                errorElement: <ErrorPage />,
+            },
             {
                 path: "/login",
                 element: <Login />,
@@ -65,6 +72,11 @@ const router = createBrowserRouter([
             {
                 path: "/search/properties/:propertyId",
                 element: <PropertyDetails />,
+                errorElement: <ErrorPage />,
+            },
+            {
+                path: "/search/properties/:propertyId/gallery",
+                element: <PropertyImageGallery/>,
                 errorElement: <ErrorPage />,
             },
         ],

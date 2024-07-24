@@ -39,7 +39,7 @@ const people = [
 
 export default function SurveyList() {
     return (
-        <div>
+        <div className="mt-10">
             <h2 className="text-lg font-semibold leading-6 text-gray-900 mb-2">Surveys & Documents</h2>
             <ul
                 role="list"
