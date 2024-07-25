@@ -3,7 +3,7 @@ import { auth } from './auth/resource';
 import { data } from './data/resource';
 
 const backend = defineBackend({
-  // auth,
+  auth,
   data,
 });
 
