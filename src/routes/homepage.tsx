@@ -66,7 +66,7 @@ export default function Homepage() {
             </div>
 
             <div className="col-span-6 md:col-span-6  lg:col-span-6 mx-5 grid grid-cols-1 lg:col-start-8  gap-x-6 gap-y-10 items-end  xl:gap-x-8">
-                <img src="/src/assets/media/banners/heroChange.png" className="w-full" alt="changeHero"/>
+                <img src="../public/assets/media/banners/heroChange.png" className="w-full" alt="changeHero"/>
             </div>
         </div>
     </div>
@@ -159,13 +159,14 @@ export default function Homepage() {
 
                         </div>
                     </div>
+
                 </div>
                 <div className="w-full flex justify-end lg:w-1/6 -mt-2 md:-mt-6 lg:mt-[245px]">
                     {/*<img className=" w-80 md:w-full lg:h-auto md:object-cover lg:object-contain" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/hero_XXI-img-1.png" alt="boy in hat" />*/}
                 </div>
             </div>
         </div>
-        <div className="absolute -z-10 bg-yellow-300  -top-14 h-[170px] md:w-[40vw] xl:w-full  max-w-[519px] inv-rad inv-rad-14">asd
+        <div className="absolute -z-10 bg-yellow-300  -top-14 h-[170px] md:w-[40vw] xl:w-full  max-w-[519px] inv-rad inv-rad-14">
         </div>
     </div>
 
