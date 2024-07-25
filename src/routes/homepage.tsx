@@ -1,3 +1,4 @@
+import changeHero from '../assets/media/banners/heroChange.png';
 export default function Homepage() {
     return (
 <>
@@ -66,7 +67,7 @@ export default function Homepage() {
             </div>
 
             <div className="col-span-6 md:col-span-6  lg:col-span-6 mx-5 grid grid-cols-1 lg:col-start-8  gap-x-6 gap-y-10 items-end  xl:gap-x-8">
-                <img src="../public/assets/media/banners/heroChange.png" className="w-full" alt="changeHero"/>
+                <img src={changeHero} className="w-full" alt="changeHero"/>
             </div>
         </div>
     </div>
