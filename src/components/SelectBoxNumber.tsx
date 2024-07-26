@@ -19,11 +19,17 @@ const data = [
     { id: 11, name: "11 or more" },
 ]
 
-export default function SelectBoxNumber() {
+export default function SelectBoxNumber({onChange,name}) {
     const [selected, setSelected] = useState(data[0])
 
+    const handleChange = (item) => {
+        setSelected(item);
+        onChange(item.name);
+        console.log(item.name)
+
+    };
     return (
-        <Listbox value={selected} onChange={setSelected}>
+        <Listbox value={selected} onChange={handleChange}>
            <div className="relative">
                 <ListboxButton className="relative w-full cursor-default rounded-xl bg-white py-3 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-2 ring-inset ring-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 sm:text-sm sm:leading-6">
                     <span className="block truncate">{selected.name}</span>
@@ -38,7 +44,7 @@ export default function SelectBoxNumber() {
                 >
                     {data.map((person) => (
                         <ListboxOption
-                            key={person.id}
+                            key={`${name}-${person.id}`}
                             value={person}
                             className="group relative cursor-default select-none py-2 pl-8 pr-4 text-gray-900 data-[focus]:bg-yellow-300 data-[focus]:text-white"
                         >

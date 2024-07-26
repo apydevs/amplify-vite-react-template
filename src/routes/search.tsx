@@ -1,37 +1,33 @@
 'use client'
 
-import {useEffect, useState} from 'react'
-
-import {Link} from "react-router-dom";
-import SelectBox from "../components/SelectBox.tsx";
+import React from 'react'
 import SelectBoxRadius from "../components/SelectBoxRadius.tsx";
 import SelectBoxNumber from "../components/SelectBoxNumber.tsx";
 import SelectBoxValue from "../components/SelectBoxValue.tsx";
+import SelectBox from "../components/SelectBox.tsx";
+import {json, Link} from "react-router-dom";
 
-interface Location {
-    id: number;
-    name: string;
-    // Add other properties if needed
-}
-const locationsData: Location[] = [
-    // Example data
-    { id: 1, name: 'New York' },
-    { id: 2, name: 'Los Angeles' },
-    // Add other locations
-];
+import { useSelector, useDispatch } from 'react-redux'
+import {
+    locations,
+    type,
+    minBedroom,
+    maxBedroom,
+    minValuation,
+    maxValuation,
+    locationRadius,
+    maxOfferPrice } from '../store/features/searchFilters/filterSlice.js'
 
 export default function Search() {
-    const [locations, setLocations] = useState<Location[]>([])
 
-    useEffect(() => {
-        // Fetch locations from an API
-        setLocations(locationsData)
-        console.log('asd')
-    }, [])
+
+    const dispatch = useDispatch()
+    const filters = useSelector((state) => state.filters)
 
 
     return (
         <>
+
             <div className="w-screen h-[16rem] bg-blue-50">
                 <div className="container   self-center mx-auto max-w-7xl">
 
@@ -41,15 +37,15 @@ export default function Search() {
                             <div className="flex flex-row items-center justify-between  rounded-xl border-2 border-yellow-300 bg-white">
                                 <input className="m-1 px-4 py-4  w-2/3 max-w-xl border-y-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0" placeholder="Search by location"/>
                                 <div className="m-0.5 px-1 py-1 w-1/3">
-                                    <SelectBoxRadius/>
+                                    <SelectBoxRadius name="radius" onChange={(value) =>dispatch(locationRadius(value))}/>
                                 </div>
 
 
                             </div>
 
                             <div className="flex flex-row justify-start my-1 gap-x-2.5">
-                                {locations.length > 0  ? (
-                                    locations.map((location) => (
+                                {filters.locations.length > 0  ? (
+                                        filters.locations.map((location) => (
                                     <span key={location.id} className="inline-flex items-center gap-x-0.5 rounded-md bg-yellow-200 px-2 py-1 text-xs font-medium text-black">
                                       {location.name}
                                                                         <button type="button" className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-yellow-600/20">
@@ -64,6 +60,9 @@ export default function Search() {
                                  : (
                                     <span className="text-sm text-gray-900 w-full text-center">Please select locations</span>
                                 )}
+
+
+
                             </div>
 
                             <span className="max-w-xl mx-auto mt-1">
@@ -82,21 +81,22 @@ export default function Search() {
             </div>
             <div className="container bg-white self-center mx-auto max-w-7xl">
                 <div className=" flex flex-col justify-center mx-auto py-8 md:px-6 items-center">
+
                     <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 gap-y-10">
                         <div>
                             <label>Property Type</label>
-                            <SelectBox/>
+                            <SelectBox name="type" onChange={(value) => dispatch(type(value))}/>
                         </div>
                         <div className="flex flex-row gap-8">
-e
+
                             <div className="w-full">
                                 <label>Min Valuation</label>
-                                <SelectBoxValue/>
+                                <SelectBoxValue name="min" onChange={(value) =>dispatch(minValuation(value))}/>
                             </div>
 
                             <div className="w-full">
                                 <label>Max Valuation</label>
-                                <SelectBoxValue/>
+                                <SelectBoxValue  name="max" onChange={(value)  =>dispatch(maxValuation(value))}/>
                             </div>
 
                         </div>
@@ -104,12 +104,12 @@ e
 
                             <div className="w-full">
                                 <label>Min Bedrooms</label>
-                                <SelectBoxNumber/>
+                                <SelectBoxNumber name="minbed" onChange={(value) =>dispatch(minBedroom(value))}/>
                             </div>
 
                             <div className="w-full">
                             <label>Max Bedrooms</label>
-                            <SelectBoxNumber/>
+                                <SelectBoxNumber name="maxbed" onChange={(value) =>dispatch(maxBedroom(value))}/>
                             </div>
                         </div>
                         <div>
@@ -119,15 +119,26 @@ e
                     </div>
                 </div>
             </div>
+
             <div className="flex flex-row justify-center gap-8">
-                <Link to="/search/properties" >
-                    <button
-                        type="button"
+
+                {filters.locations.length > 0  ? (
+
+                    <Link to="/search/properties"
                         className="rounded-full font-bold bg-yellow-300 p-4 text-black shadow-sm hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                         <span className="text-2xl ">GO</span>
+                    </Link>
+                    ): (
+                    <button
+                        type="button"
+                    className="rounded-full font-bold bg-yellow-300 p-4 text-black shadow-sm hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                    <span className="text-2xl ">NO GO</span>
                     </button>
-                </Link>
+
+                    )}
+
             </div>
 
         </>

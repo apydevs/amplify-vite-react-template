@@ -6,56 +6,72 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 const data = [
     {
+        "id": 1,
         "value": "0.0",
         "text": "This area only"
     },
     {
+        "id": 2,
         "value": "0.25",
         "text": "Within ¼ mile"
     },
     {
+        "id": 3,
         "value": "0.5",
         "text": "Within ½ mile"
     },
     {
+        "id": 4,
         "value": "1.0",
         "text": "Within 1 mile"
     },
     {
+        "id": 5,
         "value": "3.0",
         "text": "Within 3 miles"
     },
     {
+        "id": 6,
         "value": "5.0",
         "text": "Within 5 miles"
     },
     {
+        "id": 7,
         "value": "10.0",
         "text": "Within 10 miles"
     },
     {
+        "id": 8,
         "value": "15.0",
         "text": "Within 15 miles"
     },
     {
+        "id": 9,
         "value": "20.0",
         "text": "Within 20 miles"
     },
     {
+        "id": 10,
         "value": "30.0",
         "text": "Within 30 miles"
     },
     {
+        "id": 11,
         "value": "40.0",
         "text": "Within 40 miles"
     }
 ]
 
-export default function SelectBoxRadius() {
+export default function SelectBoxRadius({onChange,name}) {
     const [selected, setSelected] = useState(data[1])
+    const handleChange = (item) => {
+        setSelected(item);
+        onChange(item.value);
+        console.log(item.value)
 
+    };
     return (
-        <Listbox value={selected} onChange={setSelected}>
+        <Listbox value={selected} onChange={handleChange}>
            <div className="relative">
                 <ListboxButton className="relative w-full cursor-default rounded-xl bg-white py-3 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-2 ring-inset ring-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 sm:text-sm sm:leading-6">
                     <span className="block truncate">{selected.text}</span>
@@ -70,7 +86,7 @@ export default function SelectBoxRadius() {
                 >
                     {data.map((person) => (
                         <ListboxOption
-                            key={person.value}
+                            key={`${name}-${person.id}`}
                             value={person}
                             className="group relative cursor-default select-none py-2 pl-8 pr-4 text-gray-900 data-[focus]:bg-yellow-300 data-[focus]:text-white"
                         >
