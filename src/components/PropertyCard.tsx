@@ -1,83 +1,75 @@
 import { useState } from 'react';
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faBath,faBedFront,faToilet,faSquareParking,faGarage } from "@fortawesome/pro-regular-svg-icons";
 
-const PropertyCard = () => {
+const PropertyCard = ({ property }) => {
     const [open, setOpen] = useState(false);
 
     return (
-      <>
-          <a
-          href="#"
-          className="relative group bg-white rounded-3xl p-2 border-[10px] border-yellow-300"
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
-      >
-          <div className="absolute z-1 top-0 md:top-3 lg:top-4 left-8">
-              <div className="rating text-center bg-white rounded-full">
-                  <p className="text-3xl sm:text-xl ml-2 md:text-2xl md:mt-3 lg:mt-2 lg:text-xl font-semibold text-stone-800">
-                      <i className="fa-solid fa-star color-primary"></i> £28,000
-                  </p>
-                  <p className="text-xs -mt-2 text-stone-800 font-semibold">
-                      <i className="fa-solid fa-star color-primary"></i> max offer
-                  </p>
-              </div>
-          </div>
-          <div className="houseMaskCard relative aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-              <img
-                  src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/gregson-walk-dawley-tf4-2ga/1273e69f-00d7-4c5c-8a15-42f7b5180d31.jpg"
-                  alt="Olive drab green insulated bottle with flared screw lid and flat top."
-                  className="min-h-[360px] object-cover object-center group-hover:opacity-75"
-              />
-              {open && (
-                  <div className="hidden xl:block absolute z-30 bottom-0 right-0 md:bottom-6 lg:right-0 xl:right-0 xl:bottom-0">
-                      <div className="relative">
-                          <img
-                              src="./../src/assets/media/icon/arrow-dark.svg"
-                              className="absolute bottom-0 right-1 md:bottom-1 md:right-2 border-[10px] w-18 md:w-16 rounded-full border-white z-20"
-                              alt=""
-                          />
-                          <img
-                              src="./../src/assets/media/vector-shape/bottom-shape.png"
-                              className="corner-shape"
-                              alt=""
-                          />
-                      </div>
-                  </div>
-              )}
-          </div>
-          <div className="name-rating flex items-center justify-between my-1 px-3">
-              <h4 className="text-lg font-semibold text-stone-800">Telford, Shropshire</h4>
-              <div className="rating text-center">
-                  <p className="text-lg font-semibold text-stone-800">
-                      <i className="fa-solid fa-star color-primary"></i> £289,995
-                  </p>
-                  <p className="text-xs -mt-2 text-stone-800 font-semibold">
-                      <i className="fa-solid fa-star color-primary"></i> valuation
-                  </p>
-              </div>
-          </div>
-          <div className="px-3">
-              <p className="text-sm text-stone-800 mb-2">
-                  At quis nullam duis sed aliquet faucibus. Sed diam pretium cum eget.
-              </p>
-              <div className="flex flex-row justify-between overflow-hidden">
-                  <ul className="flex flex-row justify-start items-center w-1/2">
-                      <li className="flex flex-row items-center">
-                          <img className="h-4" src="/assets/media/icon/double-bed-icon.png" alt="" />
-                          <p className="text-lg px-2 bold light-black">3</p>
-                      </li>
-                      <li className="flex flex-row items-center">
-                          <img className="h-4" src="/assets/media/icon/tv-icon.png" alt="" />
-                          <p className="text-lg px-2 bold light-black">3</p>
-                      </li>
-                  </ul>
-                  <div className="text-wrap max-h-6 text-sm">
-                      <p className="line-clamp-1">Agents here Agents here Agents here</p>
-                  </div>
-              </div>
-          </div>
-      </a>
-      </>
+        <div
+            onMouseOver={() => setOpen(true)}  // Set open to true when mouse enters the div
+            onMouseOut={() => setOpen(false)}  // Set open to false when mouse leaves the div
+            id={property.id}
+            key={property.id}
+        >grid
 
+            <Link to={`/search/properties/${property.id}`}>
+                <div
+                    className={`group relative cursor-pointer border-[0.5rem] ${property.is_featured ? "border-yellow-300" : "border-grey-200"}  rounded-[2rem] shadow p-3`}>
+                    <div className="relative aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:shaddow lg:h-96 cursor-pointer">
+                        <div className="absolute w-[151px] h-[94px] cardTop-img flex flex-col items-start pl-5 justify-start">
+                            <div className="text-sm">Max Offer</div>
+                            <div className="font-semibold">
+                                {property ? `£${new Intl.NumberFormat('en-GB').format(property.max)}` : ''}
+                            </div>
+                        </div>
+                        <img
+                            alt={property.title}
+                            src={property.imageSrc ?? 'https://media.rightmove.co.uk/37k/36689/145771118/36689_TES240020_IMG_18_0000.jpeg'}
+                            className="h-full w-full object-cover object-center lg:h-full lg:w-full cursor-pointer rounded-[1.5rem]"
+                        />
+                        {open && (  // This block will only render when `open` is true
+                            <div className="absolute -bottom-1 -right-1 w-16 border-white rounded-full border-[0.5rem] h-16 bg-white cardTop-arrow flex flex-col items-start pl-5 justify-start"></div>
+                        )}
+                    </div>
+                    <div className="mt-4 w-full py-2">
+                        <div>
+                            <h3 className="text-md text-gray-900 px-2 mb-2">
+                                <div key={property.id}>
+                                    <span aria-hidden="true" className="absolute inset-0"></span>
+                                    {property.title}
+                                </div>
+                            </h3>
+                            <p className="text-sm text-gray-700 px-2 whitespace-pre-line mb-2">{property.content}</p>
+                            <div className="flex flex-col justify-between px-2">
+                                <div className="flex flex-row justify-between items-center">
+                                    <div className="flex flex-row justify-start items-center">
+                                            <span className="me-1 rounded text-xs font-medium text-black  flex flex-row">
+                                                <FontAwesomeIcon icon={faBath} className="w-4 h-4 "/>
+                                                <span   className="md:text-sm  mx-2">{property.bathrooms}</span>
+                                             </span>
+                                            <span   className="me-5 rounded px-2.5 py-0.5 text-xs font-medium text-black dark:bg-yellow-900 dark:text-yellow-300 flex flex-row">
+                                                <FontAwesomeIcon icon={faBedFront} className="w-4 h-4 "/>
+                                                <span
+                                                    className="md:text-sm  mx-2">{property.bedrooms}</span>
+                                             </span>
+                                    </div>
+                                    <div className="flex flex-row justify-end items-center gap-2">
+
+                                        <div className="font-semibold text-sm text-center">
+                                            <p className="text-xs text-gray-500">valuation</p>
+                                            {property ? `£${new Intl.NumberFormat('en-GB').format(property.max)}` : ''}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Link>
+        </div>
     );
 }
 

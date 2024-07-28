@@ -12,6 +12,7 @@ export const auth =
 
   },
 
+
   userAttributes: {
     preferredUsername: {
       mutable: true,

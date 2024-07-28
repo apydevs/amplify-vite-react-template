@@ -40,6 +40,24 @@
 
 }
 
+.cardTop-img{
+    background-image: url('./assets/media/card/top-shape.png');
+    background-size: contain;
+    background-position: top;
+    background-repeat: no-repeat;
+
+
+}
+.cardTop-arrow{
+    background-image: url('./assets/media/card/arrow-dark.png');
+    background-size: contain;
+    background-position: top;
+    background-repeat: no-repeat;
+
+
+}
+
+
 .pswp {
     --pswp-bg: #000;
     --pswp-placeholder-bg: #222;

@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useState} from 'react'
-import {createProperty, listProperties, searchProperties} from '../../api/propertiesApi.ts'; // Ensure the path is correct
+import {createProperty, listProperties} from '../../api/propertiesApi.ts'; // Ensure the path is correct
 import {
     Dialog,
     DialogBackdrop,
@@ -20,11 +20,10 @@ import {
 } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import {Link, useLoaderData, useLocation, useParams} from "react-router-dom";
 import { CreatePropertyInterface } from '/../../interfaces/CreatePropertyInterface.tsx';
-import {Filter} from "../../interfaces/SearchInterface.tsx";
 import {useSelector} from "react-redux"; // Adjust the path as needed
-
+import PropertyCard from "../../components/PropertyCard.tsx";
+import PropertyCardList from "../../components/PropertyCardList.tsx";
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
     { name: 'Closest Distance', href: '#', current: false },
@@ -73,7 +72,7 @@ const filters = [
 function classNames(...classes  :any) {
     return classes.filter(Boolean).join(' ')
 }
-const propertyData = {address: "123 Baker Street", bathrooms: 2, bedrooms: 3, area_size: 1800, city: "London", content: "Welcome to this simply unique and stunning detached Georgian-style home of 10,000 sq ft. It is located in a highly desirable location, at arguably St Alban's premier address.", country: "UK", county: "Chester", description: "Alban House, Faircross Way, St. Albans.", epc_date: "2024-03-10", garages: 1, is_featured: true, is_published: true, is_sold: false, is_yeoley_plus: true, latitude: 51.5238, layout: "Spacious with a large living area and modern kitchen.", longitude: -0.1586, max: 900000, min: 850000, postcode: "NW1 6XE", potential_epc_rating: "A", prefix: "Mr.", slug: "123-baker-street-london", tenure: "Leasehold", title: "Alban House, Faircross Way, St. Albans.", town: "London", type: "Detached", updated_at: "2024-07-25T14:30:00Z", user_id: "b6d27284-9051-702c-cfa1-af437cdc1378", valuation: 875000, valuation_type: "certified", views: 250, year_built: 1982}
+const propertyData = {address: "123 Baker Street", bathrooms: 2, bedrooms: 3, area_size: 1800, city: "London", content: "Welcome to this simply unique and stunning detached Georgian-style home of 10,000 sq ft. It is located in a highly desirable location, at arguably St Alban's premier address.", country: "UK", county: "Chester", description: "Alban House, Faircross Way, St. Albans.", epc_date: "2024-03-10", garages: 1, is_featured: false, is_published: true, is_sold: false, is_yeoley_plus: true, latitude: 51.5238, layout: "Spacious with a large living area and modern kitchen.", longitude: -0.1586, max: 34000, min: 1000, postcode: "NW1 6XE", potential_epc_rating: "A", prefix: "Mr.", slug: "123-baker-street-london", tenure: "Leasehold", title: "Alban House, Faircross Way, St. Albans.", town: "London", type: "Detached", updated_at: "2024-07-25T14:30:00Z", user_id: "b6d27284-9051-702c-cfa1-af437cdc1378", valuation: 275000, valuation_type: "certified", views: 250, year_built: 1982}
 
 
 export default function Search() {
@@ -84,14 +83,15 @@ export default function Search() {
 
     // const navigation = useNavigate();
     const [open, setOpen] = useState(false)
+    const [grid, setGrid] = useState(true)
     const activeFilters: { value: number|string, label: string }[] = []
     const searchFilters = useSelector((state) => state.filters)
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true);
+                setIsLoading(true);
 
                 try {
-                    const properties = await searchProperties(searchFilters);
+                    const properties = await listProperties();
                     setDataProperties(properties);
                     console.info(' fetching properties:', properties);
 
@@ -315,8 +315,13 @@ export default function Search() {
                                 Filters
                                 <span className="sr-only">, active</span>
                             </h3>
-
-                            <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block" />
+                            <span onClick={()=>setGrid(true)}  className="text-sm mx-4 font-medium text-gray-500">
+                                Grid
+                            </span>
+                            <span onClick={()=>setGrid(false)} className="text-sm mx-4 font-medium text-gray-500">
+                                List
+                            </span>
+                            <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"/>
 
                             <div className="mt-2 sm:ml-4 sm:mt-0">
                                 <div className="-m-1 flex flex-wrap items-center">
@@ -332,9 +337,10 @@ export default function Search() {
                     >
                       <span className="sr-only">Remove filter for {activeFilter.label}</span>
                       <svg fill="none" stroke="currentColor" viewBox="0 0 8 8" className="h-2 w-2">
-                        <path d="M1 1l6 6m0-6L1 7" strokeWidth="1.5" strokeLinecap="round" />
+                        <path d="M1 1l6 6m0-6L1 7" strokeWidth="1.5" strokeLinecap="round"/>
                       </svg>
                     </button>
+
                   </span>
                                     ))}
                                 </div>
@@ -344,42 +350,24 @@ export default function Search() {
                 </section>
             </div>
             {/* Filters */}
-    <div onClick={newProperty} >
-        new property
-    </div>
-            <div className="mx-3 md:mx-24 mx-auto">
+            <div onClick={newProperty}>
+                new property
+            </div>
+            <div className=" mx-auto container">
 
 
-                <div className="my-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+
+
+                <div className={`my-6 ${grid ? 'grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 xl:gap-x-4': 'grid  grid-cols-1 w-full' } `}>
                     {dataProperties.map((product) => (
+                    <div key={product.id}>
+                        {grid ? <PropertyCard property={product}  /> : <PropertyCardList property={product} />}
+                    </div>
+                    ))
+                    }
 
-                        // <PropertyCard ></PropertyCard>
-                        <Link  to={`/search/properties/${product.id}`} key={product.id} >
-                          <div className="group relative cursor-pointer">
-                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-96 cursor-pointer">
-                                <img
-                                    alt={product.title}
-                                    src={product.imageSrc ?? 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'}
-                                    className="h-full w-full object-fill object-cover object-center lg:h-full lg:w-full cursor-pointer"
-                                />
-                            </div>
-                            <div className="mt-4 flex justify-between">
-                                <div>
-                                    <h3 className="text-sm text-gray-700">
-                                        <div key={product.id}>
-                                            <span aria-hidden="true" className="absolute inset-0" />
-                                                {product.title}
-                                        </div>
-                                    </h3>
-                                    <p className="mt-1 text-sm text-gray-500">{product.bedrooms}</p>
-                                </div>
-                                <p className="text-sm font-medium text-gray-900">{product.bathrooms}</p>
-
-                            </div>
-                        </div>
-                        </Link>
-                    ))}
                 </div>
+
             </div>
 
         </div>
