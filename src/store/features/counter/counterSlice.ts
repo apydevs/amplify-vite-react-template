@@ -1,8 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
-const initialState = {
+export interface CounterState {
+    value: number
+}
+
+const initialState: CounterState = {
     value: 0,
 }
+
+
 
 export const counterSlice = createSlice({
     name: 'counter',
@@ -18,7 +25,7 @@ export const counterSlice = createSlice({
         decrement: (state) => {
             state.value -= 1
         },
-        incrementByAmount: (state, action) => {
+        incrementByAmount: (state, action: PayloadAction<number>) => {
             state.value += action.payload
         },
     },

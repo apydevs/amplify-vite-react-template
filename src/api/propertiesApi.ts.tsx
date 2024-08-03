@@ -1,83 +1,107 @@
 // src/api/propertiesApi.ts
 import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../../amplify/data/resource';
-import {Filter, Location, PropertyTypeInterface, SearchFormData} from "../interfaces/SearchInterface.tsx";
-import {useDispatch, useSelector} from "react-redux";
+import { Location} from "../interfaces/SearchInterface.tsx";
+import {NewPropertyType} from "../interfaces/interfaces.tsx";
 const client = generateClient<Schema>();
 
+type Filter = {
+    locationRadius?: {
+        eq: number;
+    };
+    locations?: {
+        contains: string[];
+    };
+    maxBedroom?: {
+        le: number;
+    };
+    minBedroom?: {
+        ge: number;
+    };
+    maxValuation?: {
+        le: number;
+    };
+    minValuation?: {
+        ge: number;
+    };
+    type?: {
+        contains: string;
+    };
+    bedrooms?: {
+        ge?: number;
+        le?: number;
+    };
+};
+
 // Function to list all properties
-export const listProperties = async () => {
-    const { data: todos, errors } = await client.models.Property.list();
+export const listProperties = async ():Promise<object> => {
+    const { data: properties, errors } = await client.models.Property.list();
     if (errors) {
         console.error(errors);
         throw new Error('Failed to fetch properties');
     }
-    return todos;
+    return properties;
 };
 
-export const searchProperties = async (filterValues) => {
-    console.log('FILTER', filterValues);
-
-    const filterQuery = buildFilter(
-        filterValues.locations || [],
-        filterValues.locationRadius || 0.0,
-        filterValues.minValuation || 1000,
-        filterValues.maxValuation || 20000000,
-        filterValues.type || 'All',
-        filterValues.minBedroom || 0,
-        filterValues.maxBedroom || 50
-    );
-
-    console.log('FILTER', filterQuery);
-
-
-        const {
-            data: propertiesData,
-            errors
-        } =     await client.models.Property.list({filter: filterQuery});
-
-        if (errors) {
-            console.error(errors);
-            throw new Error('Failed to fetch properties');
-        }
-
-        return propertiesData;
-
-
-};
-
-export default searchProperties;
+//
+// export const searchProperties = async (filterValues):Promise<PropertyFilter> => {
+//     console.log('FILTER', filterValues);
+//
+//     const filterQuery = buildFilter(
+//         filterValues.locations || [],
+//         filterValues.locationRadius || 0.0,
+//         filterValues.minValuation || 1000,
+//         filterValues.maxValuation || 20000000,
+//         filterValues.type || 'All',
+//         filterValues.minBedroom || 0,
+//         filterValues.maxBedroom || 50
+//     );
+//
+//     console.log('FILTER', filterQuery);
+//
+//
+//         // const {
+//         //     data: propertiesData,
+//         //     errors
+//         // } =     await client.models.Property.list({filter: filterQuery});
+//         //
+//         // if (errors) {
+//         //     console.error(errors);
+//         //     throw new Error('Failed to fetch properties');
+//         // }
+//         //
+//         // return propertiesData;
+//
+//
+// };
+//
+// export default searchProperties;
 
 // Function to get a specific property by ID
-export const getProperty = async (id: string) => {
-    const { data: todo, errors } = await client.models.Property.get({ id });
-    // First, check for API-reported errors
-    if (errors) {
-        console.error(errors);
-        throw new Error(`Failed to fetch property with ID ${id}`);
-    }
+export const getProperty = async (id: string):Promise<object> => {
 
+
+    const apiProperty = await client.models.Property.get({ id });
     // Check if the data returned is null
-    if (!todo) {
+    if (!apiProperty) {
         throw new Error(`property with ID ${id} not found`);
     }
-
-    return todo;
-};
-
-
-export const createProperty = async (property: any) => {
-    const { data: todo, errors } = await client.models.Property.create(property);
-    if (errors) {
-        console.error(errors);
-        throw new Error('Failed to create property');
-    }
-    return todo;
+    console.log('Transformed Property Data:', apiProperty);
+    return apiProperty;
 }
 
 
+export const createProperty = async (property2: NewPropertyType) => {
 
-export const  buildFilter = (
+
+    const property = await client.models.Property.create(property2 as any);
+    if (!property) {
+        throw new Error('Failed to create property');
+    }
+    return property;
+}
+
+export const buildFilter = (
     locations: Location[],
     locationRadius: number | null,
     minValuation: number | null,
@@ -86,13 +110,14 @@ export const  buildFilter = (
     minBedroom: number | null | string,
     maxBedroom: number | null | string
 ): Filter => {
+
     const filter: Filter = {};
 
-    // if (locations.length > 0) {
-    //     filter.location = {
-    //         contains: locations.map(location => location.name.toLowerCase())
-    //     };
-    // }
+    if (locations && locations.length > 0) {
+        filter.locations = {
+            contains: locations.map(location => location.name.toLowerCase())
+        };
+    }
 
     if (locationRadius) {
         filter.locationRadius = {
@@ -119,7 +144,7 @@ export const  buildFilter = (
     }
 
     if (minBedroom) {
-        filter.bedrooms = {
+        filter.minBedroom = {
             ge: Number(minBedroom)
         };
     }
@@ -131,7 +156,7 @@ export const  buildFilter = (
         filter.bedrooms.le = Number(maxBedroom);
     }
 
-    console.log('filter',filter)
+    console.log('filter', filter);
+
     return filter;
 };
-

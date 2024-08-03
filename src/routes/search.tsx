@@ -1,11 +1,9 @@
 'use client'
-
-import React from 'react'
 import SelectBoxRadius from "../components/SelectBoxRadius.tsx";
 import SelectBoxNumber from "../components/SelectBoxNumber.tsx";
 import SelectBoxValue from "../components/SelectBoxValue.tsx";
 import SelectBox from "../components/SelectBox.tsx";
-import {json, Link} from "react-router-dom";
+import { Link} from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -16,15 +14,18 @@ import {
     minValuation,
     maxValuation,
     locationRadius,
-    maxOfferPrice } from '../store/features/searchFilters/filterSlice.js'
+     } from '../store/features/searchFilters/filterSlice.ts'
+import {RootState} from "../store/store.ts";
+
 
 export default function Search() {
 
 
     const dispatch = useDispatch()
-    const filters = useSelector((state) => state.filters)
+    // Use RootState to type the state parameter
+    const filters = useSelector((state: RootState) => state.filters);
 
-
+    console.log(locations);
     return (
         <>
 
@@ -37,7 +38,7 @@ export default function Search() {
                             <div className="flex flex-row items-center justify-between  rounded-xl border-2 border-yellow-300 bg-white">
                                 <input className="m-1 px-4 py-4  w-2/3 max-w-xl border-y-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0" placeholder="Search by location"/>
                                 <div className="m-0.5 px-1 py-1 w-1/3">
-                                    <SelectBoxRadius name="radius" onChange={(value) =>dispatch(locationRadius(value))}/>
+                                    <SelectBoxRadius name="radius" onChange={(item) =>dispatch(locationRadius(item))}/>
                                 </div>
 
 
@@ -85,7 +86,7 @@ export default function Search() {
                     <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 gap-y-10">
                         <div>
                             <label>Property Type</label>
-                            <SelectBox name="type" onChange={(value) => dispatch(type(value))}/>
+                            <SelectBox name="type" onChange={(item) => dispatch(type(item))}/>
                         </div>
                         <div className="flex flex-row gap-8">
 
@@ -104,12 +105,19 @@ export default function Search() {
 
                             <div className="w-full">
                                 <label>Min Bedrooms</label>
-                                <SelectBoxNumber name="minbed" onChange={(value) =>dispatch(minBedroom(value))}/>
+                                <SelectBoxNumber name="minbed" onChange={(item) =>{
+
+
+                                    dispatch(minBedroom(item))
+                                        }
+                                }
+
+                                    />
                             </div>
 
                             <div className="w-full">
                             <label>Max Bedrooms</label>
-                                <SelectBoxNumber name="maxbed" onChange={(value) =>dispatch(maxBedroom(value))}/>
+                                <SelectBoxNumber name="maxbed" onChange={(item) =>dispatch(maxBedroom(item))}/>
                             </div>
                         </div>
                         <div>

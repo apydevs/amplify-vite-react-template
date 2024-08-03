@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { } from 'react';
 import { Link } from "react-router-dom";
+
 import {PropertyInterface} from "../interfaces/interfaces.tsx";
 interface PropertyCardProps {
     property: PropertyInterface;
 }
 
-const PropertyCardList :  React.FC<PropertyCardProps> = ({ property }) => {
+const PropertyCardFeaturedList:  React.FC<PropertyCardProps> = ({ property }) => {
+    // const [open, setOpen] = useState(false);
 
     return (
         <div
-            key={`property-list-${property.id}`}
-            className='my-6 '
+            // onMouseOver={() => setOpen(true)}  // Set open to true when mouse enters the div
+            // onMouseOut={() => setOpen(false)}  // Set open to false when mouse leaves the div
+            key={`property-featured-list-${property.id}`}
+            className='my-6'
         >
+            Featured
             <Link to={`/search/properties/${property.id}`}>
                 <div className={`group relative cursor-pointer border-[0.5rem] ${property.is_featured ? "border-yellow-300" : "border-grey-200"}  
                 rounded-[0.5rem] shadow grid grid-cols-1 md:grid-cols-2 mr-4 md:mr-0 `}>
@@ -25,25 +30,10 @@ const PropertyCardList :  React.FC<PropertyCardProps> = ({ property }) => {
                                 </div>
                             </div>
                             <img
-                                alt={`property-card-img-${property.title}`}
+                                alt={property.title ?? 'yeoley-property-image'}
                                 src={property.imageSrc ?? 'https://media.rightmove.co.uk/37k/36689/145771118/36689_TES240020_IMG_18_0000.jpeg'}
-                                className="object-cover object-center
-                                max-w-full
-                                xl:max-w-[218px]
-                                h-96
-                                xl:h-72
-                                lg:w-full
-                                cursor-pointer
-                                rounded-2xl
-                                xl:p-0.0
-
-                                xl:rounded-[0rem]"
-                            />
-                            <img
-                                alt={`property-card-img-${property.title}`}
-                                src={property.imageSrc ?? 'https://media.rightmove.co.uk/37k/36689/145771118/36689_TES240020_IMG_18_0000.jpeg'}
-                                className="object-cover object-center max-w-[218px]
-                               xl:h-72 lg:w-full cursor-pointer hidden xl:block"
+                                className="object-cover object-center max-w-[419px]
+                                lg:h-72 lg:w-full cursor-pointer "
                             />
                         </div>
                     </div>
@@ -102,4 +92,4 @@ const PropertyCardList :  React.FC<PropertyCardProps> = ({ property }) => {
     );
 }
 
-export default PropertyCardList;
+export default PropertyCardFeaturedList;

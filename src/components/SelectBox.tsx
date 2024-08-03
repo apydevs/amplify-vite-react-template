@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { SelectBoxProps,DataItem } from '../interfaces/interfaces'
 
 const data = [
     { id: 1, name: 'All' },
@@ -16,15 +17,15 @@ const data = [
     { id: 9, name: 'Other' },
 ]
 
-export default function SelectBox({ onChange,name}) {
-    const [selected, setSelected] = useState(data[0])
-    const handleChange = (value) => {
+const SelectBox: React.FC<SelectBoxProps> = ({ onChange, name }) => {
+    const [selected, setSelected] = useState<DataItem>({ id: 1, name: 'All',value: 'All'})
+    const handleChange = (value: DataItem) => {
         setSelected(value);
         onChange(value);
 
     };
     return (
-        <Listbox name={name} value={selected} onChange={handleChange}>
+        <Listbox name={name.toString()} value={selected} onChange={handleChange}>
            <div className="relative">
                 <ListboxButton className="relative w-full cursor-default rounded-xl bg-white py-3 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-2 ring-inset ring-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 sm:text-sm sm:leading-6">
                     <span className="block truncate">{selected.name}</span>
@@ -55,3 +56,4 @@ export default function SelectBox({ onChange,name}) {
         </Listbox>
     )
 }
+export default SelectBox;

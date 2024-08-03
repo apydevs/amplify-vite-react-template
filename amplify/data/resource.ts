@@ -27,6 +27,7 @@ const schema = a.schema({
             city: a.string(),
             county: a.string(),
             postcode: a.string(),
+            condition: a.string(),
             country: a.string(),
             bedrooms: a.integer(),
             bathrooms: a.integer(),
@@ -39,8 +40,6 @@ const schema = a.schema({
             is_sold: a.boolean(),
             is_yeoley_plus: a.boolean(),
             user_id: a.id(),  // Assuming `a.id()` is a valid type definition in your library
-            created_at: a.datetime(),
-            updated_at: a.datetime(),
             type: a.string(),
             longitude: a.float(),
             latitude: a.float(),
@@ -55,7 +54,16 @@ const schema = a.schema({
         })
         .authorization((allow) => [allow.publicApiKey()]),
 
-
+    Favourites: a.model({
+        id: a.id(),
+        user_id: a.string(),  // Cognito user ID
+        property_id: a.id(),  // Foreign key to Property
+    })
+    .secondaryIndexes((index) => [
+        index("user_id"),
+        index("property_id")
+    ])
+    .authorization((allow) => [allow.publicApiKey()]),
 });
 export type Schema = ClientSchema<typeof schema>;
 
@@ -69,6 +77,8 @@ export const data = defineData({
     },
   },
 });
+
+
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a

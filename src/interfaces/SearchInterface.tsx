@@ -8,6 +8,8 @@ export interface PropertyTypeInterface {
     name: string;
 }
 
+
+
 export interface Filter {
     locationRadius: string;
     locations: Location[];

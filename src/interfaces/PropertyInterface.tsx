@@ -1,4 +1,4 @@
-export interface CreatePropertyInterface {
+export interface PropertyInterface {
     address: string;
     bathrooms: number;
     bedrooms: number;
@@ -36,3 +36,12 @@ export interface CreatePropertyInterface {
     views: number;
     year_built: number;
 }
+export interface PropertyFavoriteInterface {
+    id: string;
+    user_id: string;
+    property_id: string;
+}
+
+export type FavoriteProperty = {
+    saved: PropertyFavoriteInterface[];
+};

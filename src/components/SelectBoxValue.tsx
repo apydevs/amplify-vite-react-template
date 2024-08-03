@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { DataRadiusItem, SelectBoxRadiusProps} from "../interfaces/interfaces.tsx";
 
 const data = [
-    { "id": 1, "value": "", "selected": "selected", "text": "Any" },
+    { "id": 1, "value": "","text": "Any" },
     { "id": 2, "value": "50000", "text": "50,000" },
     { "id": 3, "value": "60000", "text": "60,000" },
     { "id": 4, "value": "70000", "text": "70,000" },
@@ -65,14 +66,14 @@ const data = [
 ];
 
 
-export default function SelectBoxValue({ onChange,name }) {
-    const [selected, setSelected] = useState(data[0])
-    const handleChange = (value) => {
-        setSelected(value);
-        onChange(value);
-
-    };
-    return (
+const SelectBoxValue: React.FC<SelectBoxRadiusProps> = ({ onChange, name }) => {
+    const [selected, setSelected] = useState<DataRadiusItem>({ "id": 1, "value": 0, "text": "Any" })
+    const handleChange = (item: DataRadiusItem) => {
+        setSelected(item);
+        onChange(item);
+        console.log(item)
+    }
+        return (
         <Listbox value={selected} onChange={handleChange}>
            <div className="relative">
                 <ListboxButton className="relative w-full cursor-default rounded-xl bg-white py-3 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-2 ring-inset ring-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 sm:text-sm sm:leading-6">
@@ -104,3 +105,4 @@ export default function SelectBoxValue({ onChange,name }) {
         </Listbox>
     )
 }
+export default SelectBoxValue;

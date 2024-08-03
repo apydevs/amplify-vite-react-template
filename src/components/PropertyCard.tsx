@@ -1,18 +1,41 @@
-import { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBath,faBedFront,faToilet,faSquareParking,faGarage } from "@fortawesome/pro-regular-svg-icons";
+import {faBath,faBedFront } from "@fortawesome/pro-regular-svg-icons";
+import {PropertyInterface} from "../interfaces/interfaces.tsx";
+interface PropertyCardProps {
+    property: PropertyInterface;
+}
 
-const PropertyCard = ({ property }) => {
+const PropertyCard: React.FC<PropertyCardProps> = ({ property}) => {
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+
+            if(property) {
+                setIsLoading(false);
+            }else {
+                setIsLoading(true);
+            }
+        };
+
+        fetchData();
+    }, [property]); // Depend on informationId to re-fetch when it changes
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
 
     return (
         <div
             onMouseOver={() => setOpen(true)}  // Set open to true when mouse enters the div
             onMouseOut={() => setOpen(false)}  // Set open to false when mouse leaves the div
-            id={property.id}
+
             key={property.id}
-        >grid
+        >
 
             <Link to={`/search/properties/${property.id}`}>
                 <div
@@ -21,11 +44,10 @@ const PropertyCard = ({ property }) => {
                         <div className="absolute w-[151px] h-[94px] cardTop-img flex flex-col items-start pl-5 justify-start">
                             <div className="text-sm">Max Offer</div>
                             <div className="font-semibold">
-                                {property ? `£${new Intl.NumberFormat('en-GB').format(property.max)}` : ''}
+                                {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}
                             </div>
                         </div>
                         <img
-                            alt={property.title}
                             src={property.imageSrc ?? 'https://media.rightmove.co.uk/37k/36689/145771118/36689_TES240020_IMG_18_0000.jpeg'}
                             className="h-full w-full object-cover object-center lg:h-full lg:w-full cursor-pointer rounded-[1.5rem]"
                         />
@@ -59,7 +81,7 @@ const PropertyCard = ({ property }) => {
 
                                         <div className="font-semibold text-sm text-center">
                                             <p className="text-xs text-gray-500">valuation</p>
-                                            {property ? `£${new Intl.NumberFormat('en-GB').format(property.max)}` : ''}
+                                            {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}
 
                                         </div>
                                     </div>

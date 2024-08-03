@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {  Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import {DataRadiusItem, SelectBoxRadiusProps} from "../interfaces/interfaces.tsx";
+
 
 const data = [
     {
@@ -62,12 +64,16 @@ const data = [
     }
 ]
 
-export default function SelectBoxRadius({onChange,name}) {
-    const [selected, setSelected] = useState(data[1])
-    const handleChange = (item) => {
+const SelectBoxRadius : React.FC<SelectBoxRadiusProps> = ({ onChange, name }) => {
+    const [selected, setSelected] =  useState <DataRadiusItem>({
+        "id": 1,
+        "value": 0.0,
+        "text": "This area only"
+    })
+    const handleChange = (item: DataRadiusItem) => {
         setSelected(item);
-        onChange(item.value);
-        console.log(item.value)
+        onChange(item);
+        console.log(item)
 
     };
     return (
@@ -102,3 +108,4 @@ export default function SelectBoxRadius({onChange,name}) {
         </Listbox>
     )
 }
+export default SelectBoxRadius;
