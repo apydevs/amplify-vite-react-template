@@ -37,7 +37,12 @@ export interface PropertyInterface {
     year_built: number;
 }
 export interface PropertyFavoriteInterface {
-    id: string;
+    id?: string;
+    user_id: string;
+    property_id: string;
+}
+export interface PropertyFavoriteInterface {
+    id?: string;
     user_id: string;
     property_id: string;
 }

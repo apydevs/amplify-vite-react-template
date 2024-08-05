@@ -79,7 +79,7 @@ export type PropertyInterface = {
     createdAt?: string | null;
     updatedAt?: string | null;
 };
-
+export type CreatePropertyInputType = Omit<NewPropertyType, 'id'>;
 // NewPropertyInterface as a type
 export type NewPropertyType = {
     id: Nullable<string>;
@@ -114,8 +114,8 @@ export type NewPropertyType = {
     valuation_type: string;
     prefix: string;
     tenure: string;
-    current_epc_rating: string; // Added based on your schema
-    potential_epc_rating: string;
+    current_epc_rating?: string; // Added based on your schema
+    potential_epc_rating?: string;
     epc_date: string;
     layout: string;
     content: string;
@@ -188,9 +188,18 @@ export type SelectIdValueTextProps = {
 export type PropertyFavoriteSave = {
     saved: PropertyFavorite[];
 }
+export type FavoriteProperty = {
+    saved: PropertyFavorite[];
+};
 
 export type PropertyFavorite = {
     id?: string;
-    user_id: string;
-    property_id: string;
+    userId: string;
+    propertyId: string;
 };
+
+export type PropertyFavoriteInterface = {
+    id?: string;
+    userId: string;
+    propertyId: string;
+}

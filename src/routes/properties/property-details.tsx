@@ -198,13 +198,13 @@ export default function PropertyDetails() {
                                     </div>
 
                                     <div className="mt-4 min-w-0 flex-1 sm:mt-0">
-                                        <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">{property?.title} </h1>
+                                        <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">{property.title} </h1>
 
                                         <div className="flex flex-row items-start justify-between">
 
                                             <div className="flex flex-col md:flex-row justify-start">
                                                 <span
-                                                    className="me-2 rounded bg-yellow-300 px-2.5 py-0.5 text-lg font-medium text-gray-900 dark:bg-yellow-900 dark:text-yellow-300 border border-black"> Max Offer £32,000 </span>
+                                                    className="me-2 rounded bg-yellow-300 px-2.5 py-0.5 text-lg font-medium text-gray-900 dark:bg-yellow-900 dark:text-yellow-300 border border-black"> Max Offer  {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}</span>
                                                     <AddFavorites propertyId={property.id ?? ''}/>
 
                                             </div>
@@ -255,7 +255,7 @@ export default function PropertyDetails() {
                                             <div className="flex items-center gap-1.5 align-middle">
                                                 <p className="text-sm font-medium text-primary-700 dark:text-primary-500">Condition:</p>
                                                 <span
-                                                    className="h-5 w-5 text-sm  font-bold text-primary-700 dark:text-primary-500 underline"> {'TBA'} </span>
+                                                    className="h-5 w-5 text-sm  font-bold text-primary-700 dark:text-primary-500 underline"> {property.condition} </span>
                                             </div>
 
                                             <div className="flex items-center gap-1.5">
@@ -276,15 +276,14 @@ export default function PropertyDetails() {
                                                 Property Points:</p>
                                             <div className="space-y-4">
 
-                                                <p className="text-base font-normal mb-10 text-gray-500 dark:text-gray-400 whitespace-pre-line">{property.description}</p>
-
+                                                <p className="text-base font-normal mb-10 text-gray-500 dark:text-gray-400 whitespace-pre-line">{property.content  ?? 'Info coming soon'}</p>
                                                 <SurveyList/>
 
                                             </div>
                                             <h1 className="text-base text-lg font-semibold text-gray-900 dark:text-white ">Information </h1>
 
                                             <div className="mt-2 space-y-4">
-                                                <p className="text-base font-normal text-gray-500 dark:text-gray-400 whitespace-pre-line">{property.content}</p>
+                                                <p className="text-base font-normal text-gray-500 dark:text-gray-400 whitespace-pre-line">{property.description}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -295,7 +294,7 @@ export default function PropertyDetails() {
                                 <div className="mt-6 shrink-0 space-y-8 sm:mt-8 lg:mt-0 lg:w-full lg:max-w-xs">
                                     <div>
                                         <p className="text-2xl font-medium leading-none text-gray-900 dark:text-white">Market
-                                            Value <span className="font-extrabold">£249,999</span></p>
+                                            Value <span className="font-extrabold"> {property ? `£${new Intl.NumberFormat('en-GB').format(property.valuation ?? 0)}` : ''}</span></p>
                                         <p className="mt-2 text-base font-normal text-gray-800 dark:text-gray-400">Valuation
                                             approved by:<span className="font-semibold">Agent Here.</span></p>
                                     </div>

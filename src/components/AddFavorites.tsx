@@ -6,26 +6,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faDoorOpen, faHeartCircle} from "@fortawesome/pro-thin-svg-icons";
 import { addFavorites ,removeFavorites } from "../store/features/favorites/favouritesSlice";
 
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {UserInterface} from "../interfaces/UserInterface.tsx";
 import {AddFavoritesProps} from "../interfaces/FavouriteInterface.tsx";
-import {PropertyFavoriteInterface,} from "../interfaces/PropertyInterface.tsx";
-import {AuthEvent} from "../interfaces/interfaces.tsx" ;
+import {AuthEvent, PropertyFavorite} from "../interfaces/interfaces.tsx" ;
+import {RootState} from "../store/store.ts";
+import {createFavourite} from "../api/favouritesApi.tsx";
+
 
 export default function AddFavorites({propertyId}:AddFavoritesProps) {
     const [user, setUser] = useState<UserInterface | null>(null);
-    const [fav, setFav] = useState<PropertyFavoriteInterface | null>(null);
     const [isSelected, setIsSelected] = useState<boolean>(false);
+    const Favs = useSelector((state: RootState) => state.favorites.saved)
     const dispatch = useDispatch()
 
     useEffect(() => {
         // Function to fetch user data
-
-
-
         async function fetchUser() {
-
             try {
                 const { username, userId, signInDetails } = await getCurrentUser();
                 setUser({ username, userId, signInDetails });
@@ -34,6 +32,30 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
                 console.error('Error fetching user', error);
             }
         }
+
+        function checkFav() {
+            console.log('Property ID:', propertyId);
+            console.log('Saved array:', Favs);
+
+            // Ensure Favs is an array
+            if (!Array.isArray(Favs)) {
+                console.error("Favs is not an array:", Favs);
+                return;
+            }
+
+            // Access the array and check for favorite property
+            const isFavorite = Favs.some((fav: PropertyFavorite) => fav.propertyId === propertyId);
+
+            // Log the result
+            if (isFavorite) {
+                console.log(`Property ID ${propertyId} is marked as favorite.`);
+            } else {
+                console.log(`Property ID ${propertyId} is not a favorite.`);
+            }
+
+            setIsSelected(isFavorite); // Update the state with the result
+        }
+
 
         // Listen to authentication events
         const authListener = (data:AuthEvent ) => {
@@ -56,13 +78,10 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
                     console.warn('Unknown event:', payload.event);
             }
         };
-
         Hub.listen('auth', authListener);
 
-
         fetchUser()
-
-
+        checkFav()
         // Cleanup listener when component unmounts
         return () => {
             /* start listening for messages */
@@ -78,29 +97,27 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
     }, []);
 
     console.log(propertyId)
-    const handleClick = () => {
+    const handleClick = async () => {
         setIsSelected(!isSelected);
 
         if (user && !isSelected) {
-            dispatch(addFavorites({ property_id: propertyId, user_id: user.userId }));
-            setFav({id: "", property_id: propertyId, user_id: user.userId });
+            await createFavourite({propertyId: propertyId, userId: user.userId});
+            dispatch(addFavorites({propertyId: propertyId, userId: user.userId}));
+            setIsSelected(true);
         }
 
         if (user && isSelected) {
-            dispatch(removeFavorites({ property_id: propertyId, user_id: user.userId }));
+            dispatch(removeFavorites({propertyId: propertyId, userId: user.userId}));
         }
     };
 
     if (user) {
-        if (fav && fav.property_id === propertyId && fav.user_id === user.userId) {
-            return (<span>No Favorite</span>);
-        } else {
-            return (
-                <button className={isSelected ? `text-yellow-300` : `text-red-600`} onClick={handleClick}>
-                    <FontAwesomeIcon icon={faHeartCircle} className="font-semibold h-8 w-8 px-1 py-0.5" />
-                </button>
-            );
-        }
+
+        return (   <button className={isSelected ? `text-yellow-300` : `text-red-600`} onClick={handleClick}>
+                        <FontAwesomeIcon icon={faHeartCircle} className="font-semibold h-8 w-8 px-1 py-0.5" />
+                  </button>
+        );
+
     } else {
         return (
             <button className="bg-black text-white w-10 p-0.5 rounded">

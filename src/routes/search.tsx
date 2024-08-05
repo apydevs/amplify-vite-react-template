@@ -16,6 +16,8 @@ import {
     locationRadius,
      } from '../store/features/searchFilters/filterSlice.ts'
 import {RootState} from "../store/store.ts";
+import {createProperty} from "../api/propertiesApi.ts.tsx";
+import {NewPropertyType} from "../interfaces/interfaces.tsx";
 
 
 export default function Search() {
@@ -24,6 +26,62 @@ export default function Search() {
     const dispatch = useDispatch()
     // Use RootState to type the state parameter
     const filters = useSelector((state: RootState) => state.filters);
+
+
+
+    const handleNew = async () => {
+        // const propertyData = {id:null, address: "123 Baker Street", bathrooms: 2, bedrooms: 3, area_size: 1800, city: "London",condition:"A", content: "Welcome to this simply unique and stunning detached Georgian-style home of 10,000 sq ft. It is located in a highly desirable location, at arguably St Alban's premier address.", country: "UK", county: "Chester", description: "Alban House, Faircross Way, St. Albans.", epc_date: "2024-03-10", garages: 1, is_featured: false, is_published: true, is_sold: false, is_yeoley_plus: true, latitude: 51.5238, layout: "Spacious with a large living area and modern kitchen.", longitude: -0.1586, max: 34000, min: 1000, postcode: "NW1 6XE", potential_epc_rating: "A", prefix: "Mr.", slug: "123-baker-street-london", tenure: "Leasehold", title: "Alban House, Faircross Way, St. Albans.", town: "London", type: "Detached", updated_at: "2024-07-25T14:30:00Z", user_id: "b6d27284-9051-702c-cfa1-af437cdc1378", valuation: 275000, valuation_type: "certified", views: 250, year_built: 1982}
+        const propertyTestData: NewPropertyType = {
+            //id: null,
+            title: "Stunning 4 Bedroom Detached House",
+            slug: "stunning-4-bedroom-detached-house",
+            valuation: 750000,
+            min: 700000,
+            max: 800000,
+            description: "Aquadale Farm offers a captivating rural retreat with modern comforts and historic charm.Aquadale Farm is a four-bedroom character property nestled within over 4 acres of private grounds. Accessed via a remote-controlled gated entrance, the property welcomes you with spacious living areas and picturesque surroundings.\n" +
+                "\n" +
+                "The main house of Aquadale Farm spans approximately 194.8 square meters (2096.8 square feet) and features a grand lounge with a wood-burning stove, French doors leading to a patio, and a versatile gym or multifunctional room. The kitchen is a focal point, boasting modern amenities and a centre island perfect for entertaining. Upstairs, the bedrooms are generously sized, with the main bedroom offering a vaulted ceiling and en-suite facilities.\n" +
+                "\n" +
+                "Outbuildings and storage are provided by a bespoke timber building, while the gardens offer a tranquil retreat with ample space for outdoor activities. The property also includes open field areas suitable for equestrian use or potential development (subject to planning)\n" +
+                "\n" +
+                "Situation - Conveniently located near Newport, Shrewsbury and Telford, Aquadale Farm provides easy access to amenities and excellent local schools, making it an ideal countryside haven with urban conveniences nearby.\n" +
+                "\n" +
+                "Directions - Easily accessible from all areas: From the North or Telford, travelling along the A442 to Crudgington, turning onto the B5062 heading towards Newport, then right turn onto Crudgington Moor Lane. A short distance along you will arrive at the crossroads of Crudgington Green, turn left here and the wooden gated entrance can be seen directly ahead. The intercom access and guest arrival is on your left.\n" +
+                "(Gated entrance photo can be seen on the property photo reel for ease of reference).",
+            address: "10 Downing Street",
+            town: "Westminster",
+            city: "London",
+            county: "Greater London",
+            postcode: "SW1A 2AA",
+            condition: "Excellent",
+            country: "United Kingdom",
+            bedrooms: 4,
+            bathrooms: 3,
+            garages: 2,
+            area_size: 2200, // in square feet
+            year_built: 1998,
+            views: 1200,
+            is_featured: Math.random() < 0.5,
+            is_published: true,
+            is_sold: false,
+            is_yeoley_plus: true,
+            user_id: "user_12345",
+            type: "Detached",
+            longitude: -0.127758,
+            latitude: 51.507351,
+            valuation_type: "Market Value",
+            prefix: "Dr.",
+            tenure: "Freehold",
+            current_epc_rating: "C",
+            potential_epc_rating: "B",
+            epc_date: "2024-01-15",
+            layout: "Spacious open-plan living with a modern kitchen and separate dining area.",
+            content: "Aquadale Farm and Strine View Cottage offer a captivating rural retreat with modern comforts and historic charm, set in over 9 acres of grounds.",
+        };
+
+        const propertynew = await createProperty(propertyTestData);
+        console.log('New Property', propertynew);
+    }
 
     console.log(locations);
     return (
@@ -130,6 +188,11 @@ export default function Search() {
 
             <div className="flex flex-row justify-center gap-8">
 
+                <button onClick={handleNew}
+                      className="rounded-full font-bold bg-yellow-300 p-4 text-black shadow-sm hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                    <span className="text-2xl ">NEW  TEST PROP</span>
+                </button>
                 {filters.locations.length > 0  ? (
 
                     <Link to="/search/properties"

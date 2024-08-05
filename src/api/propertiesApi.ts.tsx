@@ -2,7 +2,7 @@
 import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../../amplify/data/resource';
 import { Location} from "../interfaces/SearchInterface.tsx";
-import {NewPropertyType} from "../interfaces/interfaces.tsx";
+import {CreatePropertyInputType, NewPropertyType} from "../interfaces/interfaces.tsx";
 const client = generateClient<Schema>();
 
 type Filter = {
@@ -78,21 +78,27 @@ export const listProperties = async ():Promise<object> => {
 // export default searchProperties;
 
 // Function to get a specific property by ID
-export const getProperty = async (id: string):Promise<object> => {
+export const getProperty = async (id: string): Promise<NewPropertyType> => {
+    const apiResponse = await client.models.Property.get({ id });
 
-
-    const apiProperty = await client.models.Property.get({ id });
     // Check if the data returned is null
-    if (!apiProperty) {
-        throw new Error(`property with ID ${id} not found`);
+    if (!apiResponse) {
+        throw new Error(`Property with ID ${id} not found`);
     }
-    console.log('Transformed Property Data:', apiProperty);
-    return apiProperty;
+
+    // Extract the property data from the 'data' field
+    const propertyData = apiResponse.data;
+
+    console.log('Transformed Property Data:', propertyData);
+
+    // Ensure propertyData matches NewPropertyType
+    return propertyData as NewPropertyType;
 }
 
 
-export const createProperty = async (property2: NewPropertyType) => {
+export const createProperty = async (property2: CreatePropertyInputType) => {
 
+    console.log('Property Data:', property2);
 
     const property = await client.models.Property.create(property2 as any);
     if (!property) {

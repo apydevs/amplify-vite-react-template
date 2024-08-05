@@ -56,12 +56,12 @@ const schema = a.schema({
 
     Favourites: a.model({
         id: a.id(),
-        user_id: a.string(),  // Cognito user ID
-        property_id: a.id(),  // Foreign key to Property
+        userId: a.string(),  // Cognito user ID
+        propertyId: a.id(),  // Foreign key to Property
     })
     .secondaryIndexes((index) => [
-        index("user_id"),
-        index("property_id")
+        index("userId"),
+        index("propertyId")
     ])
     .authorization((allow) => [allow.publicApiKey()]),
 });

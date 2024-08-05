@@ -4,6 +4,10 @@ import { Hub } from 'aws-amplify/utils';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {Link, useNavigate} from 'react-router-dom';
+import {FavoriteProperty,PropertyFavoriteInterface} from "../interfaces/interfaces.tsx";
+import {getFavourite} from "../api/favouritesApi.tsx";
+import {setFavorites} from "../store/features/favorites/favouritesSlice.tsx";
+import {useDispatch} from "react-redux";
 // Define an interface for the user data
 interface UserData {
     username: string;
@@ -21,7 +25,9 @@ function App() {
     const navigation = useNavigate();
     // Initialize state with the correct type, which can be UserData or null
     const [user, setUser] = useState<UserData | null>(null);
+    const [fav, setFav] = useState<FavoriteProperty>({ saved: [] });
 
+    const dispatch = useDispatch()
     useEffect(() => {
         // Function to fetch user data
 
@@ -32,7 +38,15 @@ function App() {
              try {
                 const { username, userId, signInDetails } = await getCurrentUser();
                 setUser({ username, userId, signInDetails });
+                 // Fetch favorites
+                 const favorites: PropertyFavoriteInterface[] = await getFavourite(userId);
 
+                 // Transform into FavoriteProperty type
+                 const favoriteProperty: FavoriteProperty = { saved: favorites };
+
+                 console.log("favorites set",favoriteProperty);
+                 dispatch(setFavorites(favoriteProperty));
+                 setFav(favoriteProperty);
             } catch (error) {
                 // console.error("Failed to fetch user details:", error);
                 // setUser(null);
@@ -97,6 +111,15 @@ function App() {
                             className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                         >
                           My Yeoley
+                        </Link>
+                    </MenuItem>
+                    <MenuItem>
+                        <Link
+                            to="/account"
+                            type="button"
+                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                        >
+                            Saved {fav.saved.length}
                         </Link>
                     </MenuItem>
                         <MenuItem>

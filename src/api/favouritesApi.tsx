@@ -16,26 +16,36 @@ export const listFavourites = async () => {
 };
 
 // Function to get a specific Todo by ID
-export const getFavourite = async (id: string) => {
-    const { data: todo, errors } = await client.models.Favourites.get({ id });
+// Update the getFavourite function to accept a string user_id directly
+export const getFavourite = async (user_id: string)=> {
+    // Call the client method with the user_id as a string
+    console.log({ user_id: user_id });
+    const { data: todo, errors } = await client.models.Favourites.listFavouritesByUserId({ userId: user_id });
+
+    console.log('asdasd',todo);
     // First, check for API-reported errors
     if (errors) {
         console.error(errors);
-        throw new Error(`Failed to fetch todo with ID ${id}`);
+        throw new Error(`Failed to fetch todo with user_id ${user_id}`);
     }
 
     // Check if the data returned is null
     if (!todo) {
-        throw new Error(`Todo with ID ${id} not found`);
+        throw new Error(`Todo with user_id ${user_id} not found`);
     }
 
-    return todo;
+    return todo.map((fav) => ({
+        id: fav.id || undefined,
+        userId: fav.userId || '',
+        propertyId: fav.propertyId || '',
+    }));
+
 };
 
 export const createFavourite = async ({ propertyId, userId }: CreateFavouriteParams): Promise<string> => {
     const { data: favourite, errors } = await client.models.Favourites.create({
-        user_id: userId,
-        property_id: propertyId
+        userId: userId,
+        propertyId: propertyId
     });
 
     if (errors) {

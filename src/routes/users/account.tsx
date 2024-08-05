@@ -45,8 +45,8 @@ function Account() {
                         <div className="flex flex-nowrap  space-x-1.5 space-x-1.5">
 
                             {favorites.map((property) => (
-                                    <div key={property.property_id}>
-                                        {property.property_id}
+                                    <div key={property.propertyId}>
+                                        {property.propertyId}
                                     </div>
                                 ))}
 
