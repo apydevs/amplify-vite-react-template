@@ -33,7 +33,7 @@ export default function Search() {
         // const propertyData = {id:null, address: "123 Baker Street", bathrooms: 2, bedrooms: 3, area_size: 1800, city: "London",condition:"A", content: "Welcome to this simply unique and stunning detached Georgian-style home of 10,000 sq ft. It is located in a highly desirable location, at arguably St Alban's premier address.", country: "UK", county: "Chester", description: "Alban House, Faircross Way, St. Albans.", epc_date: "2024-03-10", garages: 1, is_featured: false, is_published: true, is_sold: false, is_yeoley_plus: true, latitude: 51.5238, layout: "Spacious with a large living area and modern kitchen.", longitude: -0.1586, max: 34000, min: 1000, postcode: "NW1 6XE", potential_epc_rating: "A", prefix: "Mr.", slug: "123-baker-street-london", tenure: "Leasehold", title: "Alban House, Faircross Way, St. Albans.", town: "London", type: "Detached", updated_at: "2024-07-25T14:30:00Z", user_id: "b6d27284-9051-702c-cfa1-af437cdc1378", valuation: 275000, valuation_type: "certified", views: 250, year_built: 1982}
         const propertyTestData: NewPropertyType = {
             //id: null,
-            title: "Stunning 4 Bedroom Detached House",
+            title: "NEW RELATION Stunning 4 Bedroom Detached House",
             slug: "stunning-4-bedroom-detached-house",
             valuation: 750000,
             min: 700000,

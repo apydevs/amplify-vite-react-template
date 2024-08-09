@@ -4,7 +4,8 @@ import { Amplify } from 'aws-amplify';
 import outputs from './../../../amplify_outputs.json'; // Adjust the path as needed
 import '@aws-amplify/ui-react/styles.css';
 import { useSelector} from "react-redux";
-import { RootState } from '../../store/store.ts'; // Adjust the path based on your file structure
+import { RootState } from '../../store/store.ts';
+import {useEffect, useState} from "react";
 
 
 Amplify.configure(outputs);
@@ -13,8 +14,23 @@ Amplify.configure(outputs);
 
 function Account() {
 
+    const [isLoading, setIsLoading] = useState(true);
     const favorites = useSelector((state: RootState) => state.favorites.saved)
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            if (favorites) {
+                   setIsLoading(false );
+                }
+            }
+        fetchData();
+    }, []); // Depend on informationId to re-fetch when it changes
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    else
 
     return (
         <>
@@ -37,19 +53,26 @@ function Account() {
 
                 <div className="flex items-center justify-between items-center ">
                     <div className="border-b pb-5">
-                        <div className="text-gray-800 text-xs font-semibold text-center border-2 border-black  p-2 h-20 w-20 ">Saved<br/>Properties<br/><span className="text-2xl mx-auto self-center mt-3">2</span></div>
+                        <div className="text-gray-800 text-xs font-semibold text-center border-2 border-black  p-2 h-20 w-20 ">Saved<br/>Properties<br/><span className="text-2xl mx-auto self-center mt-3">{favorites.length}</span></div>
                     </div>
 
-                    <div className="flex items-stretch w-full overflow-hidden overflow-x-auto scrollbar-hidden border-b pb-5">
+                    <div className="flex items-stretch w-full overflow-hidden overflow-x-auto scrollbar-hidden no-scrollbar border-b pb-5">
                         <div className="h-100 border-l mx-4"></div>
                         <div className="flex flex-nowrap  space-x-1.5 space-x-1.5">
 
-                            {favorites.map((property) => (
-                                    <div key={property.propertyId}>
-                                        {property.propertyId}
+
+                            {favorites.map((propertyObj,index) => (
+                                    <div key={index} className="w-20 h-20">
+                                        <img  alt={propertyObj.property} className="object-cover w-full h-full rounded" src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>
+                                        {propertyObj.id}
                                     </div>
                                 ))}
-
+                            {favorites.map((propertyObj,index) => (
+                                <div key={index} className="w-20 h-20">
+                                    <img  alt={propertyObj.id} className="object-cover w-full h-full rounded" src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>
+                                    {propertyObj.id}
+                                </div>
+                            ))}
 
                             <a href="http://127.0.0.1:8000/property/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134" className="h-20 w-20">
                                 <img className="object-cover w-full h-full rounded" src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>

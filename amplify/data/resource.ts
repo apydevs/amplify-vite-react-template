@@ -13,6 +13,14 @@ const schema = a.schema({
         })
         .authorization((allow) => [allow.publicApiKey()]),
 
+    User: a.model({
+         id: a.id(),
+         username: a.string(),
+         accountType: a.enum(["buyer", "agent", "developer","reseller","advertiser","admin"]),
+    }).authorization(allow => [allow.owner()]),
+
+
+
     Property: a
         .model({
             id: a.id(),
@@ -51,19 +59,46 @@ const schema = a.schema({
             epc_date: a.string(),
             layout: a.string(),
             content: a.string(),
-        })
-        .authorization((allow) => [allow.publicApiKey()]),
+
+            favourites: a.hasMany('Favourites', 'propertyId'),
+            agentId: a.id(),
+            agency: a.belongsTo('Agency', 'agentId'),
+        }).authorization((allow) => [allow.publicApiKey()]),
+
+
+    Members: a.model({
+        id: a.id(),
+        userId: a.string(),  // Cognito user ID
+        agencyId: a.id(),
+        // 2. Create a belongsTo relationship with the reference field
+        agencies: a.belongsTo('Agency', 'agencyId'),
+    })
+        .secondaryIndexes((index) => [
+            index("userId")
+        ]).authorization((allow) => [allow.publicApiKey()]),
+
+    Agency: a.model({
+        id: a.id(),
+        intro: a.string().required(),
+        logo: a.string().required(),
+        properties: a.hasMany('Property', 'agentId'),
+        members: a.hasMany('Members', 'agencyId'),
+
+    }).authorization(allow => [allow.publicApiKey()]),
+    //
+
 
     Favourites: a.model({
         id: a.id(),
-        userId: a.string(),  // Cognito user ID
-        propertyId: a.id(),  // Foreign key to Property
+        userId: a.id(),  // Cognito user ID
+        propertyId: a.id(),  // Cognito user ID
+        property: a.belongsTo('Property', 'propertyId'),
+
+        // property: a.hasOne('Property', 'favouriteId'),
     })
     .secondaryIndexes((index) => [
-        index("userId"),
-        index("propertyId")
-    ])
-    .authorization((allow) => [allow.publicApiKey()]),
+        index("userId")
+    ]).authorization((allow) => [allow.publicApiKey()]),
 });
 export type Schema = ClientSchema<typeof schema>;
 

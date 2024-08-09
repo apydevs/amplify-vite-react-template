@@ -15,7 +15,12 @@ const favoritesSlice = createSlice({
     initialState,
     reducers: {
         setFavorites: (state, action: PayloadAction<PropertyFavorite[]>) => {
-            state.saved = action.payload;
+
+            if(action.payload.contains('saved')){
+                state.saved = action.payload.saved;
+            }else{
+                state.saved = action.payload;
+            }
         },
         addFavorites: (state, action: PayloadAction<PropertyFavorite>) => {
             console.log('payload', action.payload);

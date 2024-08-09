@@ -31,6 +31,7 @@ function App() {
     useEffect(() => {
         // Function to fetch user data
 
+        console.log("favs",fav);
 
 
         async function fetchUser() {
@@ -41,11 +42,15 @@ function App() {
                  // Fetch favorites
                  const favorites: PropertyFavoriteInterface[] = await getFavourite(userId);
 
+
                  // Transform into FavoriteProperty type
                  const favoriteProperty: FavoriteProperty = { saved: favorites };
 
                  console.log("favorites set",favoriteProperty);
-                 dispatch(setFavorites(favoriteProperty));
+
+
+                 dispatch(setFavorites(favorites));
+
                  setFav(favoriteProperty);
             } catch (error) {
                 // console.error("Failed to fetch user details:", error);
@@ -111,15 +116,6 @@ function App() {
                             className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                         >
                           My Yeoley
-                        </Link>
-                    </MenuItem>
-                    <MenuItem>
-                        <Link
-                            to="/account"
-                            type="button"
-                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            Saved {fav.saved.length}
                         </Link>
                     </MenuItem>
                         <MenuItem>

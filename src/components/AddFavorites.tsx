@@ -18,7 +18,7 @@ import {createFavourite} from "../api/favouritesApi.tsx";
 export default function AddFavorites({propertyId}:AddFavoritesProps) {
     const [user, setUser] = useState<UserInterface | null>(null);
     const [isSelected, setIsSelected] = useState<boolean>(false);
-    const Favs = useSelector((state: RootState) => state.favorites.saved)
+    const Favs = useSelector((state: RootState) => state.favorites)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -44,8 +44,8 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
             }
 
             // Access the array and check for favorite property
-            const isFavorite = Favs.some((fav: PropertyFavorite) => fav.propertyId === propertyId);
-
+            const isFavorite = Favs.saved.some((fav: PropertyFavorite) => fav.propertyId === propertyId);
+            console.log(isFavorite);
             // Log the result
             if (isFavorite) {
                 console.log(`Property ID ${propertyId} is marked as favorite.`);
@@ -54,6 +54,7 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
             }
 
             setIsSelected(isFavorite); // Update the state with the result
+
         }
 
 
@@ -102,7 +103,7 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
 
         if (user && !isSelected) {
             await createFavourite({propertyId: propertyId, userId: user.userId});
-            dispatch(addFavorites({propertyId: propertyId, userId: user.userId}));
+            dispatch(addFavorites({property: propertyId, userId: user.userId}));
             setIsSelected(true);
         }
 

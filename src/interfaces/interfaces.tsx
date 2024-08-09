@@ -1,4 +1,5 @@
 // Define an interface for the payload
+
 export  const  SUCCESS_RESPONSE_CODE = 200;
 export  const  ERROR_RESPONSE_CODE = 'error';
 // AuthPayload as a type
@@ -196,10 +197,12 @@ export type PropertyFavorite = {
     id?: string;
     userId: string;
     propertyId: string;
+    property: PropertyInterface;
 };
 
 export type PropertyFavoriteInterface = {
     id?: string;
     userId: string;
     propertyId: string;
+    property: PropertyInterface;
 }

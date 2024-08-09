@@ -20,9 +20,11 @@ export const listFavourites = async () => {
 export const getFavourite = async (user_id: string)=> {
     // Call the client method with the user_id as a string
     console.log({ user_id: user_id });
-    const { data: todo, errors } = await client.models.Favourites.listFavouritesByUserId({ userId: user_id });
 
-    console.log('asdasd',todo);
+    const { data: todo, errors } = await client.models.Favourites.listFavouritesByUserId(
+             { userId: user_id },
+             { selectionSet: ['id','propertyId','userId',  'property.*'] },
+        );
     // First, check for API-reported errors
     if (errors) {
         console.error(errors);
@@ -34,10 +36,12 @@ export const getFavourite = async (user_id: string)=> {
         throw new Error(`Todo with user_id ${user_id} not found`);
     }
 
+    console.log('DATA', todo);
     return todo.map((fav) => ({
         id: fav.id || undefined,
         userId: fav.userId || '',
         propertyId: fav.propertyId || '',
+        property: fav.property || '',
     }));
 
 };
@@ -59,7 +63,9 @@ export const createFavourite = async ({ propertyId, userId }: CreateFavouritePar
         throw new Error('Failed to create favourite: no ID returned');
     }
 
-    return favourite.id;
+
+
+    return getFavourite(userId);
 
 };
 

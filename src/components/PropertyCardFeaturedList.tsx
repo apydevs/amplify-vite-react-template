@@ -43,7 +43,7 @@ const PropertyCardFeaturedList:  React.FC<PropertyCardProps> = ({ property }) =>
                             <span >{property.title} </span>
                             <div className=" mt-2 text-xs flex flex-wrap items-center gap-4">
                                 <div className="flex items-center gap-2">
-                                    <a href="#" className="cursor-pointer text-xs  font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white  ">34.5k views</a>
+                                    <span className="cursor-pointer text-xs  font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white  ">34.5k views</span>
                                 </div>
 
                                 <div className="flex items-center gap-1.5 align-middle">
