@@ -2,17 +2,21 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import {
     DataItem,
-    DataRadiusItem, PropertyFilter
+    DataRadiusItem
 } from "../../../interfaces/interfaces.tsx";
+import {LocationState} from "../../../interfaces/SearchInterface.tsx";
 
 // Initial state type
-type LocationState = { id: number; name: string }[];
+
+
+   // Adjust according to your actual state structure
+
 
 const initialState = {
     locations: [
         { id: 1, name: 'New York' },
         { id: 2, name: 'Los Angeles' },
-    ]as LocationState,
+    ],
     type: 'All',
     locationRadius: 0.0,
     minBedroom: 0,
@@ -26,7 +30,7 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
-        locations: (state, action: PayloadAction<PropertyFilter>) => {
+        locations: (state, action: PayloadAction<LocationState>) => {
             // Extract LocationType[] from PropertyLocations[]
             // const locationList = action.payload.locations.reduce<LocationType[]>((acc, loc) => {
             //     return loc.locations ? [...acc, ...loc.locations] : acc;
@@ -37,7 +41,7 @@ export const filterSlice = createSlice({
             //     id: location.id,
             //     name: location.name,
             // }));
-
+            state.locations.push(action.payload)
             console.log('locations payload',state, action.payload);
         },
         locationRadius: (_state,acton:PayloadAction<DataRadiusItem>) => {

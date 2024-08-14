@@ -23,3 +23,12 @@ export interface Filter {
 export interface SearchFormData extends Filter {
 
 }
+
+export interface LocationState {
+    locations: LocationStateContent[]; // Adjust according to your actual state structure
+}
+
+export interface LocationStateContent {
+    id: string | number,
+    name: string
+}

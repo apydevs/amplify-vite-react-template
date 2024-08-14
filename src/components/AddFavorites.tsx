@@ -29,31 +29,25 @@ export default function AddFavorites({ propertyId }: AddFavoritesProps) {
             try {
                 const { username, userId, signInDetails } = await getCurrentUser();
                 setUser({ username, userId, signInDetails });
-
             } catch (error) {
                 console.error('Error fetching user', error);
             }
         }
-
         function checkFav() {
             favourites.forEach(item =>{
                 if(item.propertyId == propertyId){
                     setIsSelected(true);
                 }
             })
-
         }
-
 
         // Listen to authentication events
         const authListener = (data:AuthEvent ) => {
             const { payload } = data;
-
             if (!payload?.event) {
                 console.error('Payload event is missing');
                 return;
             }
-
             switch (payload.event) {
                 case 'signedIn':
                 case 'tokenRefresh':
@@ -67,9 +61,7 @@ export default function AddFavorites({ propertyId }: AddFavoritesProps) {
             }
         };
         Hub.listen('auth', authListener);
-
         fetchUser().then(() => checkFav());
-
         // Cleanup listener when component unmounts
         return () => {
             /* start listening for messages */
@@ -77,7 +69,6 @@ export default function AddFavorites({ propertyId }: AddFavoritesProps) {
                 if(data){
                     console.log('Listening for all auth events: ', data.payload);
                 }
-
             });
             /* later */
             hubListenerCancelToken(); // stop listening for messages
@@ -92,28 +83,17 @@ export default function AddFavorites({ propertyId }: AddFavoritesProps) {
             const savedFav = await createFavourite({
                 userId:user.userId,
                 propertyId: propertyId
-            }
-
-            );
-            console.log("resrrs", savedFav);
-
+            });
             if (savedFav) {
-
                 if (!savedFav.userId || !savedFav.propertyId) {
                     throw new Error('Favourite object is missing required user or property identifiers');
                 } else {
-
                     const data = {
-
                         userId: savedFav.userId,
                         propertyId: savedFav.propertyId,
-                        // Assumes this relationship is handled correctly elsewhere
                     };
                     dispatch(addFavorites(data)); // Dispatch the result
-                }
-
-
-
+                    }
                 }
             }
         }
@@ -137,20 +117,16 @@ export default function AddFavorites({ propertyId }: AddFavoritesProps) {
             }
         }
     };
-
     if (user) {
-
         if (!propertyId) {
             console.error('AddFavorites component requires a valid propertyId');
             return null; // Or some fallback UI
         }
-
         return (   <button className={isSelected ? `text-yellow-300` : `text-red-600`}
                            onClick={!isSelected ? handleSelectClick : handleDeselect}>
                         <FontAwesomeIcon icon={faHeartCircle} className="font-semibold h-8 w-8 px-1 py-0.5" />
                   </button>
         );
-
     } else {
         return (
             <button className="bg-black text-white w-10 p-0.5 rounded">

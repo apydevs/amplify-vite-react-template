@@ -4,7 +4,7 @@ import SelectBoxNumber from "../components/SelectBoxNumber.tsx";
 import SelectBoxValue from "../components/SelectBoxValue.tsx";
 import SelectBox from "../components/SelectBox.tsx";
 import { Link} from "react-router-dom";
-
+import React, {useCallback, useState} from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import {
     locations,
@@ -15,18 +15,61 @@ import {
     maxValuation,
     locationRadius,
      } from '../store/features/searchFilters/filterSlice.ts'
+import debounce from 'lodash/debounce';
 import {RootState} from "../store/store.ts";
 import {createProperty} from "../api/propertiesApi.ts.tsx";
 import {CreatePropertyType} from "../types/PropertyTypes.tsx";
+import {fetchSearchResults} from "../api/tomTomApi.tsx";
+import {SearchResult} from "../types/TomTomTypes.tsx";
+import {LocationState} from "../interfaces/SearchInterface.tsx";
+
+
+
 
 
 export default function Search() {
+    const [inputValue, setInputValue] = useState<string>('');
+    const [resultsList, setResultsList] = useState<LocationState[]>([]);
+    const dispatch = useDispatch();
 
-
-    const dispatch = useDispatch()
-    // Use RootState to type the state parameter
     const filters = useSelector((state: RootState) => state.filters);
 
+    const getSearchResults = useCallback(async (query: string) => {
+        if (query.length >= 3) {
+            console.log("Fetching results for query:", query);
+            // Here you might call an actual API or dispatch a Redux action
+           const results = await fetchSearchResults({query:query})
+            // Function to transform results
+            const formated =results.results.map((result: SearchResult) => ({
+                            id: result.id,
+                            name: result.address?.freeformAddress // Using optional chaining to safely access freeformAddress
+                        }));
+
+            setResultsList(formated);
+            console.log(results);
+
+
+        }
+    }, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedFetchResults = useCallback(
+        debounce((nextValue: string) => getSearchResults(nextValue), 300),
+        [] // fetchSearchResults should be defined outside or wrapped in another useCallback if it uses props/state
+    );
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        setInputValue(value);
+        debouncedFetchResults(value);
+    };
+
+    const handleSelectLocation = (location: LocationState) => {
+        return () => {
+            console.log("Selected location:", location.name);
+            dispatch(locations(location))
+        };
+    };
 
 
     const handleNew = async () => {
@@ -83,7 +126,7 @@ export default function Search() {
         console.log('New Property', propertynew);
     }
 
-    console.log(locations);
+
     return (
         <>
 
@@ -92,16 +135,41 @@ export default function Search() {
 
                     <div className=" flex flex-col justify-center  mx-auto px-4 py-8 sm:px-6 lg:px-8 items-center">
                         <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-center">Search for properties</h1>
-                        <div className="mt-4 flex flex-col justify-center  text-sm text-gray-700 tracking-tight  text-center">
-                            <div className="flex flex-row items-center justify-between  rounded-xl border-2 border-yellow-300 bg-white">
-                                <input className="m-1 px-4 py-4  w-2/3 max-w-xl border-y-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0" placeholder="Search by location"/>
+                        <div className="relative mt-4 flex flex-col justify-center  text-sm text-gray-700 tracking-tight  text-center">
+                            <div className="flex flex-row items-center justify-between  rounded-lg border-2 border-yellow-300 bg-white">
+                                <input
+                                    className="m-1 px-4 py-4  w-2/3 max-w-xl border-y-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0"
+                                       placeholder="Search by location"
+                                       value={inputValue}
+                                       onChange={handleInputChange}
+
+                                />
                                 <div className="m-0.5 px-1 py-1 w-1/3">
                                     <SelectBoxRadius name="radius" onChange={(item) =>dispatch(locationRadius(item))}/>
                                 </div>
 
 
                             </div>
+                            {resultsList.length > 0  && inputValue.length > 2? (
+                            <div className="absolute top-14 w-full mt-0.5 z-50  bg-white rounded-b-xl border-b-2 border-x-2 border-yellow-300 text-left divider-x divider ">
+                               <ul className="max-h-72 overflow-y-scroll ">
+                                   {
+                                       resultsList.map((location) => (
+                                           <li onClick={handleSelectLocation(location)} // Notice how we're passing the location object now
 
+                                               className="w-full text-lg font-bold border-t border-gray-300 py-2 hover:bg-yellow-50 hover:rounded-b-lg">
+                                           <span className="px-3">
+                                               {location.name}
+                                           </span>
+                                           </li>
+                                       ))
+                                   }
+
+                               </ul>
+
+                            </div>
+                                ):null
+                            }
                             <div className="flex flex-row justify-start my-1 gap-x-2.5">
                                 {filters.locations.length > 0  ? (
                                         filters.locations.map((location) => (
