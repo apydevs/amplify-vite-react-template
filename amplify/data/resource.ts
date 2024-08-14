@@ -92,7 +92,7 @@ const schema = a.schema({
         id: a.id(),
         userId: a.id(),  // Cognito user ID
         propertyId: a.id(),  // Cognito user ID
-        property: a.belongsTo('Property', 'propertyId'),
+        propertyRel: a.belongsTo('Property', 'propertyId'),
 
         // property: a.hasOne('Property', 'favouriteId'),
     })

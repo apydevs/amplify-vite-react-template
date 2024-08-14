@@ -4,8 +4,8 @@ import { Hub } from 'aws-amplify/utils';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {Link, useNavigate} from 'react-router-dom';
-import {FavoriteProperty,PropertyFavoriteInterface} from "../interfaces/interfaces.tsx";
-import {getFavourite} from "../api/favouritesApi.tsx";
+import {PropertyFavoriteObjectType, PropertyFavoriteType} from "../types/FavouriteTypes.tsx";
+import {getUsersFavourite} from "../api/favouritesApi.tsx";
 import {setFavorites} from "../store/features/favorites/favouritesSlice.tsx";
 import {useDispatch} from "react-redux";
 // Define an interface for the user data
@@ -25,13 +25,13 @@ function App() {
     const navigation = useNavigate();
     // Initialize state with the correct type, which can be UserData or null
     const [user, setUser] = useState<UserData | null>(null);
-    const [fav, setFav] = useState<FavoriteProperty>({ saved: [] });
+    const [_fav, setFav] = useState<PropertyFavoriteType>({saved:[]});
 
     const dispatch = useDispatch()
     useEffect(() => {
         // Function to fetch user data
 
-        console.log("favs",fav);
+
 
 
         async function fetchUser() {
@@ -40,18 +40,14 @@ function App() {
                 const { username, userId, signInDetails } = await getCurrentUser();
                 setUser({ username, userId, signInDetails });
                  // Fetch favorites
-                 const favorites: PropertyFavoriteInterface[] = await getFavourite(userId);
 
-
-                 // Transform into FavoriteProperty type
-                 const favoriteProperty: FavoriteProperty = { saved: favorites };
-
-                 console.log("favorites set",favoriteProperty);
-
-
+                 //const favorites: PropertyFavoriteType = await getUsersFavourite(userId);
+                 const favorites: PropertyFavoriteType = {
+                     saved: await getUsersFavourite(userId) as PropertyFavoriteObjectType[]
+                 };
+                 console.log(_fav)
                  dispatch(setFavorites(favorites));
-
-                 setFav(favoriteProperty);
+                 setFav(favorites);
             } catch (error) {
                 // console.error("Failed to fetch user details:", error);
                 // setUser(null);

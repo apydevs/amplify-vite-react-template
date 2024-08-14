@@ -1,7 +1,8 @@
 // src/api/Favourites.ts
 import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../../amplify/data/resource';
-import { CreateFavouriteParams} from "../interfaces/FavouriteInterface.tsx";
+import {CreateFavoriteType} from "../types/FavouriteTypes.tsx";
+
 
 const client = generateClient<Schema>();
 
@@ -12,41 +13,35 @@ export const listFavourites = async () => {
         console.error(errors);
         throw new Error('Failed to fetch todos');
     }
+    console.log('List Favourites',todos)
     return todos;
 };
 
-// Function to get a specific Todo by ID
 // Update the getFavourite function to accept a string user_id directly
-export const getFavourite = async (user_id: string)=> {
+export const getUsersFavourite = async (userId: string)=> {
     // Call the client method with the user_id as a string
-    console.log({ user_id: user_id });
-
     const { data: todo, errors } = await client.models.Favourites.listFavouritesByUserId(
-             { userId: user_id },
-             { selectionSet: ['id','propertyId','userId',  'property.*'] },
+             { userId: userId },
+             { selectionSet: ['id','propertyId','userId',  'propertyRel.*'] },
         );
     // First, check for API-reported errors
     if (errors) {
         console.error(errors);
-        throw new Error(`Failed to fetch todo with user_id ${user_id}`);
+        throw new Error(`Failed to fetch todo with user_id ${userId}`);
     }
 
     // Check if the data returned is null
     if (!todo) {
-        throw new Error(`Todo with user_id ${user_id} not found`);
+        throw new Error(`Todo with user_id ${userId} not found`);
     }
 
     console.log('DATA', todo);
-    return todo.map((fav) => ({
-        id: fav.id || undefined,
-        userId: fav.userId || '',
-        propertyId: fav.propertyId || '',
-        property: fav.property || '',
-    }));
+    return todo;
 
 };
 
-export const createFavourite = async ({ propertyId, userId }: CreateFavouriteParams): Promise<string> => {
+export const createFavourite = async ({userId, propertyId}: CreateFavoriteType) => {
+    console.log('Creating favourite with userId:', userId, 'and propertyId:', propertyId);
     const { data: favourite, errors } = await client.models.Favourites.create({
         userId: userId,
         propertyId: propertyId
@@ -55,17 +50,52 @@ export const createFavourite = async ({ propertyId, userId }: CreateFavouritePar
     if (errors) {
         throw new Error(`Error creating favourite: ${errors}`);
     }
-    if (!favourite) {
-        throw new Error('Failed to create favourite: no data returned');
+    if (!favourite || !favourite.id || !favourite.userId) {
+        throw new Error('Failed to create favourite: essential data missing');
+    }
+    return favourite;
+};
+
+
+export const removeFavourite = async (id:string ) => {
+
+
+
+    const { data: deletedFavourite, errors } = await client.models.Favourites.delete({id:id});
+    console.log('removed',deletedFavourite)
+
+    if (errors) {
+        throw new Error(`Error removing favourite: ${errors}`);
+    }
+    if (!deletedFavourite) {
+        throw new Error('Failed to removing favourite: no data returned');
     }
 
-    if (!favourite.id) {
-        throw new Error('Failed to create favourite: no ID returned');
+    if (!deletedFavourite.id) {
+        throw new Error('Failed to removing favourite: no ID returned');
     }
 
+};
 
 
-    return getFavourite(userId);
+export const removeAllFavourites = async ( propertyId : string) => {
+
+
+    const toBeDeletedTodo = {
+        id: propertyId
+    }
+    const { data: deletedFavourite, errors } = await client.models.Favourites.delete(toBeDeletedTodo);
+
+    if (errors) {
+        throw new Error(`Error removing favourite: ${errors}`);
+    }
+    if (!deletedFavourite) {
+        throw new Error('Failed to removing favourite: no data returned');
+    }
+
+    if (!deletedFavourite.id) {
+        throw new Error('Failed to removing favourite: no ID returned');
+    }
 
 };
 

@@ -6,6 +6,8 @@ import '@aws-amplify/ui-react/styles.css';
 import { useSelector} from "react-redux";
 import { RootState } from '../../store/store.ts';
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {removeAllFavourites} from "../../api/favouritesApi.tsx";
 
 
 Amplify.configure(outputs);
@@ -15,17 +17,31 @@ Amplify.configure(outputs);
 function Account() {
 
     const [isLoading, setIsLoading] = useState(true);
+
+
     const favorites = useSelector((state: RootState) => state.favorites.saved)
 
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
             if (favorites) {
+
                    setIsLoading(false );
                 }
             }
         fetchData();
     }, []); // Depend on informationId to re-fetch when it changes
+
+    async function handleDetete() {
+        favorites.map(async (propertyObj) =>{
+               const id = propertyObj.id
+            if(id){
+                await removeAllFavourites(id)
+            }
+
+        })
+    }
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -62,24 +78,15 @@ function Account() {
 
 
                             {favorites.map((propertyObj,index) => (
-                                    <div key={index} className="w-20 h-20">
-                                        <img  alt={propertyObj.property} className="object-cover w-full h-full rounded" src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>
-                                        {propertyObj.id}
-                                    </div>
+                                    <Link key={index} to={`/search/properties/${propertyObj.propertyId}`} className="w-20 h-20">
+                                        <img  alt={propertyObj.propertyId}
+                                              className="object-cover w-full h-full rounded"
+                                              src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>
+                                        {propertyObj.propertyId}
+                                    </Link>
                                 ))}
-                            {favorites.map((propertyObj,index) => (
-                                <div key={index} className="w-20 h-20">
-                                    <img  alt={propertyObj.id} className="object-cover w-full h-full rounded" src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>
-                                    {propertyObj.id}
-                                </div>
-                            ))}
+                            <button onClick={handleDetete} className="text-red-500 text-xs w-20 h-20 px-2 py-1  rounded">Remove All</button>
 
-                            <a href="http://127.0.0.1:8000/property/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134" className="h-20 w-20">
-                                <img className="object-cover w-full h-full rounded" src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>
-                            </a>
-                            <a href="http://127.0.0.1:8000/property/3-bedroom-semi-detached-house-for-saleref3bbf0836-5c9e-4797-8197-d4add5cb0c12" className="h-20 w-20">
-                                <img className="object-cover w-full h-full rounded" src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-semi-detached-house-for-saleref3bbf0836-5c9e-4797-8197-d4add5cb0c12/bbe03c9c-1ea2-4177-b88e-66adb1b24e30.jpg"/>
-                            </a>
                         </div>
                     </div>
 

@@ -1,0 +1,76 @@
+export type PropertyType = {
+    readonly  id?: string; // Allow both undefined and null
+    address?: string | null;
+    bathrooms?: number | null;
+    bedrooms?: number | null;
+    area_size?: number| null;
+    city?: string| null;
+    content?: string | null;
+    country?: string| null;
+    county?: string| null;
+    description?: string | null;
+    epc_date?: string | null;
+    garages?: number | null;
+    is_published?: boolean | null;
+    imageSrc?: string | null;
+    is_featured?: boolean;
+    is_sold?: boolean;
+    is_yeoley_plus?: boolean;
+    latitude?: number| null;
+    layout?: string | null;
+    longitude?: number | null;
+    max?: number | bigint | null;
+    min?: number | null;
+    postcode?: string | null;
+    condition?: string| null;
+    potential_epc_rating?: string | null;
+    prefix?: string | null;
+    slug?: string | null;
+    tenure?: string | null;
+    title?: string | null;
+    town?: string | null;
+    type?: string | null;
+    user_id?: string | null;
+    valuation?: number | null;
+    valuation_type?: string | null;
+    views?: number | null;
+    year_built?: number | null;
+};
+
+export type CreatePropertyType = {
+    country: string;
+    city: string;
+    is_published: boolean;
+    prefix: string;
+    latitude: number;
+    county: string;
+    description: string;
+    title: string;
+    type: string;
+    content: string;
+    current_epc_rating: string;
+    min: number;
+    is_sold: boolean;
+    is_yeoley_plus: boolean;
+    slug: string;
+    views: number;
+    tenure: string;
+    longitude: number;
+    epc_date: string;
+    address: string;
+    town: string;
+    max: number;
+    postcode: string;
+    bathrooms: number;
+    bedrooms: number;
+    garages: number;
+    layout: string;
+    condition: string;
+    valuation: number;
+    area_size: number;
+    user_id: string;
+    year_built: number;
+    valuation_type: string;
+    potential_epc_rating: string;
+    is_featured: boolean
+}

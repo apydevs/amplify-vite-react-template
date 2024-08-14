@@ -8,9 +8,9 @@ import {getProperty} from '../../api/propertiesApi.ts.tsx'; // Ensure the path i
 import {Link} from "react-router-dom";
 import AddFavorites from "../../components/AddFavorites.tsx";
 import {useEffect, useState} from "react";
-import {NewPropertyType} from "../../interfaces/interfaces.tsx";
 
 import yeoleyBg from "../../assets/bg/pattents/yeoley-bg.png";
+import {CreatePropertyType, PropertyType} from "../../types/PropertyTypes.tsx";
 
 const product = {
     name: 'Basic Tee 6-Pack',
@@ -72,7 +72,7 @@ export default function PropertyDetails() {
 
     const [isLoading, setIsLoading] = useState(true);
     const { propertyId } = useParams();
-    const [property, setProperty] = useState<NewPropertyType | null>(null); // Initialize as a single object or null
+    const [property, setProperty] = useState<PropertyType>({}); // Initialize as a single object or null
 
     const [error, setError] = useState(false);
 
@@ -81,7 +81,7 @@ export default function PropertyDetails() {
             setIsLoading(true);
             if (propertyId) {
                 try {
-                    const propertyData = await getProperty(propertyId)  as NewPropertyType;
+                    const propertyData = await getProperty(propertyId)  as CreatePropertyType;
                     setProperty(propertyData );
                     setIsLoading(false);
                     console.log(propertyData);
@@ -205,7 +205,11 @@ export default function PropertyDetails() {
                                             <div className="flex flex-col md:flex-row justify-start">
                                                 <span
                                                     className="me-2 rounded bg-yellow-300 px-2.5 py-0.5 text-lg font-medium text-gray-900 dark:bg-yellow-900 dark:text-yellow-300 border border-black"> Max Offer  {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}</span>
-                                                    <AddFavorites propertyId={property.id ?? ''}/>
+                                                {property.id ? (
+                                                        <AddFavorites propertyId={property.id}/>):(
+                                                            <span>Login</span>
+                                                )}
+
 
                                             </div>
 

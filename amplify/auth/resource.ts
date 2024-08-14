@@ -12,7 +12,7 @@ export const auth =
 
   },
 
-  groups: ["BUYERS", "AGENT","DEVELOPER","ADMINS", "EDITORS"],
+ groups: ["BUYERS", "AGENT","DEVELOPER","ADMINS", "EDITORS"],
 
   userAttributes: {
     preferredUsername: {

@@ -1,24 +1,26 @@
-import {useEffect, useState} from "react";
-
-import {getCurrentUser} from "aws-amplify/auth";
 import { Hub } from 'aws-amplify/utils';
+import {useEffect, useState} from "react";
+import {getCurrentUser} from "aws-amplify/auth";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faDoorOpen, faHeartCircle} from "@fortawesome/pro-thin-svg-icons";
-import { addFavorites ,removeFavorites } from "../store/features/favorites/favouritesSlice";
 
-import {useDispatch, useSelector} from "react-redux";
-
+import {addFavorites, removeFavorites} from "../store/features/favorites/favouritesSlice.tsx";
+import {createFavourite, removeFavourite} from "../api/favouritesApi.tsx";
 import {UserInterface} from "../interfaces/UserInterface.tsx";
-import {AddFavoritesProps} from "../interfaces/FavouriteInterface.tsx";
-import {AuthEvent, PropertyFavorite} from "../interfaces/interfaces.tsx" ;
+import {AuthEvent} from "../interfaces/interfaces.tsx" ;
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store.ts";
-import {createFavourite} from "../api/favouritesApi.tsx";
 
 
-export default function AddFavorites({propertyId}:AddFavoritesProps) {
+interface AddFavoritesProps {
+    propertyId: string;
+}
+
+export default function AddFavorites({ propertyId }: AddFavoritesProps) {
     const [user, setUser] = useState<UserInterface | null>(null);
     const [isSelected, setIsSelected] = useState<boolean>(false);
-    const Favs = useSelector((state: RootState) => state.favorites)
+    const favourites = useSelector((state: RootState) => state.favorites.saved)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -34,26 +36,11 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
         }
 
         function checkFav() {
-            console.log('Property ID:', propertyId);
-            console.log('Saved array:', Favs);
-
-            // Ensure Favs is an array
-            if (!Array.isArray(Favs)) {
-                console.error("Favs is not an array:", Favs);
-                return;
-            }
-
-            // Access the array and check for favorite property
-            const isFavorite = Favs.saved.some((fav: PropertyFavorite) => fav.propertyId === propertyId);
-            console.log(isFavorite);
-            // Log the result
-            if (isFavorite) {
-                console.log(`Property ID ${propertyId} is marked as favorite.`);
-            } else {
-                console.log(`Property ID ${propertyId} is not a favorite.`);
-            }
-
-            setIsSelected(isFavorite); // Update the state with the result
+            favourites.forEach(item =>{
+                if(item.propertyId == propertyId){
+                    setIsSelected(true);
+                }
+            })
 
         }
 
@@ -81,8 +68,8 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
         };
         Hub.listen('auth', authListener);
 
-        fetchUser()
-        checkFav()
+        fetchUser().then(() => checkFav());
+
         // Cleanup listener when component unmounts
         return () => {
             /* start listening for messages */
@@ -95,26 +82,71 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
             /* later */
             hubListenerCancelToken(); // stop listening for messages
         };
-    }, []);
+    }, [favourites, isSelected, propertyId]);
 
-    console.log(propertyId)
-    const handleClick = async () => {
-        setIsSelected(!isSelected);
 
-        if (user && !isSelected) {
-            await createFavourite({propertyId: propertyId, userId: user.userId});
-            dispatch(addFavorites({property: propertyId, userId: user.userId}));
-            setIsSelected(true);
+
+    // handles adding to favourites State & Api
+    const handleSelectClick = async () => {
+        if (user) {
+            const savedFav = await createFavourite({
+                userId:user.userId,
+                propertyId: propertyId
+            }
+
+            );
+            console.log("resrrs", savedFav);
+
+            if (savedFav) {
+
+                if (!savedFav.userId || !savedFav.propertyId) {
+                    throw new Error('Favourite object is missing required user or property identifiers');
+                } else {
+
+                    const data = {
+
+                        userId: savedFav.userId,
+                        propertyId: savedFav.propertyId,
+                        // Assumes this relationship is handled correctly elsewhere
+                    };
+                    dispatch(addFavorites(data)); // Dispatch the result
+                }
+
+
+
+                }
+            }
         }
 
-        if (user && isSelected) {
-            dispatch(removeFavorites({propertyId: propertyId, userId: user.userId}));
+
+
+    // handles removing from favourites State & Api
+    const handleDeselect = async () => {
+        const index = favourites.findIndex(obj => obj.propertyId === propertyId);
+        if(index >= 0){
+            const id = favourites[index].id
+            console.log('remove id',index)
+            try {
+                if (user && "userId" in user && id !== undefined) { // Ensure id is not undefined
+                    await removeFavourite(id);
+                    dispatch(removeFavorites({propertyId: propertyId, userId: user.userId}));
+                    setIsSelected(false);
+                }
+            }catch (e){
+                console.log('error fav',e)
+            }
         }
     };
 
     if (user) {
 
-        return (   <button className={isSelected ? `text-yellow-300` : `text-red-600`} onClick={handleClick}>
+        if (!propertyId) {
+            console.error('AddFavorites component requires a valid propertyId');
+            return null; // Or some fallback UI
+        }
+
+        return (   <button className={isSelected ? `text-yellow-300` : `text-red-600`}
+                           onClick={!isSelected ? handleSelectClick : handleDeselect}>
                         <FontAwesomeIcon icon={faHeartCircle} className="font-semibold h-8 w-8 px-1 py-0.5" />
                   </button>
         );
@@ -122,7 +154,7 @@ export default function AddFavorites({propertyId}:AddFavoritesProps) {
     } else {
         return (
             <button className="bg-black text-white w-10 p-0.5 rounded">
-                <FontAwesomeIcon icon={faDoorOpen} />
+                <FontAwesomeIcon icon={faDoorOpen}/>
             </button>
         );
     }

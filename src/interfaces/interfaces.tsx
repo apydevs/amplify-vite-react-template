@@ -183,26 +183,12 @@ export type SelectIdValueTextProps = {
     name: string;
 };
 
-
-// PropertyFavoriteInterface as a type
-
-export type PropertyFavoriteSave = {
-    saved: PropertyFavorite[];
-}
-export type FavoriteProperty = {
-    saved: PropertyFavorite[];
-};
-
-export type PropertyFavorite = {
+export type PropertyFavoriteObjectType = {
     id?: string;
     userId: string;
     propertyId: string;
-    property: PropertyInterface;
-};
-
-export type PropertyFavoriteInterface = {
-    id?: string;
-    userId: string;
-    propertyId: string;
-    property: PropertyInterface;
 }
+
+export type PropertyFavoriteType = {
+    saved: PropertyFavoriteObjectType[];
+};
