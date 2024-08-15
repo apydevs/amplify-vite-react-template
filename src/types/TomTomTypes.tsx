@@ -29,6 +29,7 @@ export interface SearchResult {
     position: Position;
     poi?: PointOfInterest; // POI might not be present for all entries
     viewport?: Viewport;
+
 }
 
 // Define address details

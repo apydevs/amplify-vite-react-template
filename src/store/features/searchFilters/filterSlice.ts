@@ -4,7 +4,7 @@ import {
     DataItem,
     DataRadiusItem
 } from "../../../interfaces/interfaces.tsx";
-import {LocationState} from "../../../interfaces/SearchInterface.tsx";
+import {Location} from "../../../types/LocationType.ts";
 
 // Initial state type
 
@@ -14,8 +14,8 @@ import {LocationState} from "../../../interfaces/SearchInterface.tsx";
 
 const initialState = {
     locations: [
-        { id: 1, name: 'New York' },
-        { id: 2, name: 'Los Angeles' },
+        { id: '1', name: 'New York' },
+        { id: '2', name: 'Los Angeles' },
     ],
     type: 'All',
     locationRadius: 0.0,
@@ -30,20 +30,26 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
-        locations: (state, action: PayloadAction<LocationState>) => {
-            // Extract LocationType[] from PropertyLocations[]
-            // const locationList = action.payload.locations.reduce<LocationType[]>((acc, loc) => {
-            //     return loc.locations ? [...acc, ...loc.locations] : acc;
-            // }, []);
-            //
-            // // Assign extracted LocationType[] to state.locations
-            // state.locations = locationList.map((location) => ({
-            //     id: location.id,
-            //     name: location.name,
-            // }));
-            state.locations.push(action.payload)
-            console.log('locations payload',state, action.payload);
+        locations: (state, action: PayloadAction<Location>) => {
+            const exists = state.locations.some(location => location.id === action.payload.id);
+            if (!exists) {
+                state.locations.push(action.payload);
+                console.log('Added new location:', action.payload);
+            } else {
+                console.log('Location already exists with id:', action.payload.id);
+            }
         },
+        locationRemove: (state, action: PayloadAction<Location>) => {
+            const index = state.locations.findIndex(location => location.id === action.payload.id);
+            if (index !== -1) { // Check that the index is not -1 (not found)
+                state.locations.splice(index, 1); // Remove 1 item at index
+                console.log('Removed location:', action.payload);
+            } else {
+                console.log('Location not found:', action.payload.id);
+            }
+        },
+
+
         locationRadius: (_state,acton:PayloadAction<DataRadiusItem>) => {
             console.log('current State',_state);
             console.log('locationRadius payload',acton.payload);
@@ -103,6 +109,7 @@ export const filterSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
     locations,
+    locationRemove,
     locationRadius,
     type,
     minBedroom,

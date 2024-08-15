@@ -13,8 +13,8 @@ import {
     maxBedroom,
     minValuation,
     maxValuation,
-    locationRadius,
-     } from '../store/features/searchFilters/filterSlice.ts'
+    locationRadius, locationRemove,
+} from '../store/features/searchFilters/filterSlice.ts'
 import debounce from 'lodash/debounce';
 import {RootState} from "../store/store.ts";
 import {createProperty} from "../api/propertiesApi.ts.tsx";
@@ -22,6 +22,7 @@ import {CreatePropertyType} from "../types/PropertyTypes.tsx";
 import {fetchSearchResults} from "../api/tomTomApi.tsx";
 import {SearchResult} from "../types/TomTomTypes.tsx";
 import {LocationState} from "../interfaces/SearchInterface.tsx";
+import {Location} from "../types/LocationType.ts";
 
 
 
@@ -29,7 +30,7 @@ import {LocationState} from "../interfaces/SearchInterface.tsx";
 
 export default function Search() {
     const [inputValue, setInputValue] = useState<string>('');
-    const [resultsList, setResultsList] = useState<LocationState[]>([]);
+    const [resultsList, setResultsList] = useState<LocationState['locations']>([]);
     const dispatch = useDispatch();
 
     const filters = useSelector((state: RootState) => state.filters);
@@ -38,15 +39,17 @@ export default function Search() {
         if (query.length >= 3) {
             console.log("Fetching results for query:", query);
             // Here you might call an actual API or dispatch a Redux action
-           const results = await fetchSearchResults({query:query})
+           const response = await fetchSearchResults({query:query})
             // Function to transform results
-            const formated =results.results.map((result: SearchResult) => ({
+           console.log('response',response)
+
+            const formated = response.results.map((result: SearchResult) => ({
                             id: result.id,
                             name: result.address?.freeformAddress // Using optional chaining to safely access freeformAddress
                         }));
 
             setResultsList(formated);
-            console.log(results);
+            console.log(response);
 
 
         }
@@ -64,10 +67,19 @@ export default function Search() {
         debouncedFetchResults(value);
     };
 
-    const handleSelectLocation = (location: LocationState) => {
+    const handleSelectLocation = (location: Location) => {
         return () => {
             console.log("Selected location:", location.name);
             dispatch(locations(location))
+            setInputValue('')
+        };
+    };
+
+    const removeLocation = (location: Location) => {
+        return () => {
+            console.log("Selected location:", location.name);
+            dispatch(locationRemove(location))
+            setInputValue('')
         };
     };
 
@@ -155,9 +167,9 @@ export default function Search() {
                                <ul className="max-h-72 overflow-y-scroll ">
                                    {
                                        resultsList.map((location) => (
-                                           <li onClick={handleSelectLocation(location)} // Notice how we're passing the location object now
-
-                                               className="w-full text-lg font-bold border-t border-gray-300 py-2 hover:bg-yellow-50 hover:rounded-b-lg">
+                                           <li
+                                               key={location.id} onClick={handleSelectLocation(location)}
+                                               className="w-full text-lg font-bold border-t border-gray-300 py-2 hover:bg-yellow-50 hover:rounded-b-lg cursor-pointer">
                                            <span className="px-3">
                                                {location.name}
                                            </span>
@@ -175,7 +187,7 @@ export default function Search() {
                                         filters.locations.map((location) => (
                                     <span key={location.id} className="inline-flex items-center gap-x-0.5 rounded-md bg-yellow-200 px-2 py-1 text-xs font-medium text-black">
                                       {location.name}
-                                                                        <button type="button" className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-yellow-600/20">
+                                        <button type="button" onClick={removeLocation(location)} className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-yellow-600/20">
                                         <span className="sr-only">Remove</span>
                                         <svg viewBox="0 0 14 14" className="h-3.5 w-3.5 stroke-yellow-800/50 group-hover:stroke-yellow-800/75">
                                           <path d="M4 4l6 6m0-6l-6 6" />

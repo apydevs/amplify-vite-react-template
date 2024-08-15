@@ -1,8 +1,8 @@
 // src/api/todoApi.ts
-import {Search} from "../types/TomTomTypes.tsx";
+import {Search, SearchApiResponse} from "../types/TomTomTypes.tsx";
 
-// Function to list all Todos
-export const fetchSearchResults = async (query: Search): Promise<{ name: string | undefined; id: string }[]> => {
+// API to get all locations from TOMTOM
+export const fetchSearchResults = async (query: Search): Promise<SearchApiResponse> => {
     const apiKey = '5XtQljyBGnl8QqwlwqkXhqYnzL2eYZnS'; // Replace 'YOUR_API_KEY' with your actual API key
     const baseUrl = `https://api.tomtom.com/search/2/search/${query.query}.json`;
     const queryParams = new URLSearchParams({
@@ -38,7 +38,20 @@ export const fetchSearchResults = async (query: Search): Promise<{ name: string 
 
     } catch (error) {
         console.error('Failed to fetch data:', error);
-        return [];
+        return {
+            summary: {
+                query: query.query,
+                queryType: 'GEO',
+                queryTime: 0,
+                numResults:0,
+                offset:0,
+                totalResults:0,
+                fuzzyLevel: 3,
+            },
+            results: []
+        }
+
+        ;
     }
 };
 

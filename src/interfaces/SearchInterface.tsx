@@ -29,6 +29,6 @@ export interface LocationState {
 }
 
 export interface LocationStateContent {
-    id: string | number,
+    id: string,
     name: string
 }
