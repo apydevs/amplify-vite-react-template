@@ -17,9 +17,18 @@ const schema = a.schema({
          id: a.id(),
          username: a.string(),
          accountType: a.enum(["buyer", "agent", "developer","reseller","advertiser","admin"]),
+         locations: a.hasMany('UserLocations', 'userId'),
     }).authorization(allow => [allow.owner()]),
 
 
+    UserLocations: a.model({
+        id: a.string(),
+        name: a.string(),
+        longitude: a.float(),
+        latitude: a.float(),
+        userId: a.id(),  // Cognito user ID
+        userRel: a.belongsTo('User', 'userId'),
+    }).authorization(allow => [allow.owner()]),
 
     Property: a
         .model({

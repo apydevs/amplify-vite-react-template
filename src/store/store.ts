@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from './features/counter/counterSlice'
 import filterReducer from './features/searchFilters/filterSlice'
 import favoritesReducer from './features/favorites/favouritesSlice.jsx'
+import userReducer from  './features/user/userSlice'
 export const store = configureStore({
     reducer: {
         filters: filterReducer,
         counter: counterReducer,
         favorites: favoritesReducer,
+        users: userReducer
     },
 })
 

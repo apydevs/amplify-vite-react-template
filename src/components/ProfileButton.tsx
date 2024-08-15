@@ -8,6 +8,7 @@ import {PropertyFavoriteObjectType, PropertyFavoriteType} from "../types/Favouri
 import {getUsersFavourite} from "../api/favouritesApi.tsx";
 import {setFavorites} from "../store/features/favorites/favouritesSlice.tsx";
 import {useDispatch} from "react-redux";
+import {setUserDetails} from "../store/features/user/userSlice.ts";
 // Define an interface for the user data
 interface UserData {
     username: string;
@@ -39,6 +40,12 @@ function App() {
              try {
                 const { username, userId, signInDetails } = await getCurrentUser();
                 setUser({ username, userId, signInDetails });
+
+
+                dispatch(setUserDetails( {
+                    userId: userId,
+                    username: username
+                }))
                  // Fetch favorites
 
                  //const favorites: PropertyFavoriteType = await getUsersFavourite(userId);

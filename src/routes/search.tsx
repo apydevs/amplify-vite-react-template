@@ -4,7 +4,7 @@ import SelectBoxNumber from "../components/SelectBoxNumber.tsx";
 import SelectBoxValue from "../components/SelectBoxValue.tsx";
 import SelectBox from "../components/SelectBox.tsx";
 import { Link} from "react-router-dom";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import {
     locations,
@@ -23,17 +23,34 @@ import {fetchSearchResults} from "../api/tomTomApi.tsx";
 import {SearchResult} from "../types/TomTomTypes.tsx";
 import {LocationState} from "../interfaces/SearchInterface.tsx";
 import {Location} from "../types/LocationType.ts";
+//import {listLocations} from "../api/locationApi.tsx";
 
 
 
 
 
 export default function Search() {
+   // const [isLoading, setIsLoading] = useState(true);
     const [inputValue, setInputValue] = useState<string>('');
     const [resultsList, setResultsList] = useState<LocationState['locations']>([]);
     const dispatch = useDispatch();
 
     const filters = useSelector((state: RootState) => state.filters);
+    //const userObj = useSelector((state: RootState) => state.users);
+
+    useEffect(() => {
+        const fetchLocations = async () => {
+            // setIsLoading(true);
+            // console.log(userObj.user.userId)
+            // const locs =   await listLocations()
+            // if (locs) {
+            //     setIsLoading(false );
+            //     console.log('isloading ',isLoading)
+            // }
+        }
+        fetchLocations();
+    }, []); // Depend on informationId to re-fetch when it changes
+
 
     const getSearchResults = useCallback(async (query: string) => {
         if (query.length >= 3) {
