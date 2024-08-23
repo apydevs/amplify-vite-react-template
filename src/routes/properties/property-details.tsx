@@ -3,14 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faBath,faBedFront,faToilet,faSquareParking,faGarage } from "@fortawesome/pro-regular-svg-icons";
 import LocationMap from "../../components/LocationMap.tsx";
 import { useParams } from 'react-router-dom';
-import {getProperty} from '../../api/propertiesApi.ts.tsx'; // Ensure the path is correct
+
 
 import {Link} from "react-router-dom";
 import AddFavorites from "../../components/AddFavorites.tsx";
 import {useEffect, useState} from "react";
 
 import yeoleyBg from "../../assets/bg/pattents/yeoley-bg.png";
-import {CreatePropertyType, PropertyType} from "../../types/PropertyTypes.tsx";
+ import { PropertyType} from "../../types/PropertyTypes.tsx";
 
 const product = {
     name: 'Basic Tee 6-Pack',
@@ -72,7 +72,7 @@ export default function PropertyDetails() {
 
     const [isLoading, setIsLoading] = useState(true);
     const { propertyId } = useParams();
-    const [property, setProperty] = useState<PropertyType>({}); // Initialize as a single object or null
+    const [property] = useState<PropertyType>({}); // Initialize as a single object or null
 
     const [error, setError] = useState(false);
 
@@ -81,10 +81,10 @@ export default function PropertyDetails() {
             setIsLoading(true);
             if (propertyId) {
                 try {
-                    const propertyData = await getProperty(propertyId)  as CreatePropertyType;
-                    setProperty(propertyData );
-                    setIsLoading(false);
-                    console.log(propertyData);
+                    // const propertyData = await getProperty(propertyId)  as CreatePropertyType;
+                    // setProperty(propertyData );
+                    // setIsLoading(false);
+                    // console.log(propertyData);
                 } catch (error) {
                     console.error('Error fetching todo:', error);
                     setError(true);

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
-import { getTodo, listTodos } from '../api/todoApi.ts'; // Ensure the path is correct
 import { Link } from "react-router-dom";
 
 
@@ -13,8 +12,8 @@ interface Todo {
 
 function Information() {
     const [isLoading, setIsLoading] = useState(true);
-    const [dataTodo, setDataTodo] = useState<Todo | null>(null);
-    const [dataTodos, setDataTodos] = useState<Todo[]>([]);
+    const [dataTodo] = useState<Todo | null>(null);
+    const [dataTodos] = useState<Todo[]>([]);
     const { informationId } = useParams();
     const [error, setError] = useState(false);
 
@@ -22,17 +21,14 @@ function Information() {
         const fetchData = async () => {
             setIsLoading(true);
             if (informationId) {
-                try {
-                    const todo = await getTodo(informationId);
-                    setDataTodo(todo);
-                } catch (error) {
+                try { /* empty */ } catch (error) {
                     console.error('Error fetching todo:', error);
                     setError(true);
                 }
             } else {
                 try {
-                    const todos = await listTodos();
-                    setDataTodos(todos);
+
+                    /* empty */
                 } catch (error) {
                     console.error('Error fetching todos:', error);
                     setError(true);

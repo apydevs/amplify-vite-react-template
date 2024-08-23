@@ -1,62 +1,45 @@
 
-import { Authenticator } from '@aws-amplify/ui-react';
-import { Amplify } from 'aws-amplify';
-import outputs from './../../../amplify_outputs.json'; // Adjust the path as needed
-import '@aws-amplify/ui-react/styles.css';
-import { useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { RootState } from '../../store/store.ts';
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {Link} from "react-router-dom";
-import {removeAllFavourites} from "../../api/favouritesApi.tsx";
+import {setLogout} from "../../store/features/user/userSlice.ts";
 
-
-Amplify.configure(outputs);
 
 
 
 function Account() {
-
-    const [isLoading, setIsLoading] = useState(true);
+    const user = useSelector((state: RootState) => state.users.user);
+    const dispatch = useDispatch();
 
 
     const favorites = useSelector((state: RootState) => state.favorites.saved)
 
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            if (favorites) {
-
-                   setIsLoading(false );
-                }
-            }
-        fetchData();
     }, []); // Depend on informationId to re-fetch when it changes
 
     async function handleDetete() {
         favorites.map(async (propertyObj) =>{
                const id = propertyObj.id
-            if(id){
-                await removeAllFavourites(id)
-            }
+            if(id){ /* empty */ }
 
         })
     }
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    async function signOut(){
+        dispatch(setLogout())
     }
 
-    else
 
     return (
         <>
 <div className="bg-blue-50 py-16">
-    <Authenticator>
-        {({signOut, user}) => (
+
+    {user ? (
             <>
             <div className="container max-w-7xl mx-auto">
                 <div className="flex flex-row justify-between items-center ">
-                    <h1 className="text-2xl " >Welcome:<span className="font-semibold"> {user?.username} </span></h1>
+                    <h1 className="text-2xl " >Welcome:<span className="font-semibold"> {user?.name} </span></h1>
                     <div>Account Type:<span className="font-bold">Buyer</span></div>
                 </div>
             </div>
@@ -202,8 +185,8 @@ function Account() {
                 <button onClick={signOut}>Sign out</button>
             </div>
             </>
-        )}
-    </Authenticator>
+            ):null}
+
 </div>
 
         </>

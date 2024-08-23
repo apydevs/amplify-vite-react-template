@@ -1,107 +1,45 @@
-import { useEffect, useState } from 'react';
-import { getCurrentUser,signOut } from 'aws-amplify/auth';
-import { Hub } from 'aws-amplify/utils';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import {Link, useNavigate} from 'react-router-dom';
-import {PropertyFavoriteObjectType, PropertyFavoriteType} from "../types/FavouriteTypes.tsx";
-import {getUsersFavourite} from "../api/favouritesApi.tsx";
-import {setFavorites} from "../store/features/favorites/favouritesSlice.tsx";
-import {useDispatch} from "react-redux";
-import {setUserDetails} from "../store/features/user/userSlice.ts";
+import {Link} from 'react-router-dom';
 // Define an interface for the user data
-interface UserData {
-    username: string;
-    userId: string;
-    signInDetails: any; // Adjust according to the actual data type you expect
-}
-
-async function handleSignOut() {
-    await signOut();
-}
-
-
-
-function App() {
-    const navigation = useNavigate();
-    // Initialize state with the correct type, which can be UserData or null
-    const [user, setUser] = useState<UserData | null>(null);
-    const [_fav, setFav] = useState<PropertyFavoriteType>({saved:[]});
-
-    const dispatch = useDispatch()
-    useEffect(() => {
-        // Function to fetch user data
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
+import {setLogout} from "../store/features/user/userSlice.ts";
+import {setLocations} from "../store/features/locations/locationSlice.ts";
 
 
 
 
-        async function fetchUser() {
-
-             try {
-                const { username, userId, signInDetails } = await getCurrentUser();
-                setUser({ username, userId, signInDetails });
 
 
-                dispatch(setUserDetails( {
-                    userId: userId,
-                    username: username
-                }))
-                 // Fetch favorites
+const App = () => {
 
-                 //const favorites: PropertyFavoriteType = await getUsersFavourite(userId);
-                 const favorites: PropertyFavoriteType = {
-                     saved: await getUsersFavourite(userId) as PropertyFavoriteObjectType[]
-                 };
-                 console.log(_fav)
-                 dispatch(setFavorites(favorites));
-                 setFav(favorites);
-            } catch (error) {
-                // console.error("Failed to fetch user details:", error);
-                // setUser(null);
-                //  console.log("or here",error);
+
+    //const token = useSelector((state: RootState) => state.users.user.token);
+    const user = useSelector((state: RootState) => state.users.user);
+    const dispatch = useDispatch();
+    const handleSignOut = async () => {
+        try {
+
+            dispatch(setLogout())
+            dispatch(setLocations({locations:[]}))
+            console.log('attempt sign out');  // Now safe to access `message`
+        } catch (error) {
+            if (error instanceof Error) {
+                console.log('Login failed:', error.message);  // Now safe to access `message`
             }
         }
-
-        // Listen to authentication events
-        const authListener = (data:any) => {
-            const { payload } = data;
-            switch (payload.event) {
-                case 'signedIn':
-                case 'tokenRefresh':
-                    fetchUser();  // Re-fetch the user data on sign-in or token refresh
-                    navigation('/account');
-
-                    break;
-                case 'signedOut':
-                    setUser(null);  // Clear user data on sign-out
-                    console.log("ites here");
-                    navigation('/login');
+    };
 
 
 
-                    break;
-            }
-        };
-
-        Hub.listen('auth', authListener);
-
-
-            fetchUser()
-
-
-        // Cleanup listener when component unmounts
-        return () => {
-
-        };
-    }, []);
-
-    if (user) {
+    if (user.token) {
         return (
 
         <Menu as="div" className="relative inline-block text-left">
             <div>
                 <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-2xl bg-white px-3 py-2 text-[8pt] font-semibold  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    {user.username}
+                    {user.name}
                     <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
                 </MenuButton>
             </div>
@@ -143,5 +81,6 @@ function App() {
         );
     }
 }
+
 
 export default App;

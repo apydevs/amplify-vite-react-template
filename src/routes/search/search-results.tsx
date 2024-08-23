@@ -1,7 +1,7 @@
 'use client'
 
-import {useEffect, useState} from 'react'
-import {listProperties} from '../../api/propertiesApi.ts'; // Ensure the path is correct
+import React, {useEffect, useState} from 'react'
+
 import {
     Dialog,
     DialogBackdrop,
@@ -24,6 +24,8 @@ import { PropertyInterface } from '../../interfaces/interfaces.tsx';
 import PropertyCard from "../../components/PropertyCard.tsx";
 import PropertyCardList from "../../components/PropertyCardList.tsx";
 import PropertyCardFeaturedList from "../../components/PropertyCardFeaturedList.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/store.ts";
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
     { name: 'Closest Distance', href: '#', current: false },
@@ -78,8 +80,9 @@ function classNames(...classes: string[]    ){
 export default function Search() {
 
     const [isLoading, setIsLoading] = useState(true);
-    const [dataProperties, setDataProperties] = useState<PropertyInterface[]>([]); // Initialize as an array
-
+    const [dataProperties] = useState<PropertyInterface[]>([]); // Initialize as an array
+    const selectedFilters = useSelector((state: RootState) => state.filters);
+    const selectedLocations = useSelector((state: RootState) => state.locations);
     const [error, setError] = useState(false);
 
     // const navigation = useNavigate();
@@ -92,9 +95,9 @@ export default function Search() {
             setIsLoading(true);
 
             try {
-                const properties = await listProperties()  as PropertyInterface[];
-                setDataProperties(properties);
-                console.info('Fetching properties:', properties);
+
+                // setDataProperties(properties);
+                // console.info('Fetching properties:', properties);
 
             } catch (error) {
                 console.error('Error fetching properties:', error);
@@ -256,7 +259,7 @@ export default function Search() {
                                 <button
                                     type="button"
                                     onClick={() => setOpen(true)}
-                                    className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden"
+                                    className="inline-block text-sm font-medium text-black hover:text-gray-900 sm:hidden"
                                 >
                                     Filters
                                 </button>
@@ -320,23 +323,44 @@ export default function Search() {
                         </div>
 
                         {/* Active filters */}
-                        <div className="bg-gray-100 w-screen">
+                        <div className="bg-blue-50 w-screen">
                             <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
-                                <h3 className="text-sm font-medium text-gray-500">
+                                <h3 className="text-sm font-medium text-black ">
                                     Filters
                                     <span className="sr-only">, active</span>
                                 </h3>
-                                <span onClick={() => setGrid(true)} className="text-sm mx-4 font-medium text-gray-500">
+                                <span onClick={() => setGrid(true)} className="text-sm mx-4 font-medium text-black ">
                                 Grid
                             </span>
-                                <span onClick={() => setGrid(false)} className="text-sm mx-4 font-medium text-gray-500">
+                                <span onClick={() => setGrid(false)} className="text-sm mx-4 font-medium text-black ">
                                 List
                             </span>
                                 <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"/>
 
                                 <div className="mt-2 sm:ml-4 sm:mt-0">
-                                    <div className="-m-1 flex flex-wrap items-center">
-                                        {activeFilters.map((activeFilter) => (
+                                    <div className="-m-1 flex flex-wrap items-center space-x-2">
+                                        <span className="text-sm font-medium">Locations:</span>
+                                        {selectedLocations.locations.length > 0 ? (
+                                            selectedLocations.locations.map((location) => (
+                                                    <span key={location.name + "-test"}
+                                                          className="inline-flex justify-between items-center gap-x-0.5 rounded-md bg-yellow-200 px-2 py-1 text-xs font-medium text-black">
+                                           <span className="max-w-[180px] truncate hover:truncate-0">
+                                                {location.name}
+                                           </span>
+
+                                            <button type="button"
+                                                    className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-yellow-600/20">
+                                                <span className="sr-only">Remove</span>
+                                                <svg viewBox="0 0 14 14"
+                                                     className="h-3.5 w-3.5 stroke-yellow-800/50 group-hover:stroke-yellow-800/75">
+                                                  <path d="M4 4l6 6m0-6l-6 6"/>
+                                                </svg>
+                                                <span className="absolute -inset-1"/>
+                                              </button>
+                                            </span>
+                                                ))
+                                            ):null}
+                                            {activeFilters.map((activeFilter) => (
                                             <span
                                                 key={activeFilter.value}
                                                 className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"

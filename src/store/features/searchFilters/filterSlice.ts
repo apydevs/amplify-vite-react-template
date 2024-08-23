@@ -4,21 +4,17 @@ import {
     DataItem,
     DataRadiusItem
 } from "../../../interfaces/interfaces.tsx";
-import {Location} from "../../../types/LocationType.ts";
-
-// Initial state type
-
-
    // Adjust according to your actual state structure
 
 
+type RadiusType = {
+    value: number;
+};
+
+
 const initialState = {
-    locations: [
-        { id: '1', name: 'New York' },
-        { id: '2', name: 'Los Angeles' },
-    ],
     type: 'All',
-    locationRadius: 0.0,
+    locationRadius: 0,
     minBedroom: 0,
     maxBedroom: 99,
     minValuation: 0,
@@ -30,29 +26,10 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
-        locations: (state, action: PayloadAction<Location>) => {
-            const exists = state.locations.some(location => location.id === action.payload.id);
-            if (!exists) {
-                state.locations.push(action.payload);
-                console.log('Added new location:', action.payload);
-            } else {
-                console.log('Location already exists with id:', action.payload.id);
-            }
-        },
-        locationRemove: (state, action: PayloadAction<Location>) => {
-            const index = state.locations.findIndex(location => location.id === action.payload.id);
-            if (index !== -1) { // Check that the index is not -1 (not found)
-                state.locations.splice(index, 1); // Remove 1 item at index
-                console.log('Removed location:', action.payload);
-            } else {
-                console.log('Location not found:', action.payload.id);
-            }
-        },
-
-
-        locationRadius: (_state,acton:PayloadAction<DataRadiusItem>) => {
-            console.log('current State',_state);
+        locationRadius: (state,acton:PayloadAction<RadiusType>) => {
+            console.log('current State',state);
             console.log('locationRadius payload',acton.payload);
+            state.locationRadius = acton.payload.value
         },
         type: (state,acton:PayloadAction<DataItem>) => {
             state.type = acton.payload.name
@@ -108,8 +85,7 @@ export const filterSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-    locations,
-    locationRemove,
+
     locationRadius,
     type,
     minBedroom,

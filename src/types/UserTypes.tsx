@@ -2,4 +2,19 @@
 export interface UserType {
     userId:string;
     username: string;
+    token: string | null;
+}
+
+
+export interface UserTypeQL {
+    email:string | null,
+    name: string | null,
+    token: string | null,
+}
+
+
+export interface UserLoginTypeQL {
+    email:string | null;
+    password: string | null;
+    deviceName : string | null;
 }
