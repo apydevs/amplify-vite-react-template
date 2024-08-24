@@ -29,7 +29,7 @@ export const filterSlice = createSlice({
         locationRadius: (state,acton:PayloadAction<RadiusType>) => {
             console.log('current State',state);
             console.log('locationRadius payload',acton.payload);
-            state.locationRadius = acton.payload.value
+            state.locationRadius = parseFloat(acton.payload.value.toString())
         },
         type: (state,acton:PayloadAction<DataItem>) => {
             state.type = acton.payload.name

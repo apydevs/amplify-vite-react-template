@@ -21,7 +21,7 @@ const PropertyCardList :  React.FC<PropertyCardProps> = ({ property }) => {
                             <div className="absolute left-0  w-[158px] h-[94px] cardTop-img flex flex-col items-start pl-5 justify-start">
                                 <div className="text-sm">Max Offer</div>
                                 <div className="font-semibold">
-                                    {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}
+                                    {property ? `£${new Intl.NumberFormat('en-GB').format(property.max_cap ?? 0)}` : ''}
                                 </div>
                             </div>
                             <img
@@ -65,10 +65,10 @@ const PropertyCardList :  React.FC<PropertyCardProps> = ({ property }) => {
                                     <svg className="h-3 w-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9h13a5 5 0 0 1 0 10H7M3 9l4-4M3 9l4 4" />
                                     </svg>
-                                    <p className="text-xs  font-normal text-gray-500 dark:text-gray-400">Telford Shropshire</p>
+                                    <p className="text-xs  font-normal text-gray-500 dark:text-gray-400">{property.address2} {property.county}</p>
                                 </div>
                             </div>
-                            <p className=" my-2 text-sm text-gray-700 whitespace-pre-line mb-2">{property.content}</p>
+                            <p className=" my-2 text-sm text-gray-700 whitespace-pre-line mb-2">{property.excerpt}</p>
 
                         </div>
 
@@ -76,7 +76,7 @@ const PropertyCardList :  React.FC<PropertyCardProps> = ({ property }) => {
                             <div className=" flex flex-col items-start pl-5 justify-start">
                                 <div className="text-sm">Valuation</div>
                                 <div className="font-semibold">
-                                    {property ? `£${new Intl.NumberFormat('en-GB').format(property.valuation ?? 0)}` : ''}
+                                    {property ? `£${new Intl.NumberFormat('en-GB').format(property.price ?? 0)}` : ''}
                                 </div>
                             </div>
                             <div className="flex">

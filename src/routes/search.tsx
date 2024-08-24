@@ -80,6 +80,7 @@ export default function Search() {
 
     const handleSelectLocation = (location: Location) => {
         return async () => {
+
             const index = locationsState.locations.findIndex((loc) => loc.name === location.name);
             const user = userObj?.user;
             if (index === -1) {
@@ -105,13 +106,18 @@ export default function Search() {
                         latitude: data.addLocation.latitude,
                     }));
                 }else{
-                    dispatch(addLocation({
-                        locationId: location.id ?? '',
-                        name: location.name,
-                        longitude: location.longitude,
-                        latitude: location.latitude,
-                    }));
-                }
+                    if(locationsState.locations.length == 0){
+                        dispatch(addLocation({
+                            locationId: location.id ?? '',
+                            name: location.name,
+                            longitude: location.longitude,
+                            latitude: location.latitude,
+                        }));
+                    }else{
+                        alert('Login to Yeoley to search more locations at once. ')
+                    }
+                    }
+
             }
             setInputValue('');
         };
@@ -221,7 +227,7 @@ export default function Search() {
                             </div>
 
                             <span className="max-w-xl mx-auto mt-1">
-                               Our unique property search is designed to locate your next property quicker. Simply search all the areas of interest,and find properties over multiple locations.
+                               Our unique property search is designed to locate your next property quicker.Search all the areas of interest,and find properties over multiple locations Simply login for this feature.
                            </span>
 
                         </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useState} from 'react'
+import  {useEffect, useState} from 'react'
 
 import {
     Dialog,
@@ -26,6 +26,7 @@ import PropertyCardList from "../../components/PropertyCardList.tsx";
 import PropertyCardFeaturedList from "../../components/PropertyCardFeaturedList.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store.ts";
+import {useSearchProperties} from "../../hooks/useSearchProperty.ts";
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
     { name: 'Closest Distance', href: '#', current: false },
@@ -79,56 +80,65 @@ function classNames(...classes: string[]    ){
 
 export default function Search() {
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [dataProperties] = useState<PropertyInterface[]>([]); // Initialize as an array
     const selectedFilters = useSelector((state: RootState) => state.filters);
     const selectedLocations = useSelector((state: RootState) => state.locations);
-    const [error, setError] = useState(false);
+    const user = useSelector((state: RootState) => state.users.user);
+
+
 
     // const navigation = useNavigate();
     const [open, setOpen] = useState(false)
     const [grid, setGrid] = useState(false)
     const activeFilters: { value: number|string, label: string }[] = []
+    const [results, setResults] = useState([])
+
+
+    const searchProperties = useSearchProperties();
+    // { limit: 10, page: 1, radius: 50, locations:{} }
     // const searchFilters = useSelector((state) => state.filters)
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true);
 
-            try {
-
-                // setDataProperties(properties);
-                // console.info('Fetching properties:', properties);
-
-            } catch (error) {
-                console.error('Error fetching properties:', error);
-                setError(true);
+            let vars = {
+                variables: {
+                    limit: 10,
+                    page: 1,
+                    radius: selectedFilters.locationRadius,
+                    guestLongitude:selectedLocations.locations[0].longitude,
+                    guestLatitude:selectedLocations.locations[0].latitude,
+                }
             }
-            setIsLoading(false);
-        };
+            if(user.token){
+                vars = {
+                    variables: {
+                        limit: 10,
+                        page: 1,
+                        radius: 50,
+                        guestLongitude:0,
+                        guestLatitude:0
+                    }
+                }
+            }
+            const { data, errors } = await searchProperties(vars);
 
-        fetchData();
+            setResults(data.searchProperty.data)
+            console.log(data);
+
+            // Handle GraphQL Errors if any
+            if (errors && errors.length > 0) {
+                console.log('Login failed with GraphQL errors:', errors);
+                return; // Exit early
+            }
+
+
+
+
+        };
+                fetchData();
     }, []); // Depend on informationId to re-fetch when it changes
 
-    if (error) {
-        return <div>Error loading the data.</div>;
-    }
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
 
-
-
-
-
-    if (error) {
-        return <div>Error loading the data.</div>;
-    }
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }else {
-
-
-        return (
+    return (
 
 
             <div className="bg-white relative">
@@ -393,13 +403,16 @@ export default function Search() {
 
                         <div
                             className="my-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 xl:gap-x-4">
-                            {dataProperties.map((product) => (
-                                <div key={product.id}>
-                                    <PropertyCard property={product}/>
+                            {results?.map((propertyItem:PropertyInterface) => (
+                                <div key={propertyItem.id}>
+                                    <PropertyCard property={propertyItem}/>
                                 </div>
                             ))
                             }
-
+                            {/* Pagination Info */}
+                            {/*<div>*/}
+                            {/*    Page {paginatorInfo?.current_page} of {paginatorInfo?.last_page}*/}
+                            {/*</div>*/}
                         </div>
 
                         :
@@ -602,15 +615,18 @@ export default function Search() {
 
                                 </div>
                                 <div className="w-full  dark:bg-gray-800 pl-4 border-l ">
-                                    {dataProperties.map((product:PropertyInterface) => (
-                                        <div key={product.id}>
-                                            {product.is_featured ? <PropertyCardFeaturedList property={product}/> :
-                                                <PropertyCardList property={product}/>}
+                                    {results?.map((propertyItem:PropertyInterface) => (
+                                        <div key={propertyItem.id}>
+                                            {propertyItem.is_featured ? <PropertyCardFeaturedList property={propertyItem}/> :
+                                                <PropertyCardList property={propertyItem}/>}
 
                                         </div>
                                     ))
                                     }
-
+                                    {/* Pagination Info */}
+                                    {/*<div>*/}
+                                    {/*    Page {paginatorInfo?.current_page} of {paginatorInfo?.last_page}*/}
+                                    {/*</div>*/}
                                 </div>
 
                             </div>
@@ -622,5 +638,5 @@ export default function Search() {
 
             </div>
         )
-    }
+
 }
