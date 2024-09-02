@@ -1,75 +1,88 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import {  Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import {DataRadiusItem, SelectBoxRadiusProps} from "../interfaces/interfaces.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
 
 
 const data = [
     {
         "id": 1,
-        "value": "0.0",
+        "value": 0.0,
         "text": "This area only"
     },
     {
         "id": 2,
-        "value": "0.25",
+        "value": 0.25,
         "text": "Within ¼ mile"
     },
     {
         "id": 3,
-        "value": "0.5",
+        "value": 0.5,
         "text": "Within ½ mile"
     },
     {
         "id": 4,
-        "value": "1.0",
+        "value": 1.0,
         "text": "Within 1 mile"
     },
     {
         "id": 5,
-        "value": "3.0",
+        "value": 3.0,
         "text": "Within 3 miles"
     },
     {
         "id": 6,
-        "value": "5.0",
+        "value": 5.0,
         "text": "Within 5 miles"
     },
     {
         "id": 7,
-        "value": "10.0",
+        "value": 10.0,
         "text": "Within 10 miles"
     },
     {
         "id": 8,
-        "value": "15.0",
+        "value": 15.0,
         "text": "Within 15 miles"
     },
     {
         "id": 9,
-        "value": "20.0",
+        "value": 20.0,
         "text": "Within 20 miles"
     },
     {
         "id": 10,
-        "value": "30.0",
+        "value": 30.0,
         "text": "Within 30 miles"
     },
     {
         "id": 11,
-        "value": "40.0",
+        "value": 40.0,
         "text": "Within 40 miles"
     }
 ]
 
 const SelectBoxRadius : React.FC<SelectBoxRadiusProps> = ({ onChange, name }) => {
+    const selectedFilters = useSelector((state: RootState) => state.filters);
+
     const [selected, setSelected] =  useState <DataRadiusItem>({
         "id": 1,
-        "value": 0.0,
+        "value": selectedFilters.locationRadius ?? 0.0,
         "text": "This area only"
     })
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const index = data.findIndex(item => item.value === selectedFilters.locationRadius);
+            setSelected(data[index]);
+        };
+        fetchData();
+    }, []); // Depend on informationId to re-fetch when it changes
+
     const handleChange = (item: DataRadiusItem) => {
         setSelected(item);
         onChange(item);

@@ -41,8 +41,11 @@ export type PropertyTypeInterface = {
 type Nullable<T> = T | null;
 // PropertyInterface as a type
 export type PropertyInterface = {
+
     id?: Nullable<string>; // Allow both undefined and null
     address?: string | null;
+    address2?: string | null;
+    excerpt?: string | null;
     bathrooms?: number | null;
     bedrooms?: number | null;
     area_size?: number| null;
@@ -61,8 +64,8 @@ export type PropertyInterface = {
     latitude?: number| null;
     layout?: string | null;
     longitude?: number | null;
-    max?: number | bigint | null;
-    min?: number | null;
+    max_cap?: number | bigint | null;
+    min_cap?: number | null;
     postcode?: string | null;
     condition?: string| null;
     potential_epc_rating?: string | null;
@@ -73,7 +76,7 @@ export type PropertyInterface = {
     town?: string | null;
     type?: string | null;
     user_id?: string | null;
-    valuation?: number | null;
+    price?: number | null;
     valuation_type?: string | null;
     views?: number | null;
     year_built?: number | null;
@@ -154,7 +157,12 @@ export  type PropertyFilter = {
 export type DataItem = {
     id: number;
     name: string;
-    value: string | number;
+    value: string | number |null;
+};
+
+export type DataTypeItem = {
+    id: number;
+    name: string;
 };
 
 // SelectBoxProps as a type

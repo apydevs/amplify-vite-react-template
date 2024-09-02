@@ -10,14 +10,15 @@ export interface userStateObj {
     name: string | null,
     email: string | null
     token: string | null
-
+    account: string | null
 }
 
 const initialState: userState = {
     user:{
         name: null,
         email: null,
-        token: null
+        token: null,
+        account: null
     }
 
 
@@ -32,6 +33,7 @@ export const userSlice = createSlice({
             state.user.name = action.payload.name
             state.user.email = action.payload.email
             state.user.token = action.payload.token
+            state.user.account = action.payload.account
         },
         // decrement: (state) => {
         //     state.value -= 1
@@ -43,7 +45,8 @@ export const userSlice = createSlice({
             state.user = {
                 name: null,
                 email: null,
-                token: null
+                token: null,
+                account: null
             }
         },
     }

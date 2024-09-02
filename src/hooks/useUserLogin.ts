@@ -13,6 +13,9 @@ const LOGIN_USER = gql`
                 locations {
                     locationId,name,latitude,longitude
                 }
+                account {
+                    type
+                } 
                 message
             }
             errors

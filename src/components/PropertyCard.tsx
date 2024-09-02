@@ -44,7 +44,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property}) => {
                         <div className="absolute w-[151px] h-[94px] cardTop-img flex flex-col items-start pl-5 justify-start">
                             <div className="text-sm">Max Offer</div>
                             <div className="font-semibold">
-                                {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}
+                                {property ? `£${new Intl.NumberFormat('en-GB').format(property.max_cap ?? 0)}` : ''}
                             </div>
                         </div>
                         <img
@@ -81,7 +81,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property}) => {
 
                                         <div className="font-semibold text-sm text-center">
                                             <p className="text-xs text-gray-500">valuation</p>
-                                            {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}
+                                            {property ? `£${new Intl.NumberFormat('en-GB').format(property.max_cap ?? 0)}` : ''}
 
                                         </div>
                                     </div>

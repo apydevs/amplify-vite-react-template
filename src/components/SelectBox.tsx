@@ -1,9 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { SelectBoxProps,DataItem } from '../interfaces/interfaces'
+import {SelectBoxProps, DataItem, DataTypeItem} from '../interfaces/interfaces'
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
 
 const data = [
     { id: 1, name: 'All' },
@@ -18,7 +20,18 @@ const data = [
 ]
 
 const SelectBox: React.FC<SelectBoxProps> = ({ onChange, name }) => {
-    const [selected, setSelected] = useState<DataItem>({ id: 1, name: 'All',value: 'All'})
+    const selectedFilters = useSelector((state: RootState) => state.filters);
+    const [selected, setSelected] = useState<DataTypeItem>({ id: 1, name: 'All'})
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const index = data.findIndex(item => item.name === selectedFilters.type);
+            setSelected(data[index]);
+        };
+        fetchData();
+    }, []); // Depend on informationId to re-fetch when it changes
+
     const handleChange = (value: DataItem) => {
         setSelected(value);
         onChange(value);

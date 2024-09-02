@@ -27,6 +27,7 @@ import PropertyCardFeaturedList from "../../components/PropertyCardFeaturedList.
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store.ts";
 import {useSearchProperties} from "../../hooks/useSearchProperty.ts";
+import {useNavigate} from "react-router-dom";
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
     { name: 'Closest Distance', href: '#', current: false },
@@ -83,15 +84,20 @@ export default function Search() {
     const selectedFilters = useSelector((state: RootState) => state.filters);
     const selectedLocations = useSelector((state: RootState) => state.locations);
     const user = useSelector((state: RootState) => state.users.user);
-
+    const navigate = useNavigate();
 
 
     // const navigation = useNavigate();
     const [open, setOpen] = useState(false)
     const [grid, setGrid] = useState(false)
     const activeFilters: { value: number|string, label: string }[] = []
-    const [results, setResults] = useState([])
-
+    const [results, setResults] = useState<PropertyInterface[]>([]);
+    const [pagination, setPagination] = useState({
+        "total": 1,
+        "per_page": 1,
+        "current_page": 1,
+        "last_page": 1}
+    )
 
     const searchProperties = useSearchProperties();
     // { limit: 10, page: 1, radius: 50, locations:{} }
@@ -99,29 +105,23 @@ export default function Search() {
     useEffect(() => {
         const fetchData = async () => {
 
-            let vars = {
-                variables: {
-                    limit: 10,
-                    page: 1,
-                    radius: selectedFilters.locationRadius,
-                    guestLongitude:selectedLocations.locations[0].longitude,
-                    guestLatitude:selectedLocations.locations[0].latitude,
-                }
+            if(!selectedLocations.locations[0]){
+              return   navigate('/search')
             }
-            if(user.token){
-                vars = {
-                    variables: {
-                        limit: 10,
-                        page: 1,
-                        radius: 50,
-                        guestLongitude:0,
-                        guestLatitude:0
-                    }
+            const page  =  pagination.last_page !== pagination.current_page ? pagination.current_page+1 : pagination.current_page;
+            const vars = {
+                variables: {
+                    limit: 25,
+                    page: page,
+                    radius: selectedFilters.locationRadius,
+                    guestLongitude: user.token ? 0 : selectedLocations.locations[0].longitude,
+                    guestLatitude: user.token ? 0 :  selectedLocations.locations[0].latitude,
                 }
             }
             const { data, errors } = await searchProperties(vars);
 
             setResults(data.searchProperty.data)
+            setPagination(data.searchProperty)
             console.log(data);
 
             // Handle GraphQL Errors if any
@@ -137,6 +137,31 @@ export default function Search() {
                 fetchData();
     }, []); // Depend on informationId to re-fetch when it changes
 
+    async function handleAddMore() {
+
+      const page  =  pagination.last_page !== pagination.current_page ? pagination.current_page+1 : pagination.current_page;
+        const vars = {
+            variables: {
+                limit: 25,
+                page: page,
+                radius: selectedFilters.locationRadius,
+                guestLongitude: user.token ? 0 : selectedLocations.locations[0].longitude,
+                guestLatitude: user.token ? 0 :  selectedLocations.locations[0].latitude,
+            }
+        }
+        const {data, errors} = await searchProperties(vars);
+
+        // Handle GraphQL Errors if any
+        if (errors && errors.length > 0) {
+            console.log('Login failed with GraphQL errors:', errors);
+            return; // Exit early
+        }
+        // Correctly updating the results state
+        setResults(prevResults => [...prevResults, ...data.searchProperty.data]);  // Spread both arrays to form a new one
+        setPagination(data.searchProperty);
+
+
+    }
 
     return (
 
@@ -334,24 +359,27 @@ export default function Search() {
 
                         {/* Active filters */}
                         <div className="bg-blue-50 w-screen">
-                            <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
-                                <h3 className="text-sm font-medium text-black ">
-                                    Filters
-                                    <span className="sr-only">, active</span>
-                                </h3>
-                                <span onClick={() => setGrid(true)} className="text-sm mx-4 font-medium text-black ">
+                            <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8  md:justify-between">
+
+                                <div className="flex flex-row justify-start">
+                                    <h3 className="text-sm font-medium text-black ">
+                                        Filters
+                                        <span className="sr-only">, active</span>
+                                    </h3>
+                                    <span onClick={() => setGrid(true)}
+                                          className="text-sm mx-4 font-medium text-black ">
                                 Grid
                             </span>
-                                <span onClick={() => setGrid(false)} className="text-sm mx-4 font-medium text-black ">
+                                    <span onClick={() => setGrid(false)}
+                                          className="text-sm mx-4 font-medium text-black ">
                                 List
                             </span>
-                                <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"/>
-
-                                <div className="mt-2 sm:ml-4 sm:mt-0">
-                                    <div className="-m-1 flex flex-wrap items-center space-x-2">
-                                        <span className="text-sm font-medium">Locations:</span>
-                                        {selectedLocations.locations.length > 0 ? (
-                                            selectedLocations.locations.map((location) => (
+                                    <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"/>
+                                    <div className="mt-2 sm:ml-4 sm:mt-0 flex flex-row justify-end">
+                                        <div className="-m-1 flex flex-wrap items-center space-x-2">
+                                            <span className="text-sm font-medium">Locations:</span>
+                                            {selectedLocations.locations.length > 0 ? (
+                                                selectedLocations.locations.map((location) => (
                                                     <span key={location.name + "-test"}
                                                           className="inline-flex justify-between items-center gap-x-0.5 rounded-md bg-yellow-200 px-2 py-1 text-xs font-medium text-black">
                                            <span className="max-w-[180px] truncate hover:truncate-0">
@@ -369,12 +397,12 @@ export default function Search() {
                                               </button>
                                             </span>
                                                 ))
-                                            ):null}
+                                            ) : null}
                                             {activeFilters.map((activeFilter) => (
-                                            <span
-                                                key={activeFilter.value}
-                                                className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
-                                            >
+                                                <span
+                                                    key={activeFilter.value}
+                                                    className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
+                                                >
                     <span>{activeFilter.label}</span>
                     <button
                         type="button"
@@ -387,9 +415,18 @@ export default function Search() {
                     </button>
 
                   </span>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
+
+
+                                <div>
+                                  <span>
+                                       Radius : <span className="font-semibold">{selectedFilters.locationRadius} miles</span>
+                                  </span>
+                                </div>
+
                             </div>
                         </div>
                     </section>
@@ -403,7 +440,7 @@ export default function Search() {
 
                         <div
                             className="my-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 xl:gap-x-4">
-                            {results?.map((propertyItem:PropertyInterface) => (
+                            {results?.map((propertyItem: PropertyInterface) => (
                                 <div key={propertyItem.id}>
                                     <PropertyCard property={propertyItem}/>
                                 </div>
@@ -617,16 +654,20 @@ export default function Search() {
                                 <div className="w-full  dark:bg-gray-800 pl-4 border-l ">
                                     {results?.map((propertyItem:PropertyInterface) => (
                                         <div key={propertyItem.id}>
-                                            {propertyItem.is_featured ? <PropertyCardFeaturedList property={propertyItem}/> :
-                                                <PropertyCardList property={propertyItem}/>}
+                                            {propertyItem.is_featured ? <PropertyCardFeaturedList property={propertyItem}/> : <PropertyCardList property={propertyItem}/>}
 
                                         </div>
                                     ))
                                     }
                                     {/* Pagination Info */}
-                                    {/*<div>*/}
-                                    {/*    Page {paginatorInfo?.current_page} of {paginatorInfo?.last_page}*/}
-                                    {/*</div>*/}
+                                    {pagination.current_page !== pagination.last_page ? (
+
+                                        <div onClick={handleAddMore}
+                                              className="rounded-full font-bold bg-yellow-300 p-4 text-black shadow-sm hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                            <span className="text-2xl ">GO</span>
+                                        </div>
+                                    ) : null
+                                    }
                                 </div>
 
                             </div>

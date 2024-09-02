@@ -48,7 +48,7 @@ const dynamicUriLink = new ApolloLink((operation, forward) => {
 
     if(user.token){
         const token = user.token; // Retrieve the token from localStorage or any secure storage
-        if (customUri === '/locations') {
+        //if (customUri === '/locations' || ) {
 
              if (token) {
                 operation.setContext(({ headers = {} }) => ({
@@ -58,7 +58,7 @@ const dynamicUriLink = new ApolloLink((operation, forward) => {
                     },
                 }));
             }
-        }
+        //}
     }
     // Check if the request is for 'locations' and add the Bearer token
 

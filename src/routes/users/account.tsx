@@ -40,7 +40,7 @@ function Account() {
             <div className="container max-w-7xl mx-auto">
                 <div className="flex flex-row justify-between items-center ">
                     <h1 className="text-2xl " >Welcome:<span className="font-semibold"> {user?.name} </span></h1>
-                    <div>Account Type:<span className="font-bold">Buyer</span></div>
+                    <div>Account Type: <span className="font-bold capitalize">{user?.account}</span></div>
                 </div>
             </div>
             <div className="container max-w-7xl mx-auto my-4 bg-white rounded-2xl p-10">

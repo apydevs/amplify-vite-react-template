@@ -35,11 +35,13 @@ const LoginComponent = () => {
             const user = data?.loginUser?.user;
 
             if (user) {
+                console.log('Login successful, device:', user);
                 console.log('Login successful, device:', user.token);
                 dispatch(setUserDetails({
                     email : user.email,
                     name:user.name,
-                    token:user.token
+                    token:user.token,
+                    account:user.account.type
                 }));
 
                 console.log('user locations',user.locations)

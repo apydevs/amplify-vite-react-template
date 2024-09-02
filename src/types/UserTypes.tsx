@@ -10,6 +10,7 @@ export interface UserTypeQL {
     email:string | null,
     name: string | null,
     token: string | null,
+    account: string | null,
 }
 
 

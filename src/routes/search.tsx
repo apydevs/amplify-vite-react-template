@@ -40,6 +40,7 @@ export default function Search() {
     useEffect(() => {
         const fetchLocations = async () => {
             setIsLoading(true);
+
             if (locationsState.locations.length > 0) {
                 const mappedData: Locations['locations'] = locationsState.locations.map((item) => ({
                     locationId: item.locationId ?? '',
@@ -50,6 +51,7 @@ export default function Search() {
                 }));
                 setIsLoading(false);
                 console.log(isLoading);
+
                 dispatch(setLocations({locations:mappedData}));
             }
         };
@@ -173,7 +175,7 @@ export default function Search() {
 
                                 />
                                 <div className="m-0.5 px-1 py-1 w-1/3">
-                                    <SelectBoxRadius name="radius" onChange={(item) => dispatch(locationRadius(item))}/>
+                                    <SelectBoxRadius name="radius" onChange={(item) => dispatch(locationRadius(item))} />
                                 </div>
 
 

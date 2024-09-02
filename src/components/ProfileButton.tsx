@@ -1,11 +1,12 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 // Define an interface for the user data
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store.ts";
 import {setLogout} from "../store/features/user/userSlice.ts";
 import {setLocations} from "../store/features/locations/locationSlice.ts";
+import {locationRadius, type} from "../store/features/searchFilters/filterSlice.ts";
 
 
 
@@ -14,7 +15,7 @@ import {setLocations} from "../store/features/locations/locationSlice.ts";
 
 const App = () => {
 
-
+    const navigate = useNavigate();
     //const token = useSelector((state: RootState) => state.users.user.token);
     const user = useSelector((state: RootState) => state.users.user);
     const dispatch = useDispatch();
@@ -23,7 +24,11 @@ const App = () => {
 
             dispatch(setLogout())
             dispatch(setLocations({locations:[]}))
+            dispatch(type( { id: 1, name: 'All' }))
+            dispatch(locationRadius( { "value": 0.0}))
             console.log('attempt sign out');  // Now safe to access `message`
+            navigate('/login')
+
         } catch (error) {
             if (error instanceof Error) {
                 console.log('Login failed:', error.message);  // Now safe to access `message`

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import {
     DataItem,
-    DataRadiusItem
+    DataRadiusItem, DataTypeItem
 } from "../../../interfaces/interfaces.tsx";
    // Adjust according to your actual state structure
 
@@ -31,7 +31,7 @@ export const filterSlice = createSlice({
             console.log('locationRadius payload',acton.payload);
             state.locationRadius = parseFloat(acton.payload.value.toString())
         },
-        type: (state,acton:PayloadAction<DataItem>) => {
+        type: (state,acton:PayloadAction<DataTypeItem>) => {
             state.type = acton.payload.name
             console.log('type payload',acton.payload);
             console.log('type reduced',state.type);

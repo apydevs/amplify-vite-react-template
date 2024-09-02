@@ -1,4 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
 
 
 
@@ -13,6 +15,9 @@ const USER_SEARCH_PROPERTIES = gql`
                 excerpt
                 address2
                 county
+                is_featured
+                
+                
             }
             total
             per_page
@@ -23,9 +28,10 @@ const USER_SEARCH_PROPERTIES = gql`
 `
 
 export const useSearchProperties = () => {
+    const user = useSelector((state: RootState) => state.users.user);
     const [searchLocation] = useMutation(USER_SEARCH_PROPERTIES, {
         context: {
-            uri: '/property', // This tells Apollo Client to use the REST link instead of the GraphQL link
+            uri: user.token ?'/properties':'/property', // This tells Apollo Client to use the REST link instead of the GraphQL link
         },
 
     });
