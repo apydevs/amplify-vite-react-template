@@ -44,7 +44,7 @@ const dynamicUriLink = new ApolloLink((operation, forward) => {
     // Modify the operation's URI by appending the context URI to the base
     if (customUri) {
         operation.setContext({
-            uri: `${import.meta.env.VITE_GRAPHQL_DEFAULT}${customUri}`,
+            uri: `${apiUrl}${customUri}`,
         });
     }
 
