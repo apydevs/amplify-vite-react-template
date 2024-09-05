@@ -13,7 +13,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-
+    "sourceMap": false,  // Disable source maps
+    "inlineSourceMap": false,
+    "inlineSources": false,
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

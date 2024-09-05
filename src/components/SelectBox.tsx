@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import {SelectBoxProps, DataItem, DataTypeItem} from '../interfaces/interfaces'
+import {SelectBoxProps, DataTypeItem} from '../interfaces/interfaces'
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store.ts";
 
@@ -32,7 +32,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ onChange, name }) => {
         fetchData();
     }, []); // Depend on informationId to re-fetch when it changes
 
-    const handleChange = (value: DataItem) => {
+    const handleChange = (value: DataTypeItem) => {
         setSelected(value);
         onChange(value);
 

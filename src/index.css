@@ -491,3 +491,6 @@ div.pswp__img--placeholder,
 .pswp--one-slide .pswp__counter {
     display: none;
 }
+.leaflet-control-attribution {
+    display: none;
+}

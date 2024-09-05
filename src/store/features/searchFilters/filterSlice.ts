@@ -51,7 +51,7 @@ export const filterSlice = createSlice({
                     console.warn('Invalid number conversion:', action.payload.value);
                 }
             } else {
-                state.minBedroom = action.payload.value;
+                state.minBedroom = action.payload.value ?? 0;
             }
         },
         maxBedroom:  (state, action: PayloadAction<DataItem>) => {
@@ -67,7 +67,7 @@ export const filterSlice = createSlice({
                     console.warn('Invalid number conversion:', action.payload.value);
                 }
             } else {
-                state.maxBedroom = action.payload.value;
+                state.maxBedroom = action.payload.value ?? 10;
             }
         },
         minValuation: (state,acton:PayloadAction<DataRadiusItem>) => {
@@ -92,7 +92,6 @@ export const {
     maxBedroom,
     minValuation,
     maxValuation,
-    maxOfferPrice
 } = filterSlice.actions
 
 export default filterSlice.reducer

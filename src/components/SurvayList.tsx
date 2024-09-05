@@ -40,7 +40,7 @@ const people = [
 export default function SurveyList() {
     return (
         <div className="mt-10">
-            <h2 className="text-lg font-semibold leading-6 text-gray-900 mb-2">Surveys & Documents</h2>
+            <h2 className="text-md font-semibold  text-gray-900 mb-2 underline">Surveys & Documents</h2>
             <ul
                 role="list"
                 className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-b-xl"

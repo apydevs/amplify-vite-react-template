@@ -14,7 +14,7 @@ const PropertyCardFeaturedList:  React.FC<PropertyCardProps> = ({ property }) =>
             key={`property-list-${property.id}`}
             className='my-6 '
         >
-            <Link to={`/search/properties/${property.id}`}>
+            <Link to={`/search/properties/${property.slug}`}>
                 <div
                     className={`group relative cursor-pointer border-[0.5rem] ${property.is_featured ? "border-yellow-300" : "border-grey-200"}  
                 rounded-[0.5rem] shadow grid grid-cols-1 md:grid-cols-2 mr-4 md:mr-0 `}>

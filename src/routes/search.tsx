@@ -266,7 +266,7 @@ export default function Search() {
 
                             <div className="w-full">
                                 <label>Min Bedrooms</label>
-                                <SelectBoxNumber name="minbed" onChange={(item) => {
+                                <SelectBoxNumber name="min" onChange={(item) => {
 
 
                                     dispatch(minBedroom(item))
@@ -278,7 +278,7 @@ export default function Search() {
 
                             <div className="w-full">
                                 <label>Max Bedrooms</label>
-                                <SelectBoxNumber name="maxbed" onChange={(item) => dispatch(maxBedroom(item))}/>
+                                <SelectBoxNumber name="max" onChange={(item) => dispatch(maxBedroom(item))}/>
                             </div>
                         </div>
                         <div>

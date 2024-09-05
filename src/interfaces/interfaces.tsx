@@ -156,7 +156,7 @@ export  type PropertyFilter = {
 // DataItem as a type
 export type DataItem = {
     id: number;
-    name: string;
+    name: string | number;
     value: string | number |null;
 };
 
@@ -167,7 +167,7 @@ export type DataTypeItem = {
 
 // SelectBoxProps as a type
 export type SelectBoxProps = {
-    onChange: (value: DataItem) => void;
+    onChange: (value: DataTypeItem) => void;
     name: string | number;
 
 };

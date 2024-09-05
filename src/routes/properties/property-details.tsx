@@ -10,7 +10,8 @@ import AddFavorites from "../../components/AddFavorites.tsx";
 import {useEffect, useState} from "react";
 
 import yeoleyBg from "../../assets/bg/pattents/yeoley-bg.png";
- import { PropertyType} from "../../types/PropertyTypes.tsx";
+import { PropertyType} from "../../types/PropertyTypes.tsx";
+import { useGetProperty } from '../../hooks/useViewProperty.ts'; // Adjust the path as per your folder structure
 
 const product = {
     name: 'Basic Tee 6-Pack',
@@ -70,32 +71,19 @@ const product = {
 }
 export default function PropertyDetails() {
 
-    const [isLoading, setIsLoading] = useState(true);
     const { propertyId } = useParams();
     const [property] = useState<PropertyType>({}); // Initialize as a single object or null
 
-    const [error, setError] = useState(false);
+    const { loading, error, data } = useGetProperty(propertyId);
+
+
 
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            if (propertyId) {
-                try {
-                    // const propertyData = await getProperty(propertyId)  as CreatePropertyType;
-                    // setProperty(propertyData );
-                    // setIsLoading(false);
-                    // console.log(propertyData);
-                } catch (error) {
-                    console.error('Error fetching todo:', error);
-                    setError(true);
-                }
-            }
-
-        };
-
-        fetchData();
-    }, [propertyId]); // Depend on informationId to re-fetch when it changes
-    if (isLoading) {
+        if (data) {
+            console.log('Property data:', data);
+        }
+    }, [data]); // Depend on informationId to re-fetch when it changes
+    if (loading) {
         return <div>Loading...</div>;
     }
 
@@ -103,7 +91,7 @@ export default function PropertyDetails() {
         return <div>Error loading the data.</div>;
     }
 
-    if (property && !isLoading) {
+    if (property && !loading) {
 
         return (
             <>
@@ -198,15 +186,19 @@ export default function PropertyDetails() {
                                     </div>
 
                                     <div className="mt-4 min-w-0 flex-1 sm:mt-0">
-                                        <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">{property.title} </h1>
+                                        <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">{data.property.title} </h1>
 
                                         <div className="flex flex-row items-start justify-between">
 
                                             <div className="flex flex-col md:flex-row justify-start">
-                                                <span
-                                                    className="me-2 rounded bg-yellow-300 px-2.5 py-0.5 text-lg font-medium text-gray-900 dark:bg-yellow-900 dark:text-yellow-300 border border-black"> Max Offer  {property ? `£${new Intl.NumberFormat('en-GB').format(property.max ?? 0)}` : ''}</span>
-                                                {property.id ? (
-                                                        <AddFavorites propertyId={property.id}/>):(
+                                                <div
+                                                    className=" flex flex-col justify-start me-2 rounded-xl  px-2.5 py-1 text-lg font-medium text-gray-900 dark:bg-yellow-900 dark:text-yellow-300  hover:bg-black hover:text-white">
+                                                   <div className="text-sm">Max Offer </div>
+                                                    <div className="font-semibold underline underline-yellow-300
+                                                    ">{property ? `£${new Intl.NumberFormat('en-GB').format(data.property.max_cap ?? 0)}` : ''}</div>
+                                                </div>
+                                                {data.property.id ? (
+                                                        <AddFavorites propertyId={data.property.id}/>):(
                                                             <span>Login</span>
                                                 )}
 
@@ -217,7 +209,7 @@ export default function PropertyDetails() {
                                             <span
                                                 className="me-5 h-10 rounded px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 flex flex-row">
                                                 <FontAwesomeIcon icon={faBath} className="w-5 h-5 "/>
-                                                <span className="md:text-lg sm:text-2xl mx-2">1</span>
+                                                <span className="md:text-lg sm:text-2xl mx-2">{data.property.bathrooms}</span>
                                             </span>
                                                 <span
                                                     className="me-2 rounded  px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 ">
@@ -259,35 +251,49 @@ export default function PropertyDetails() {
                                             <div className="flex items-center gap-1.5 align-middle">
                                                 <p className="text-sm font-medium text-primary-700 dark:text-primary-500">Condition:</p>
                                                 <span
-                                                    className="h-5 w-5 text-sm  font-bold text-primary-700 dark:text-primary-500 underline"> {property.condition} </span>
+                                                    className="h-5 w-5 text-sm  font-bold text-primary-700 dark:text-primary-500 underline"> {data.property.band} </span>
                                             </div>
 
                                             <div className="flex items-center gap-1.5">
-                                                <svg className="h-5 w-5 text-gray-500 dark:text-gray-400"
-                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                                                     height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeLinecap="round"
-                                                          strokeLinejoin="round" strokeWidth="2"
-                                                          d="M3 9h13a5 5 0 0 1 0 10H7M3 9l4-4M3 9l4 4"/>
-                                                </svg>
-                                                <p className="text-sm font-normal text-gray-500 dark:text-gray-400">Free
-                                                    returns</p>
+                                                <p className="text-sm font-medium text-primary-700 dark:text-primary-500">Progress 56%</p>
                                             </div>
                                         </div>
 
                                         <div className="mt-4 hidden space-y-6 sm:block">
-                                            <p className="text-base font-semibold text-gray-900 dark:text-white">Key
-                                                Property Points:</p>
+
+                                            <h1 className="text-black font-semibold underline">Condition
+                                                information</h1>
+                                            <p className="text-base  text-gray-900 dark:text-white">{data.property.condition_information}</p>
+
+                                            {data.property.fixtures_list ? (
+                                                <>
+                                                    <div
+                                                        className="text-base font-semibold text-gray-900 dark:text-white  underline">Key
+                                                        Features:</div>
+                                                    <div className="space-y-4">
+
+                                                        <div className="text-base font-normal mb-10 text-gray-500 dark:text-gray-400 whitespace-pre-line">
+                                                            <div
+                                                                dangerouslySetInnerHTML={{__html: data.property.fixtures_list ?? 'Info coming soon'}}/>
+                                                        </div>
+
+                                                    </div>
+                                                </>
+
+
+                                            ) : null}
                                             <div className="space-y-4">
-
-                                                <p className="text-base font-normal mb-10 text-gray-500 dark:text-gray-400 whitespace-pre-line">{property.content  ?? 'Info coming soon'}</p>
                                                 <SurveyList/>
-
                                             </div>
                                             <h1 className="text-base text-lg font-semibold text-gray-900 dark:text-white ">Information </h1>
 
                                             <div className="mt-2 space-y-4">
-                                                <p className="text-base font-normal text-gray-500 dark:text-gray-400 whitespace-pre-line">{property.description}</p>
+                                                <div className="text-base font-normal text-gray-500 dark:text-gray-400 whitespace-pre-line">
+
+                                                    <div
+                                                        dangerouslySetInnerHTML={{__html: data.property.description ?? 'Info coming soon'}}/>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -298,9 +304,9 @@ export default function PropertyDetails() {
                                 <div className="mt-6 shrink-0 space-y-8 sm:mt-8 lg:mt-0 lg:w-full lg:max-w-xs">
                                     <div>
                                         <p className="text-2xl font-medium leading-none text-gray-900 dark:text-white">Market
-                                            Value <span className="font-extrabold"> {property ? `£${new Intl.NumberFormat('en-GB').format(property.valuation ?? 0)}` : ''}</span></p>
+                                            Value <span className="font-extrabold"> {property ? `£${new Intl.NumberFormat('en-GB').format(data.property.price ?? 0)}` : ''}</span></p>
                                         <p className="mt-2 text-base font-normal text-gray-800 dark:text-gray-400">Valuation
-                                            approved by:<span className="font-semibold">Agent Here.</span></p>
+                                            approved by:<span className="italic font-semibold text-gray-800 ">Agent Here.</span></p>
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-1">
@@ -360,7 +366,8 @@ export default function PropertyDetails() {
                                             <li>PS5 consoles will ship separately.</li>
                                             <li>A signature will be required upon delivery for this product.</li>
                                         </ul>
-                                        <LocationMap zoom={18} center={[51.505, -0.09]} position={[51.505, -0.09]}
+
+                                        <LocationMap zoom={16} center={[data.property.latitude, data.property.longitude]} position={[data.property.latitude, data.property.longitude]}
                                                      scrollWheelZoom={false}/>
                                     </div>
                                 </div>

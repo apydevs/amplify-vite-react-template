@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import {  Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import {DataItem, SelectBoxProps} from "../interfaces/interfaces.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
 
 const data = [
     { id: 0, name: "Any" ,value: 0},
@@ -17,13 +18,35 @@ const data = [
     { id: 8, name: 8 ,value: 8},
     { id: 9, name: 9 ,value: 9},
     { id: 10, name: 10 ,value: 10},
-    { id: 11, name: "11 or more" ,value: 11},
+    { id: 11, name: "11+" ,value: 11},
 ]
+type SelectBoxNumberProps = {
+    onChange: (value: BedroomType) => void;
+    name: string | number;
 
-const SelectBoxNumber: React.FC<SelectBoxProps> = ({ onChange, name }) => {
-    const [selected, setSelected] = useState<DataItem>({ id: 0, name: "Any", value: "Any" })
+};
+type BedroomType = {
 
-    const handleChange = (value: DataItem) => {
+    id: number, name: number | string ,value: number
+}
+
+const SelectBoxNumber: React.FC<SelectBoxNumberProps> = ({ onChange, name }) => {
+    const [selected, setSelected] = useState<BedroomType>({ id: 0, name: "Any", value: 0 })
+
+    const selectedFilters = useSelector((state: RootState) => state.filters);
+    useEffect(() => {
+        console.log(`${name}Valuation`)
+        const fetchData = async () => {
+            const index = data.findIndex(item => item.value === selectedFilters[`${name}Bedroom` as keyof typeof selectedFilters]);
+
+            if(index >= 0){
+                setSelected(data[index]);
+            }
+        };
+        fetchData();
+    }, []); // Depend on informationId to re-fetch when it changes
+
+    const handleChange = (value: BedroomType) => {
         setSelected(value);
         onChange(value);
 
