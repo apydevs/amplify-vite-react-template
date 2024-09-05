@@ -25,10 +25,10 @@ import Homepage from "./routes/homepage.tsx";
 import { PersistGate } from 'redux-persist/integration/react';
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, ApolloLink } from "@apollo/client";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
-
+const apiUrl = import.meta.env.VITE_NODE_ENV === 'production' ? 'https://graphql.yeoley.com/graphql' : 'http://127.0.0.1:8000/graphql';
 // Base GraphQL endpoint link
 const baseHttpLink = new HttpLink({
-    uri: import.meta.env.VITE_GRAPHQL_DEFAULT, // Base URL
+    uri: apiUrl, // Base URL
     credentials: 'same-origin',
 });
 
