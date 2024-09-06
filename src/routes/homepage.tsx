@@ -1,4 +1,4 @@
-import changeHero from '../assets/media/banners/heroChange.png';
+// import changeHero from '../assets/media/banners/heroChange.png';
 export default function Homepage() {
     return (
 <>
@@ -67,7 +67,7 @@ export default function Homepage() {
             </div>
 
             <div className="col-span-6 md:col-span-6  lg:col-span-6 mx-5 grid grid-cols-1 lg:col-start-8  gap-x-6 gap-y-10 items-end  xl:gap-x-8">
-                <img src={changeHero} className="w-full" alt="changeHero"/>
+                <img src={'https://imagedelivery.net/-WFVhV80GTj1ReSadevSkA/28e320f5-284a-48b8-1781-f807fed8aa00/yeoley'} className="w-full" alt="changeHero"/>
             </div>
         </div>
     </div>
@@ -163,7 +163,7 @@ export default function Homepage() {
 
                 </div>
                 <div className="w-full flex justify-end lg:w-1/6 -mt-2 md:-mt-6 lg:mt-[245px]">
-                    {/*<img className=" w-80 md:w-full lg:h-auto md:object-cover lg:object-contain" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/hero_XXI-img-1.png" alt="boy in hat" />*/}
+
                 </div>
             </div>
         </div>

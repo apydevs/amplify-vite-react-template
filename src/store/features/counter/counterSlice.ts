@@ -3,10 +3,12 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface CounterState {
     value: number
+    accountType: number
 }
 
 const initialState: CounterState = {
     value: 0,
+    accountType:1
 }
 
 
@@ -28,10 +30,13 @@ export const counterSlice = createSlice({
         incrementByAmount: (state, action: PayloadAction<number>) => {
             state.value += action.payload
         },
+        accountType: (state, action: PayloadAction<number>) => {
+            state.accountType = action.payload
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { increment, decrement, incrementByAmount,accountType } = counterSlice.actions
 
 export default counterSlice.reducer

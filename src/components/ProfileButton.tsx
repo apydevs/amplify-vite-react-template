@@ -81,7 +81,7 @@ const App = () => {
         return (
             <div className="flex flex-row items-center gap-8 justify-between">
                 <Link to="/login" >Login</Link>
-                <Link to="/login" >Create Account </Link>
+                <Link to="/join" >Create Account </Link>
             </div>
         );
     }
