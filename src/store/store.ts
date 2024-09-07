@@ -4,6 +4,7 @@ import locationReducer from './features/locations/locationSlice.ts'
 import filterReducer from './features/searchFilters/filterSlice'
 import favoritesReducer from './features/favorites/favouritesSlice.jsx'
 import userReducer from  './features/user/userSlice'
+import registerReducer from "./features/registration/registerSlice.ts"
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage';
 
@@ -33,6 +34,9 @@ const favoritesPersistConfig = {
 
 
 
+
+
+
 // Apply the persist reducer to the user reducer
 const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 const persistedLocationReducer = persistReducer(locationPersistConfig, locationReducer);
@@ -44,6 +48,7 @@ export const store = configureStore({
     reducer: {
         filters: persistedSearchFiltersReducer,
         counter: counterReducer,
+        registration:registerReducer,
         locations:persistedLocationReducer,
         favorites: persistedFavoritesReducer,
         users: persistedUserReducer

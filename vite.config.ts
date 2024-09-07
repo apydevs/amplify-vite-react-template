@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import { visualizer } from 'rollup-plugin-visualizer';
 import react from '@vitejs/plugin-react'
+//import ssr from 'vite-plugin-ssr/plugin';
+
 
 import dotenv from 'dotenv';
 
@@ -10,8 +12,13 @@ dotenv.config();
 export default defineConfig({
   plugins: [
       react(),
-      visualizer({ open: true }) // Automatically opens the visualizer in your browser after build
+      visualizer({ open: true }), // Automatically opens the visualizer in your browser after build
+    //ssr()
   ],
+  base: '/',  // Ensure this is correct for your deployment
+  ssr: {
+    // Any SSR-specific configurations
+  },
   define: {
     'process.env': process.env,
   },

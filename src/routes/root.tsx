@@ -1,8 +1,7 @@
-
-import {Link, Outlet} from "react-router-dom";
 'use client'
-
-import {SVGProps, useState} from 'react'
+import {Link, Outlet, useLocation} from "react-router-dom";
+import {metaTags, titles} from "../utils/meta.ts"
+import {SVGProps, useEffect, useState} from 'react'
 import {
     Dialog,
     DialogPanel,
@@ -129,8 +128,29 @@ const navigation = {
     ],
 }
 
+
 export default function Root() {
 
+    const location = useLocation()
+
+    useEffect(() => {
+        document.title = titles[location.pathname as string] ?? 'Hello World';
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+            metaDescription.setAttribute(
+                'content',
+                metaTags[location.pathname]?.description ?? 'Default description'
+            );
+        }
+        // Update meta keywords
+        const metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (metaKeywords) {
+            metaKeywords.setAttribute(
+                'content',
+                metaTags[location.pathname]?.keywords ?? 'default, keywords'
+            );
+        }
+    }, [location]);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
 

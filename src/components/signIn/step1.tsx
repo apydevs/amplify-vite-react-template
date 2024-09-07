@@ -1,10 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Radio, RadioGroup} from '@headlessui/react'
 import {CheckCircleIcon} from '@heroicons/react/20/solid'
 import { useDispatch } from "react-redux";
-import {accountType, decrement, increment} from "../../store/features/counter/counterSlice.ts";
+import {decrement, increment} from "../../store/features/counter/counterSlice.ts";
 import {Link} from "react-router-dom";
 import SelectBoxCompanyType from "../SelectBoxCompanyType.tsx";
+import {accountType, company, companyType} from "../../store/features/registration/registerSlice.ts";
 
 const mailingLists = [
     {id: 1, title: 'General Buyer', description: 'Searching for a property or properties to buy.', users: 'Search Multiple Locations '},
@@ -18,12 +19,23 @@ const SignupStep1: React.FC = () => {
     const dispatch = useDispatch();
     const [selectedMailingLists, setSelectedMailingLists] = useState(mailingLists[0])
     const [companyName, setCompanyName] = useState('');
+    const [customerCompanyName, setCustomerCompanyName] = useState('');
+
+    useEffect(() => {
+        dispatch(accountType(selectedMailingLists.id))
+        dispatch(company(companyName))
+        dispatch(companyType(customerCompanyName))
+    }, [companyName, customerCompanyName, dispatch, selectedMailingLists.id]);
+
+
+    function handleSelectedChange(ww:{id:number,name:string}){
+        setCustomerCompanyName(ww.name)
+    }
 
     function handlePrevious() {
         dispatch(decrement())
     }
     function handleProceed() {
-        dispatch(accountType(selectedMailingLists.id))
         dispatch(increment())
     }
 
@@ -108,7 +120,8 @@ const SignupStep1: React.FC = () => {
 
 
                                 <div className="my-6">
-                                    <SelectBoxCompanyType/>
+                                    <SelectBoxCompanyType onSelectedChange={handleSelectedChange} />
+
                                 </div>
 
 

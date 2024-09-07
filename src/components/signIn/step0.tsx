@@ -1,23 +1,32 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import { useDispatch } from "react-redux";
 import { increment } from "../../store/features/counter/counterSlice.ts";
+
+
 import {Link} from "react-router-dom";
+import {email,name} from "../../store/features/registration/registerSlice.ts";
 
 
 
 const SignupStep0: React.FC = () => {
     const dispatch = useDispatch();
 
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
+    const [customerEmail, setCustomerEmail] = useState('');
+    const [customerName, setCustomerName] = useState('');
+
+    useEffect(() => {
+        dispatch(email(customerEmail))
+        dispatch(name(customerName))
+
+    }, [customerEmail, customerName, dispatch]);
+
+
 
 
 
     function handleProceed() {
-
         //save to create form  store state
-
         dispatch(increment())
     }
 
@@ -56,8 +65,8 @@ const SignupStep0: React.FC = () => {
                                         <input
                                             className="m-1 px-4 py-4 w-full font-medium text-lg  border-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0 placeholder:text-gray-200"
                                             type="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            value={customerEmail}
+                                            onChange={(e) => setCustomerEmail(e.target.value)}
                                             placeholder="Email adderss required"
                                             id="email"
                                             name="email"
@@ -79,8 +88,8 @@ const SignupStep0: React.FC = () => {
                                             id='name'
                                             name="name"
                                                type="text"
-                                               value={name}
-                                               onChange={(e) => setName(e.target.value)}
+                                               value={customerName}
+                                               onChange={(e) => setCustomerName(e.target.value)}
                                                placeholder="Joe bloggs"
                                                autoComplete="name"
                                                required/>
