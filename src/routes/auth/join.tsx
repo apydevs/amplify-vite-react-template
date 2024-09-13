@@ -6,7 +6,6 @@ import SignupStep0 from "../../components/signIn/step0.tsx";
 import Step2GeneralBuyer from "../../components/signIn/step2Buyer.tsx";
 const JoinComponent = () => {
     const step = useSelector((state: RootState) => state.counter.value); // Make sure the path matches your actual state structure
-    const account  = useSelector((state: RootState) => state.counter.accountType); // Make sure the path matches your actual state structure
 
     if (step === 0) {
         return <SignupStep0 />;
@@ -16,7 +15,7 @@ const JoinComponent = () => {
     }
 
     // general buyers account setup
-    if (step === 2 && account == 1) {
+    if (step === 2) {
         return <Step2GeneralBuyer />;
     }
 
