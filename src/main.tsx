@@ -26,6 +26,11 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, ApolloLink } from "@apollo/client";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Join from "./routes/auth/join.tsx";
+
+
+
+
+
 // const apiUrl = import.meta.env.VITE_NODE_ENV === 'production' ? 'https://graphql.yeoley.com/graphql' : 'http://127.0.0.1:8000/graphql';
 // const apiUrl = 'https://graphql.yeoley.com/graphql';
 const apiUrl = 'http://127.0.0.1:8000/graphql';
@@ -151,8 +156,8 @@ const router = createBrowserRouter([
 ]);
 
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+ReactDOM.hydrateRoot(document.getElementById('root')!,
+    <React.StrictMode>
       <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
               <ApolloProvider client={client}>
