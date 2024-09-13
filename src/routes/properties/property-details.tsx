@@ -11,7 +11,9 @@ import {useEffect, useState} from "react";
 
 import yeoleyBg from "../../assets/bg/pattents/yeoley-bg.png";
 import { PropertyType} from "../../types/PropertyTypes.tsx";
-import { useGetProperty } from '../../hooks/useViewProperty.ts'; // Adjust the path as per your folder structure
+import { useGetProperty } from '../../hooks/useViewProperty.ts';
+import {openDraw} from "../../store/features/counter/counterSlice.ts";
+import {useDispatch} from "react-redux"; // Adjust the path as per your folder structure
 
 const product = {
     name: 'Basic Tee 6-Pack',
@@ -70,7 +72,7 @@ const product = {
         'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
 }
 export default function PropertyDetails() {
-
+    const dispatch = useDispatch();
     const { propertyId } = useParams();
     const [property] = useState<PropertyType>({}); // Initialize as a single object or null
 
@@ -323,7 +325,7 @@ export default function PropertyDetails() {
                                                 Make an offer
                                             </a>
 
-                                            <a href="#" title=""
+                                            <div onClick={()=>dispatch(openDraw(true))} title=""
                                                className="mt-4 flex w-full items-center justify-center rounded-lg bg-yellow-300 px-5 py-2.5 text-sm font-medium text-black hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
                                                role="button">
                                                 <svg className="-ms-2 me-2 h-5 w-5" aria-hidden="true"
@@ -335,7 +337,7 @@ export default function PropertyDetails() {
                                                 </svg>
 
                                                 Buy Offer Packs
-                                            </a>
+                                            </div>
 
                                             <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
                                                 Available at a lower price from

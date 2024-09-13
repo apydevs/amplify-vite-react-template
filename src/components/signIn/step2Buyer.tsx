@@ -1,24 +1,98 @@
 import React, {useState} from 'react'
 
-import { useDispatch } from "react-redux";
-import {decrement, increment} from "../../store/features/counter/counterSlice.ts";
-import {Link} from "react-router-dom";
-
+import {useDispatch, useSelector} from "react-redux";
+import {decrement} from "../../store/features/counter/counterSlice.ts";
+import {Link, useNavigate} from "react-router-dom";
+import {RootState} from "../../store/store.ts";
+import {useNewUser} from "../../hooks/useUserRegister.ts";
+import {setUserDetails} from "../../store/features/user/userSlice.ts";
+import {setLocations} from "../../store/features/locations/locationSlice.ts";
+import {validateMultipleFields, validateMultipleGQLValidation} from "../../utils/ValidationHandler.ts";
+import {ToastContainer} from "react-toastify";
 
 
 const Step2GeneralBuyer: React.FC = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const attemptUserRegistration = useNewUser();
+    const newUserState = useSelector((state: RootState) => state.newUser);
+
+
 
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
+    const [device_name] = useState('default_device');
+
+    // Monitor and dispatch account type when selectedMailingLists changes
 
     function handlePrevious() {
         dispatch(decrement())
     }
-    function handleProceed() {
-        //save to create form  store state
-        dispatch(increment())
+    async function handleProceed() {
+
+        const isValid = validateMultipleFields([
+            { value: phone, name: 'Phone' },
+            { value: password, name: 'Password' },
+            { value: confirm, name: 'Confirm Password' }
+        ]);
+
+
+        if (isValid) {
+            // Handle form submission logic if validation passes
+
+
+            //save to create form  store state
+            const {data, errors} = await attemptUserRegistration({
+                variables: {
+                    name: newUserState.fullName,
+                    email: newUserState.email,
+                    phone: phone,
+                    password: password,
+                    confirm_password: confirm,
+                    device_name: device_name,
+                    account: newUserState.accountType
+                },
+            });
+
+            // Handle GraphQL errors
+            if (errors && errors.length > 0) {
+                console.log('Login failed with GraphQL errors:', errors);
+                return; // Exit early on errors
+            }
+
+            // Safely access the loginUser and user data
+            const loginResponse = data?.createUser;
+            const user = loginResponse?.user;
+
+            // If user exists and has a token, login was successful
+            if (user && user.token) {
+                console.log('Login successful, token:', user.token);
+
+                // Dispatch user details to the store
+                dispatch(setUserDetails({
+                    email: user.email,
+                    name: user.name,
+                    token: user.token,
+                    account: user.account.type,
+                }));
+
+                // Dispatch user locations
+                dispatch(setLocations({locations: user.locations}));
+
+                // Navigate to account page
+                return navigate('/account');
+            }else{
+                console.log(data)
+
+             const validationMsg =   data.createUser.errors.map((item:string)=>{
+                 return { value: item, name: 'Validation' }
+                });
+
+                 validateMultipleGQLValidation(validationMsg);
+
+            }
+        }
     }
 
     return (
@@ -46,7 +120,7 @@ const Step2GeneralBuyer: React.FC = () => {
                                 to the phone number provided for additional verification.
                             </legend>
 
-                            <form className="space-y-6">
+                            <div className="space-y-6"  >
                                 <div>
                                     <label htmlFor="phone"
                                            className="block text-sm font-medium leading-6 text-gray-900">Contact Number
@@ -55,15 +129,14 @@ const Step2GeneralBuyer: React.FC = () => {
                                     <div
                                         className="flex flex-row items-center justify-between  rounded-lg border-2 border-yellow-300 bg-white">
                                         <input
-                                            className="m-1 px-4 py-4 w-full font-medium text-lg  border-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0 placeholder:text-gray-200"
-                                            type="phone"
-                                            value={phone}
+                                            type="number"
+                                            className="m-1  px-4 py-4 w-full font-medium text-lg  border-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0 placeholder:text-gray-200"
                                             onChange={(e) => setPhone(e.target.value)}
                                             placeholder="Contact Number"
                                             id="phone"
                                             name="phone"
-                                            autoComplete='mobile tel'
-                                            required
+                                            aria-autocomplete={"none"}
+                                            autoComplete={"off"}
                                         />
                                     </div>
 
@@ -80,6 +153,8 @@ const Step2GeneralBuyer: React.FC = () => {
                                             name="password"
                                             type="password"
                                             value={password}
+                                            autoComplete={"fefefef"}
+                                            aria-autocomplete={"none"}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="***********"
                                             required/>
@@ -102,7 +177,7 @@ const Step2GeneralBuyer: React.FC = () => {
                                             required/>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
 
 
                             <div className="flex flex-row justify-between items-center">
@@ -133,7 +208,8 @@ const Step2GeneralBuyer: React.FC = () => {
                 </div>
 
             </div>
-
+            {/* Add ToastContainer to display notifications */}
+            <ToastContainer stacked/>
         </section>
     );
 }

@@ -14,7 +14,7 @@ export default function LocationMap({zoom, center,position,scrollWheelZoom}: Loc
     return (
         <div>
             <h2 className="text-lg font-semibold leading-6 text-gray-900 mb-2">Location</h2>
-            <div className=" overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg">
+            <div className=" overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg z-20">
 
                 <MapContainer  center={center} zoom={zoom} scrollWheelZoom={scrollWheelZoom}>
                     <TileLayer

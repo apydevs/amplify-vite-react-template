@@ -26,6 +26,7 @@
     height: 400px;
     max-height: 400px;
     width: 100%;
+    z-index: 1;
 }
 
 .leaflet-default-icon-path {

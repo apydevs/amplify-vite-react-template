@@ -3,12 +3,13 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface CounterState {
     value: number
-    accountType: number
+    openDraw: boolean
 }
 
 const initialState: CounterState = {
-    value: 0,
-    accountType:1
+    value: 0, //registration steps
+    openDraw:false // offer pack modal
+
 }
 
 
@@ -30,13 +31,13 @@ export const counterSlice = createSlice({
         incrementByAmount: (state, action: PayloadAction<number>) => {
             state.value += action.payload
         },
-        accountType: (state, action: PayloadAction<number>) => {
-            state.accountType = action.payload
+        openDraw: (state, action: PayloadAction<boolean>) => {
+            state.openDraw = action.payload
         },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount,accountType } = counterSlice.actions
+export const { increment, decrement, incrementByAmount,openDraw } = counterSlice.actions
 
 export default counterSlice.reducer

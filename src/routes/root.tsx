@@ -1,5 +1,6 @@
 
 import {Link, Outlet} from "react-router-dom";
+import SideModal from "../components/SideModal.tsx";
 'use client'
 
 import {SVGProps, useState} from 'react'
@@ -402,6 +403,7 @@ export default function Root() {
                     </div>
                 </div>
             </footer>
+            <SideModal/>
         </>
     );
 }

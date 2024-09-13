@@ -1,24 +1,45 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { increment } from "../../store/features/counter/counterSlice.ts";
 import {Link} from "react-router-dom";
+import {setEmail, setFullName} from "../../store/features/user/newUserSlice.ts";
+import {RootState} from "../../store/store.ts";
+import { validateMultipleFields} from "../../utils/ValidationHandler.ts";
+import {ToastContainer} from "react-toastify";
 
 
 
 const SignupStep0: React.FC = () => {
     const dispatch = useDispatch();
 
-    const [email, setEmail] = useState('');
+    const [userEmail, setUserEmail] = useState('');
     const [name, setName] = useState('');
 
+    const newUserState = useSelector((state: RootState) => state.newUser);
+
+
+    // // Monitor and dispatch account type when selectedMailingLists changes
+    useEffect(() => {
+        setName(newUserState.fullName)
+        setUserEmail(newUserState.email)
+    }, []); // Trigger when selectedMailingLists changes
 
 
     function handleProceed() {
+        //setName(newUserState.fullName)
 
-        //save to create form  store state
+        const isValid = validateMultipleFields([
+            { value: newUserState.email, name: 'Email' },
+            { value: newUserState.fullName, name: 'Full Name' }
+        ]);
 
-        dispatch(increment())
+        if (isValid) {
+            // Handle form submission logic if validation passes
+            dispatch(increment())
+        }
+
+
     }
 
     return (
@@ -56,8 +77,11 @@ const SignupStep0: React.FC = () => {
                                         <input
                                             className="m-1 px-4 py-4 w-full font-medium text-lg  border-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0 placeholder:text-gray-200"
                                             type="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            value={userEmail}
+                                            onChange={(e) => {
+                                                setUserEmail(e.target.value)
+                                                dispatch(setEmail(e.target.value))
+                                            }}
                                             placeholder="Email adderss required"
                                             id="email"
                                             name="email"
@@ -80,7 +104,10 @@ const SignupStep0: React.FC = () => {
                                             name="name"
                                                type="text"
                                                value={name}
-                                               onChange={(e) => setName(e.target.value)}
+                                               onChange={(e) => {
+                                                   setName(e.target.value)
+                                                   dispatch(setFullName(e.target.value))
+                                               }}
                                                placeholder="Joe bloggs"
                                                autoComplete="name"
                                                required/>
@@ -91,7 +118,7 @@ const SignupStep0: React.FC = () => {
 
                             <div
                                 onClick={handleProceed}
-                                className="rounded-full my-8  font-bold text-center bg-yellow-300 cursor-pointer p-2 text-black shadow-sm hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-auto ">
+                                className={"rounded-full my-8  font-bold text-center bg-yellow-300 cursor-pointer p-2 text-black shadow-sm hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-auto "}>
                                 <span className="text-lg text-center">Proceed</span>
                             </div>
 
@@ -108,7 +135,8 @@ const SignupStep0: React.FC = () => {
                 </div>
 
             </div>
-
+            {/* Add ToastContainer to display notifications */}
+            <ToastContainer stacked/>
         </section>
 );
 }
