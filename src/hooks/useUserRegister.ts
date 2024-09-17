@@ -21,7 +21,10 @@ const REGISTER_USER = gql`
                     locationId,name,latitude,longitude
                 }
                 favourites {
-                    property
+                    property {
+                        title
+                        price
+                    }
                 }
                 account {
                     type
