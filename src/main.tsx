@@ -31,8 +31,8 @@ import Join from "./routes/auth/join.tsx";
 
 
 
- const apiUrl = import.meta.env.VITE_NODE_ENV === 'production' ? 'https://graphql.yeoley.com/graphql' : 'http://127.0.0.1:8000/graphql';
-// const apiUrl = 'https://graphql.yeoley.com/graphql';
+ // const apiUrl = import.meta.env.VITE_NODE_ENV === 'production' ? 'https://graphql.yeoley.com/graphql' : 'http://127.0.0.1:8000/graphql';
+ const apiUrl = 'https://graphql.yeoley.com/graphql';
 // const apiUrl =  'http://127.0.0.1:8000/graphql';
 //
 //Base GraphQL endpoint link
