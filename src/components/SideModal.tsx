@@ -6,10 +6,44 @@ import {useDispatch, useSelector} from "react-redux";
 import {openDraw} from "../store/features/counter/counterSlice.ts";
 import {RootState} from "../store/store.ts";
 import PackCard from "./offerpacks/PackCard.tsx";
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import CheckoutForm from "./stripe/checkout.tsx";
+import {useState} from "react";
 
+import {useGatewayIntent} from "../hooks/useGatewayIntent.ts";
+const stripePromise = loadStripe('pk_test_e8u90ge5tOPZbvNTxaeGRlA0');
 export default function SideModal() {
     const modal = useSelector((state: RootState) => state.counter.openDraw);
     const dispatch = useDispatch();
+    const attemptPaymentIntent = useGatewayIntent();
+
+
+    const [cs, setCs] = useState('')
+
+
+
+    async function handleSelect() {
+
+        const price = 1999
+        const {data, errors} = await attemptPaymentIntent({
+            variables: {
+                amount: price
+            },
+        });
+
+        console.log('data',data)
+        setCs(data.paymentIntent.client_secret)
+        console.log('errors',errors)
+
+
+    }
+
+    const options = {
+        // passing the client secret obtained from the server
+        clientSecret: cs,
+    };
+
 
     return (
         <Dialog open={modal} onClose={()=>dispatch(openDraw(false))} className="relative z-50">
@@ -46,10 +80,12 @@ export default function SideModal() {
                                         <PackCard id={'1'} price={6.99} title={"5 Offers on any property"} offer={5} exclusive={true}/>
                                         <PackCard id={'2'} price={14.99} title={"16 Offers on any property"} offer={16} exclusive={false}/>
                                         <PackCard id={'1'} price={29.99} title={"30 Offers on any property"} offer={30} exclusive={true}/>
-
+                                        <button onClick={handleSelect}>
+                                            tet
+                                        </button>
                                     </div>
                                     <div className="w-full xl:w-1/2">
-                                        <div className="mx-auto max-w-2xl sm:text-center">
+                                        <div className="mx-auto max-w-2xl sm:text-center mt-5">
                                         <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Simple
                                                 no-tricks pricing</h2>
                                             <p className="mt-6 text-lg leading-8 text-gray-600">
@@ -57,6 +93,12 @@ export default function SideModal() {
                                                 iusto modi velit ut non voluptas
                                                 in. Explicabo id ut laborum.
                                             </p>
+                                            {cs && (
+                                                <Elements stripe={stripePromise} options={options}>
+                                                    <CheckoutForm />
+                                                </Elements>
+                                            )}
+
                                         </div>
                                     </div>
                                 </div>

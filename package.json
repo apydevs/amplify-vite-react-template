@@ -26,6 +26,8 @@
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
     "@reduxjs/toolkit": "^2.2.6",
+    "@stripe/react-stripe-js": "^2.8.0",
+    "@stripe/stripe-js": "^4.5.0",
     "apollo-link-rest": "^0.9.0",
     "dotenv": "^16.4.5",
     "flowbite": "^2.4.1",

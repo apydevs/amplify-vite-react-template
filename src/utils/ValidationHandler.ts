@@ -55,6 +55,29 @@ export const handleValidateBackend = (value: string | number, name: string): obj
         };
 };
 
+
+export const handleSuccessNotify = (value: string | number, name: string): object | boolean => {
+    // Use toast notification for validation error
+    toast.success(` ${value} `, {
+        position: "top-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+    });
+
+    return {
+        type: 'validation',
+        message: name,
+        error: `${value}`,
+    };
+};
+
+
 // Wrapper function to validate multiple fields at once
 export const validateMultipleFields = (fields: { value: string | number; name: string }[]): boolean => {
     let isValid = true;
@@ -81,3 +104,14 @@ export const validateMultipleGQLValidation = (fields: { value: string | number; 
     return true
 };
 
+
+
+export const goodUserNotification =  (fields: { value: string | number; name: string }[]): boolean => {
+
+    fields.forEach((field) => {
+        handleSuccessNotify(field.value, field.name);
+    });
+
+
+    return true
+};
