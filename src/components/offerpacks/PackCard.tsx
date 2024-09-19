@@ -1,9 +1,13 @@
 import { CheckIcon } from '@heroicons/react/20/solid'
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/store.ts";
+import {useNavigate} from "react-router-dom";
+import {openDraw} from "../../store/features/counter/counterSlice.ts";
 
 const includedFeatures = [
-    'Private forum access',
-    'Member resources',
-    'Entry to annual conference',
+    'Private Secure Offers',
+    'Exclusive Property Pricing ',
+    'Use on any property',
     'Official member t-shirt',
 ]
 
@@ -12,10 +16,15 @@ type CardValues = {
     offer: number,
     title: string,
     id: string,
-    exclusive: boolean
-}
+    exclusive: boolean,
+    onSelect: (id: string) => void; // Add onSelect prop
+    selected:boolean
+   }
 
-export default function PackCard({price,offer,title,id,exclusive = false}:CardValues) {
+export default function PackCard({price,offer,title,id,exclusive = false, onSelect,selected = false }:CardValues) {
+    const user = useSelector((state: RootState) => state.users.user);
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
     return (
         <div id={id} >
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -57,12 +66,26 @@ export default function PackCard({price,offer,title,id,exclusive = false}:CardVa
                                     <span
                                         className="text-sm font-semibold leading-6 tracking-wide text-gray-600">GBP</span>
                                 </p>
-                                <a
-                                    href="#"
+
+                            {( !user.token ? (
+                                <button
+                                    onClick={() =>{
+                                        navigate('/login')
+                                        dispatch(openDraw(false))
+                                    } }
                                     className="mt-10 block w-full rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 >
-                                    Select
-                                </a>
+                                    Login / Register
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => onSelect(id)} // Call onSelect with the id
+                                    className="mt-10 block w-full rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    {(selected ? 'Selected':'Select')}
+                                </button>
+                            ))}
+
                                 <p className="mt-6 text-xs leading-5 text-gray-600">
                                     Invoices and receipts available for easy company reimbursement
                                 </p>

@@ -12,23 +12,66 @@ import CheckoutForm from "./stripe/checkout.tsx";
 import {useState} from "react";
 
 import {useGatewayIntent} from "../hooks/useGatewayIntent.ts";
+
 const stripePromise = loadStripe('pk_test_e8u90ge5tOPZbvNTxaeGRlA0');
+
+const packs =
+    [
+        {
+            id:'1',
+            price:2.99,
+            title:"1 Offers on any property",
+            offer:1,
+            exclusive:false,
+            selected:false
+        },
+        {
+            id:'2',
+            price:8.99,
+            title:"8 Offers on any property",
+            offer:8,
+            exclusive:false,
+            selected:false
+        },
+        {
+            id:'3',
+            price:14.99,
+            title:"20 Offers on any property",
+            offer:20,
+            exclusive:false,
+            selected:false
+        },
+        {
+            id:'4',
+            price:19.99,
+            title:"26 Offers on this property only",
+            offer:26,
+            exclusive:true,
+            selected:false
+        }
+]
+
 export default function SideModal() {
+
     const modal = useSelector((state: RootState) => state.counter.openDraw);
     const dispatch = useDispatch();
     const attemptPaymentIntent = useGatewayIntent();
 
-
     const [cs, setCs] = useState('')
+    const selectedPack = packs.find(item => item.selected);
 
 
 
-    async function handleSelect() {
+    async function handlePackSelection(id: string) {
 
-        const price = 1999
+        console.log(id)
+        packs.map((item)=> item.selected = false);
+        const index = packs.findIndex((item)=> item.id == id);
+
+        packs[index].selected = true
         const {data, errors} = await attemptPaymentIntent({
             variables: {
-                amount: price
+                amount: packs[index].price
             },
         });
 
@@ -74,15 +117,15 @@ export default function SideModal() {
                                 </div>
                                 {/* Main */}
                                 <div className="divide-x divide-gray-200 flex flex-col lg:flex-row mx-auto container">
-                                    <div className="w-full xl:w-1/2">
+                                    <div className="w-full xl:w-1/2 h-screen overflow-y-scroll">
                                         <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl px-10 pt-5">Available Offer Packs</h2>
-                                        <PackCard id={'1'} price={19.99} title={"20 Offers on any property"} offer={20} exclusive={false}/>
-                                        <PackCard id={'1'} price={6.99} title={"5 Offers on any property"} offer={5} exclusive={true}/>
-                                        <PackCard id={'2'} price={14.99} title={"16 Offers on any property"} offer={16} exclusive={false}/>
-                                        <PackCard id={'1'} price={29.99} title={"30 Offers on any property"} offer={30} exclusive={true}/>
-                                        <button onClick={handleSelect}>
-                                            tet
-                                        </button>
+
+                                        {packs.map((item)=>
+
+                                            <PackCard id={item.id} price={item.price} title={item.title} offer={item.offer} exclusive={item.exclusive} selected={item.selected}  onSelect={handlePackSelection} />
+
+                                        )}
+                                    <div className="my-10"></div>
                                     </div>
                                     <div className="w-full xl:w-1/2">
                                         <div className="mx-auto max-w-2xl sm:text-center mt-5">
@@ -93,12 +136,27 @@ export default function SideModal() {
                                                 iusto modi velit ut non voluptas
                                                 in. Explicabo id ut laborum.
                                             </p>
+
+
+
+
                                             {cs && (
                                                 <Elements stripe={stripePromise} options={options}>
                                                     <CheckoutForm />
                                                 </Elements>
                                             )}
-
+                                            {selectedPack && (
+                                                <PackCard
+                                                    key={selectedPack.id}
+                                                    id={selectedPack.id}
+                                                    price={selectedPack.price}
+                                                    title={selectedPack.title}
+                                                    offer={selectedPack.offer}
+                                                    exclusive={selectedPack.exclusive}
+                                                    selected={selectedPack.selected}
+                                                    onSelect={handlePackSelection}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 </div>

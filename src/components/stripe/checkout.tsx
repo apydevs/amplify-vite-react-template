@@ -51,8 +51,8 @@ const CheckoutForm = () => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <PaymentElement/>
-                <button disabled={!stripe}>Submit</button>
+                <PaymentElement className="mt-5"/>
+                <button className="mt-10 block w-full rounded-md bg-green-500 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" disabled={!stripe}>Process Payment</button>
             </form>
             <ToastContainer stacked/>
         </div>
