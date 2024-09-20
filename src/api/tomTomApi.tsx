@@ -3,7 +3,7 @@ import {Search, SearchApiResponse} from "../types/TomTomTypes.tsx";
 
 // API to get all locations from TOMTOM
 export const fetchSearchResults = async (query: Search): Promise<SearchApiResponse> => {
-    const apiKey = import.meta.env.VITE_TOMTOM_KEY; // Replace 'YOUR_API_KEY' with your actual API key
+    const apiKey = import.meta.env.VITE_TOMTOM_KEY ?? '5XtQljyBGnl8QqwlwqkXhqYnzL2eYZnS'; // Replace 'YOUR_API_KEY' with your actual API key
     const baseUrl = `https://api.tomtom.com/search/2/search/${query.query}.json`;
     const queryParams = new URLSearchParams({
         typeahead: true.toString(), // Convert boolean to string explicitly at the point of assignment
