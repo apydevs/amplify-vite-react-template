@@ -21,7 +21,7 @@ const CheckoutForm = () => {
             //`Elements` instance that was used to create the Payment Element
             elements,
             confirmParams: {
-                return_url: `http://localhost:5173/redirect/assessment?from=${window.location.href}`,
+                return_url: `https://mvp.yeoley.com/redirect/assessment?from=${window.location.href}`,
             },
         });
 
