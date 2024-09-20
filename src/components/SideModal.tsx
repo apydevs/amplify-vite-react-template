@@ -12,6 +12,7 @@ import CheckoutForm from "./stripe/checkout.tsx";
 import {useState} from "react";
 
 import {useGatewayIntent} from "../hooks/useGatewayIntent.ts";
+import {pluralize} from "../utils/pluralizeUtil.ts";
 
 const stripePromise = loadStripe('pk_test_e8u90ge5tOPZbvNTxaeGRlA0');
 
@@ -71,7 +72,7 @@ export default function SideModal() {
         packs[index].selected = true
         const {data, errors} = await attemptPaymentIntent({
             variables: {
-                amount: packs[index].price
+                amount: (packs[index].price * 100)
             },
         });
 
@@ -128,35 +129,34 @@ export default function SideModal() {
                                     <div className="my-10"></div>
                                     </div>
                                     <div className="w-full xl:w-1/2">
-                                        <div className="mx-auto max-w-2xl sm:text-center mt-5">
-                                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Simple
-                                                no-tricks pricing</h2>
-                                            <p className="mt-6 text-lg leading-8 text-gray-600">
-                                                Distinctio et nulla eum soluta et neque labore quibusdam. Saepe et quasi
-                                                iusto modi velit ut non voluptas
-                                                in. Explicabo id ut laborum.
-                                            </p>
+                                        <div className="mx-auto max-w-2xl sm:text-center mt-5 px-10 lg:px-2.5">
+                                            <h2 className="text-xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                                                Complete your purchase to place offers</h2>
 
-
+                                            {selectedPack ? (
+                                                <p className="mt-6 text-lg leading-8 text-gray-600">
+                                                    You have selected an offer pack that contains {pluralize(selectedPack.offer,'offer')}.
+                                                    {selectedPack.exclusive && (
+                                                        <><br/>
+                                                            <span>
+                                                            <span className="font-bold text-lg">Exclusive </span>  to this property!
+                                                        </span></>
+                                                        )}
+                                                </p>
+                                            ) : (
+                                                <p className="mt-6 text-lg leading-8 text-gray-600">
+                                                    Please select an offer pack, that you would like to purchase,
+                                                    you will then see our secure payment processing form.
+                                                </p>
+                                            )}
 
 
                                             {cs && (
                                                 <Elements stripe={stripePromise} options={options}>
-                                                    <CheckoutForm />
+                                                    <CheckoutForm/>
                                                 </Elements>
                                             )}
-                                            {selectedPack && (
-                                                <PackCard
-                                                    key={selectedPack.id}
-                                                    id={selectedPack.id}
-                                                    price={selectedPack.price}
-                                                    title={selectedPack.title}
-                                                    offer={selectedPack.offer}
-                                                    exclusive={selectedPack.exclusive}
-                                                    selected={selectedPack.selected}
-                                                    onSelect={handlePackSelection}
-                                                />
-                                            )}
+
                                         </div>
                                     </div>
                                 </div>

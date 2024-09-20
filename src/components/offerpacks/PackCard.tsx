@@ -27,7 +27,7 @@ export default function PackCard({price,offer,title,id,exclusive = false, onSele
     const dispatch = useDispatch();
     return (
         <div id={id} >
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 py-9 lg:py-0">
                 <div className={` mx-auto  max-w-2xl rounded-3xl  ${!exclusive ? ' ring-1 ring-gray-200': 'ring-2 ring-yellow-300'}   sm:mt-8 lg:mx-0 lg:flex lg:max-w-none `}>
                     <div className="p-8 sm:p-10 lg:flex-auto">
                         <h3 className="text-xl font-bold tracking-tight text-gray-900">{title}</h3>
@@ -80,7 +80,7 @@ export default function PackCard({price,offer,title,id,exclusive = false, onSele
                             ) : (
                                 <button
                                     onClick={() => onSelect(id)} // Call onSelect with the id
-                                    className="mt-10 block w-full rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    className={`mt-10 block w-full rounded-md   ${!selected ? ' bg-black': 'bg-yellow-300'}  px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
                                 >
                                     {(selected ? 'Selected':'Select')}
                                 </button>
