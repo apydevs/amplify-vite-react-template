@@ -15,9 +15,9 @@ type CardValues = {
     price: number,
     offer: number,
     title: string,
-    id: string,
+    id: number,
     exclusive: boolean,
-    onSelect: (id: string) => void; // Add onSelect prop
+    onSelect: (id: number) => void; // Add onSelect prop
     selected:boolean
    }
 
@@ -26,7 +26,7 @@ export default function PackCard({price,offer,title,id,exclusive = false, onSele
     const navigate = useNavigate()
     const dispatch = useDispatch();
     return (
-        <div id={id} >
+        <div id={id.toString()} >
             <div className="mx-auto max-w-7xl px-6 lg:px-8 py-9 lg:py-0">
                 <div className={` mx-auto  max-w-2xl rounded-3xl  ${!exclusive ? ' ring-1 ring-gray-200': 'ring-2 ring-yellow-300'}   sm:mt-8 lg:mx-0 lg:flex lg:max-w-none `}>
                     <div className="p-8 sm:p-10 lg:flex-auto">

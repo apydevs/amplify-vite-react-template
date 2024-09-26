@@ -4,11 +4,11 @@ import { gql, useMutation } from "@apollo/client";
 
 const GATEWAY_INTENT = gql`
     mutation paymentIntent(
-        $amount: Float!,
+        $pid: Int!,
     
     ) {
         paymentIntent(
-            amount: $amount,
+            pid: $pid,
         ) {
            
                 object,

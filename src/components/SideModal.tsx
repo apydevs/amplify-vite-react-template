@@ -19,7 +19,7 @@ const stripePromise = loadStripe('pk_test_e8u90ge5tOPZbvNTxaeGRlA0');
 const packs =
     [
         {
-            id:'1',
+            id:1,
             price:2.99,
             title:"1 Offers on any property",
             offer:1,
@@ -27,7 +27,7 @@ const packs =
             selected:false
         },
         {
-            id:'2',
+            id:2,
             price:8.99,
             title:"8 Offers on any property",
             offer:8,
@@ -35,7 +35,7 @@ const packs =
             selected:false
         },
         {
-            id:'3',
+            id:3,
             price:14.99,
             title:"20 Offers on any property",
             offer:20,
@@ -43,7 +43,7 @@ const packs =
             selected:false
         },
         {
-            id:'4',
+            id:4,
             price:19.99,
             title:"26 Offers on this property only",
             offer:26,
@@ -63,7 +63,7 @@ export default function SideModal() {
 
 
 
-    async function handlePackSelection(id: string) {
+    async function handlePackSelection(id: number) {
 
         console.log(id)
         packs.map((item)=> item.selected = false);
@@ -72,7 +72,7 @@ export default function SideModal() {
         packs[index].selected = true
         const {data, errors} = await attemptPaymentIntent({
             variables: {
-                amount: (packs[index].price * 100)
+                pid: (packs[index].id)
             },
         });
 
