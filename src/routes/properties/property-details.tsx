@@ -13,7 +13,7 @@ import yeoleyBg from "../../assets/bg/pattents/yeoley-bg.png";
 import { PropertyType} from "../../types/PropertyTypes.tsx";
 import { useGetProperty } from '../../hooks/useViewProperty.ts';
 import {openDraw} from "../../store/features/counter/counterSlice.ts";
-import {useDispatch} from "react-redux"; // Adjust the path as per your folder structure
+import {useDispatch} from "react-redux";
 
 const product = {
     name: 'Basic Tee 6-Pack',
@@ -77,7 +77,6 @@ export default function PropertyDetails() {
     const [property] = useState<PropertyType>({}); // Initialize as a single object or null
 
     const { loading, error, data } = useGetProperty(propertyId);
-
 
 
     useEffect(() => {

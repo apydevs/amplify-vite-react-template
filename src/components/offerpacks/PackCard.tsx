@@ -15,13 +15,14 @@ type CardValues = {
     price: number,
     offer: number,
     title: string,
+    info:string,
     id: number,
     exclusive: boolean,
     onSelect: (id: number) => void; // Add onSelect prop
     selected:boolean
    }
 
-export default function PackCard({price,offer,title,id,exclusive = false, onSelect,selected = false }:CardValues) {
+export default function PackCard({price,offer,title,id,info,exclusive = false, onSelect,selected = false }:CardValues) {
     const user = useSelector((state: RootState) => state.users.user);
     const navigate = useNavigate()
     const dispatch = useDispatch();
@@ -31,8 +32,8 @@ export default function PackCard({price,offer,title,id,exclusive = false, onSele
                 <div className={` mx-auto  max-w-2xl rounded-3xl  ${!exclusive ? ' ring-1 ring-gray-200': 'ring-2 ring-yellow-300'}   sm:mt-8 lg:mx-0 lg:flex lg:max-w-none `}>
                     <div className="p-8 sm:p-10 lg:flex-auto">
                         <h3 className="text-xl font-bold tracking-tight text-gray-900">{title}</h3>
-
-                        <div className="mt-10 flex items-center gap-x-4">
+                        <p className="pt-1">{info}</p>
+                        <div className="mt-5 flex items-center gap-x-4">
                             <h4 className="flex-none text-sm font-semibold leading-6 text-indigo-600">What’s
                                 included</h4>
                             <div className="h-px flex-auto bg-gray-100"/>
