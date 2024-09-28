@@ -51,7 +51,8 @@ const Step2GeneralBuyer: React.FC = () => {
                     password: password,
                     confirm_password: confirm,
                     device_name: device_name,
-                    account: newUserState.accountType
+                    account: newUserState.accountType,
+                    offers: 0
                 },
             });
 
@@ -75,6 +76,7 @@ const Step2GeneralBuyer: React.FC = () => {
                     name: user.name,
                     token: user.token,
                     account: user.account.type,
+                    offers:user.offers
                 }));
 
                 // Dispatch user locations
