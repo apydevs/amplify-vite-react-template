@@ -20,7 +20,7 @@ const GET_USER = gql`
                 offers
                 message
             }
-            errors
+        
         }
 `;
 
