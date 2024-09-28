@@ -22,7 +22,6 @@ const GET_USER = gql`
             }
             errors
         }
-    }
 `;
 
 export const useGetUserQuery = () => {
