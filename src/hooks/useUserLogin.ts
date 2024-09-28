@@ -15,7 +15,8 @@ const LOGIN_USER = gql`
                 }
                 account {
                     type
-                } 
+                }
+                offers
                 message
             }
             errors
