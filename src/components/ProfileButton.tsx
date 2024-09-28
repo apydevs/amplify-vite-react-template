@@ -44,7 +44,7 @@ const App = () => {
                 <Menu as="div" className="relative inline-block text-left">
                     <div className="mx-3">
                         <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-full bg-white px-4 py-2 text-[8pt] font-semibold  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                            {user.offers}
+                            {user.offers ?? 0}
                          </MenuButton>
                     </div>
 
