@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useGetUserQuery } from "../../hooks/useGetUserQuery";
+import {useEffect, useState} from "react";
+import {useGetUserQuery} from "../../hooks/useGetUserQuery.ts";
 import {useDispatch} from "react-redux";
 import {setUserOffers} from "../../store/features/user/userSlice.ts";
 
-
 function PaymentCallback() {
+    const [isUserRehydrated, setIsUserRehydrated] = useState(false);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const property = urlParams.get('from');
@@ -13,38 +13,45 @@ function PaymentCallback() {
 
     const { loading, error, data } = useGetUserQuery(device ?? '');
     const dispatch = useDispatch();
+
     useEffect(() => {
         const rehydrateUser = async () => {
             if (loading) {
                 console.log('Loading user data...');
-                return; // Wait until the loading is complete
+                return;
             }
 
             if (error) {
                 console.log('Login failed with GraphQL errors:', error);
-                return; // Exit early on errors
+                return;
             }
 
             if (data) {
                 console.log('User data:', data);
                 // Dispatch user details to the store
-                dispatch(setUserOffers({
-                    offers:data.GetUser.offers
-                }));
-                // You can also do any additional processing here, like saving data to context/store
+                try {
+                    await dispatch(setUserOffers({
+                        offers: data.GetUser.offers
+                    }));
+                    setIsUserRehydrated(true); // Set rehydrated flag after store is updated
+                } catch (err) {
+                    console.error('Error dispatching user offers:', err);
+                }
             }
         };
 
-        if (status == 'succeeded' && property) {
-
-            // Rehydrate the user data
-            rehydrateUser()
-           // Redirect to the property URL after rehydrating user data
-            window.location.href = `${property}?status=${status}`
+        if (status === 'succeeded' && property) {
+            rehydrateUser();
         } else {
             window.location.href = 'error';
         }
-    }, [loading, error, data, status, property]); // Dependencies added for useEffect to react to changes in loading, error, data, status, or property
+    }, [loading, error, data, status, property, dispatch]);
+
+    useEffect(() => {
+        if (isUserRehydrated && status === 'succeeded' && property) {
+            window.location.href = `${property}?status=${status}`;
+        }
+    }, [isUserRehydrated, status, property]);
 
     return (
         <div>
