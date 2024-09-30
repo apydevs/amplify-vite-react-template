@@ -44,7 +44,7 @@ function PaymentCallback() {
                 }));
                 // Redirect to the property URL after rehydrating user data
 
-            }).finally(()=>window.location.href = property);
+            });
 
 
 
