@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import { useGetUserQuery } from "../../hooks/useGetUserQuery";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/store.ts";
 
 function PaymentCallback() {
-    const { loading, error, data } = useGetUserQuery();
+    const user = useSelector((state: RootState) => state.users.user);
+    const { loading, error, data } = useGetUserQuery(user.device_name ?? '');
 
     useEffect(() => {
         const queryString = window.location.search;

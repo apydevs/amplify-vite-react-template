@@ -12,6 +12,7 @@ export interface UserTypeQL {
     token: string | null,
     account: string | null,
     offers: number | null
+    device_name: string | null
 }
 
 

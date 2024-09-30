@@ -1,11 +1,13 @@
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 import {ToastContainer} from "react-toastify";
 import {goodUserNotification} from "../../utils/ValidationHandler.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/store.ts";
 
 const CheckoutForm = () => {
     const stripe = useStripe();
     const elements = useElements();
-
+    const user = useSelector((state: RootState) => state.users.user);
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         // We don't want to let default form submission happen here,
         // which would refresh the page.
@@ -21,7 +23,7 @@ const CheckoutForm = () => {
             //`Elements` instance that was used to create the Payment Element
             elements,
             confirmParams: {
-                return_url: `https://mvp.yeoley.com/redirect/assessment?from=${window.location.href}`,
+                return_url: `https://mvp.yeoley.com/redirect/assessment?from=${window.location.href}&device=${user.device_name}`,
             },
         });
 
