@@ -39,10 +39,10 @@ function PaymentCallback() {
 
         if (status == 'succeeded' && property) {
             // Rehydrate the user data
-            rehydrateUser();
+            rehydrateUser().then(()=>window.location.href = property);
 
             // Redirect to the property URL after rehydrating user data
-            //window.location.href = property;
+           ;
         } else {
             window.location.href = 'error';
         }
