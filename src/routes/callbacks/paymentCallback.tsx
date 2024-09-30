@@ -27,21 +27,24 @@ function PaymentCallback() {
 
             if (data) {
                 console.log('User data:', data);
+                return data
                 // Dispatch user details to the store
-                dispatch(setUserOffers({
-                    offers:data.GetUser.offers
-                }));
+
 
                 // You can also do any additional processing here, like saving data to context/store
             }
         };
 
         if (status == 'succeeded' && property) {
+
             // Rehydrate the user data
-            rehydrateUser().then(()=>{
+            rehydrateUser().then((res)=>{
+                dispatch(setUserOffers({
+                    offers:res.GetUser.offers
+                }));
                 // Redirect to the property URL after rehydrating user data
-                window.location.href = property
-            });
+
+            }).finally(()=>window.location.href = property);
 
 
 
