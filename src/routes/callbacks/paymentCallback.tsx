@@ -31,7 +31,7 @@ function PaymentCallback() {
 
                 // Dispatch user details to the store
                 dispatch(setUserOffers({
-                    offers:data.offers
+                    offers:data.GetUser.offers
                 }));
                 // You can also do any additional processing here, like saving data to context/store
             }
