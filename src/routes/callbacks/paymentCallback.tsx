@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useGetUserQuery } from "../../hooks/useGetUserQuery";
+import {useDispatch} from "react-redux";
+import {setUserDetails} from "../../store/features/user/userSlice.ts";
 
 
 function PaymentCallback() {
@@ -10,7 +12,7 @@ function PaymentCallback() {
     const status = urlParams.get('redirect_status');
 
     const { loading, error, data } = useGetUserQuery(device ?? '');
-
+    const dispatch = useDispatch();
     useEffect(() => {
         const rehydrateUser = async () => {
             if (loading) {
@@ -25,6 +27,17 @@ function PaymentCallback() {
 
             if (data) {
                 console.log('User data:', data);
+
+
+                // Dispatch user details to the store
+                dispatch(setUserDetails({
+                    email: data.user.email,
+                    name: data.user.name,
+                    token: data.user.token,
+                    account: data.user.account.type,
+                    offers:data.user.offers,
+                    device_name:data.user.device_name
+                }));
                 // You can also do any additional processing here, like saving data to context/store
             }
         };
