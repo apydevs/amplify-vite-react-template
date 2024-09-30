@@ -1,7 +1,8 @@
-import {useEffect, useState} from "react";
-import {useGetUserQuery} from "../../hooks/useGetUserQuery.ts";
-import {useDispatch} from "react-redux";
-import {setUserOffers} from "../../store/features/user/userSlice.ts";
+import { useEffect, useState } from "react";
+import { useGetUserQuery } from "../../hooks/useGetUserQuery";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserOffers } from "../../store/features/user/userSlice.ts";
+import { RootState } from "../../store/store.ts";
 
 function PaymentCallback() {
     const [isUserRehydrated, setIsUserRehydrated] = useState(false);
@@ -13,6 +14,7 @@ function PaymentCallback() {
 
     const { loading, error, data } = useGetUserQuery(device ?? '');
     const dispatch = useDispatch();
+    const userOffers = useSelector((state: RootState) => state.users.user.offers);
 
     useEffect(() => {
         const rehydrateUser = async () => {
@@ -28,15 +30,11 @@ function PaymentCallback() {
 
             if (data) {
                 console.log('User data:', data);
-                // Dispatch user details to the store
-                try {
-                    await dispatch(setUserOffers({
-                        offers: data.GetUser.offers
-                    }));
-                    setIsUserRehydrated(true); // Set rehydrated flag after store is updated
-                } catch (err) {
-                    console.error('Error dispatching user offers:', err);
-                }
+
+                dispatch(setUserOffers({
+                    offers: data.GetUser.offers,
+                }));
+                setIsUserRehydrated(true);
             }
         };
 
@@ -48,10 +46,11 @@ function PaymentCallback() {
     }, [loading, error, data, status, property, dispatch]);
 
     useEffect(() => {
-        if (isUserRehydrated && status === 'succeeded' && property) {
+        // Perform redirect once Redux store is updated
+        if (isUserRehydrated && userOffers && status === 'succeeded' && property) {
             window.location.href = `${property}?status=${status}`;
         }
-    }, [isUserRehydrated, status, property]);
+    }, [isUserRehydrated, userOffers, status, property]);
 
     return (
         <div>
