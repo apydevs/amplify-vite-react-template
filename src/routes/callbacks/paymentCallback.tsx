@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useGetUserQuery } from "../../hooks/useGetUserQuery";
 import {useDispatch} from "react-redux";
-import {setUserDetails} from "../../store/features/user/userSlice.ts";
+import {setUserOffers} from "../../store/features/user/userSlice.ts";
 
 
 function PaymentCallback() {
@@ -30,13 +30,8 @@ function PaymentCallback() {
 
 
                 // Dispatch user details to the store
-                dispatch(setUserDetails({
-                    email: data.user.email,
-                    name: data.user.name,
-                    token: data.user.token,
-                    account: data.user.account.type,
-                    offers:data.user.offers,
-                    device_name:data.user.device_name
+                dispatch(setUserOffers({
+                    offers:data.offers
                 }));
                 // You can also do any additional processing here, like saving data to context/store
             }

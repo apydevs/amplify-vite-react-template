@@ -15,7 +15,9 @@ export interface UserTypeQL {
     device_name: string | null
 }
 
-
+export interface UserOffers {
+    offers: number | null
+}
 export interface UserLoginTypeQL {
     email:string | null;
     password: string | null;

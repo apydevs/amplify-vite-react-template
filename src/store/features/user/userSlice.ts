@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import {UserTypeQL} from "../../../types/UserTypes.tsx";
+import {UserOffers, UserTypeQL} from "../../../types/UserTypes.tsx";
 
 export interface userState {
     user: userStateObj
@@ -41,6 +41,9 @@ export const userSlice = createSlice({
             state.user.offers = action.payload.offers
             state.user.device_name = action.payload.device_name
         },
+        setUserOffers: (state, action: PayloadAction<UserOffers>) => {
+            state.user.offers = action.payload.offers
+        },
         // decrement: (state) => {
         //     state.value -= 1
         // },
@@ -61,6 +64,6 @@ export const userSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setUserDetails, setLogout } = userSlice.actions
+export const { setUserDetails, setLogout,setUserOffers } = userSlice.actions
 
 export default userSlice.reducer
