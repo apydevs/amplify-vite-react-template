@@ -4,8 +4,8 @@ import {gql, useQuery} from "@apollo/client";
 
 
 const GET_USER = gql`
-    query( $deviceName: String!) {
-        GetUser(device_name:$deviceName){
+    query GetUser($device_name: String!) {
+        GetUser(device_name: $device_name) {
                 id
                 email
                 token
@@ -24,8 +24,8 @@ const GET_USER = gql`
         }
 `;
 
-export const useGetUserQuery = (deviceName:string) => {
-    const { loading, error, data } =  useQuery(GET_USER, {
+export const useGetUserQuery = (deviceName: string) => {
+    const { loading, error, data } = useQuery(GET_USER, {
         variables: { device_name: deviceName },
         context: {
             uri: '/profile',
@@ -37,4 +37,3 @@ export const useGetUserQuery = (deviceName:string) => {
         data,
     };
 }
-

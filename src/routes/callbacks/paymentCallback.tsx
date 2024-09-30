@@ -7,17 +7,12 @@ function PaymentCallback() {
     const urlParams = new URLSearchParams(queryString);
     const property = urlParams.get('from');
     const device = urlParams.get('device');
+    const status = urlParams.get('redirect_status');
+
     const { loading, error, data } = useGetUserQuery(device ?? '');
 
     useEffect(() => {
-
-
-        console.log(queryString);
-
-
-        const status = urlParams.get('redirect_status');
-
-        async function rehydrateUser() {
+        const rehydrateUser = async () => {
             if (loading) {
                 console.log('Loading user data...');
                 return; // Wait until the loading is complete
@@ -32,9 +27,9 @@ function PaymentCallback() {
                 console.log('User data:', data);
                 // You can also do any additional processing here, like saving data to context/store
             }
-        }
+        };
 
-        if (status === 'succeeded' && property) {
+        if (status == 'succeeded' && property) {
             // Rehydrate the user data
             rehydrateUser();
 
@@ -43,11 +38,17 @@ function PaymentCallback() {
         } else {
             window.location.href = 'error';
         }
-    }, [loading, error, data]); // Dependencies added for useEffect to react to changes in loading, error, or data
+    }, [loading, error, data, status, property]); // Dependencies added for useEffect to react to changes in loading, error, data, status, or property
 
     return (
         <div>
-            {/* You can show a loader or a success/error message based on the loading state here */}
+            {loading ? (
+                <p>Loading user data...</p>
+            ) : error ? (
+                <p>Error: Failed to load user data</p>
+            ) : (
+                <p>Data successfully loaded.</p>
+            )}
         </div>
     );
 }
