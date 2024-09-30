@@ -1,19 +1,20 @@
 import { useEffect } from "react";
 import { useGetUserQuery } from "../../hooks/useGetUserQuery";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store/store.ts";
+
 
 function PaymentCallback() {
-    const user = useSelector((state: RootState) => state.users.user);
-    const { loading, error, data } = useGetUserQuery(user.device_name ?? '');
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const property = urlParams.get('from');
+    const device = urlParams.get('device');
+    const { loading, error, data } = useGetUserQuery(device ?? '');
 
     useEffect(() => {
-        const queryString = window.location.search;
+
 
         console.log(queryString);
 
-        const urlParams = new URLSearchParams(queryString);
-        const property = urlParams.get('from');
+
         const status = urlParams.get('redirect_status');
 
         async function rehydrateUser() {
