@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGetUserQuery } from "../../hooks/useGetUserQuery";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserOffers } from "../../store/features/user/userSlice.ts";
 import { RootState } from "../../store/store.ts";
 
 function PaymentCallback() {
