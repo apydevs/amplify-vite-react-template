@@ -8,6 +8,7 @@ import {setLogout, setUserOffers} from "../store/features/user/userSlice.ts";
 import {setLocations} from "../store/features/locations/locationSlice.ts";
 import {locationRadius, type} from "../store/features/searchFilters/filterSlice.ts";
 import {useGetUserQuery} from "../hooks/useGetUserQuery.ts";
+import {useEffect} from "react";
 
 
 
@@ -38,29 +39,24 @@ const App = () => {
         }
     };
 
-    if(user.token){
 
-
-        window.onload = () => {
-            if (loading) {
-                console.log('Loading user data...');
-                return;
-            }
-
-            if (error) {
-                console.log('Login failed with GraphQL errors:', error);
-                return;
-            }
-
-            if (data) {
-                console.log('User data:', data);
-                dispatch(setUserOffers({
-                    offers: data.GetUser.offers,
-                }));
-            }
-            console.log("API call after page reload");
+    useEffect(() => {
+        if (loading) {
+            console.log('Loading user data...');
+            return;
         }
-    }
+
+        if (error) {
+            console.log('Login failed with GraphQL errors:', error);
+            return;
+        }
+        // Update the document title using the browser API
+        if(user.token && data) {
+            dispatch(setUserOffers({
+                offers: data.GetUser.offers,
+            }));
+        }
+    });
 
 
 
