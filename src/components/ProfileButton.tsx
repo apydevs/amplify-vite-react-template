@@ -4,9 +4,10 @@ import {Link, useNavigate} from 'react-router-dom';
 // Define an interface for the user data
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store.ts";
-import {setLogout} from "../store/features/user/userSlice.ts";
+import {setLogout, setUserOffers} from "../store/features/user/userSlice.ts";
 import {setLocations} from "../store/features/locations/locationSlice.ts";
 import {locationRadius, type} from "../store/features/searchFilters/filterSlice.ts";
+import {useGetUserQuery} from "../hooks/useGetUserQuery.ts";
 
 
 
@@ -18,6 +19,7 @@ const App = () => {
     const navigate = useNavigate();
     //const token = useSelector((state: RootState) => state.users.user.token);
     const user = useSelector((state: RootState) => state.users.user);
+    const { loading, error, data } = useGetUserQuery( 'device not needed');
     const dispatch = useDispatch();
     const handleSignOut = async () => {
         try {
@@ -35,6 +37,31 @@ const App = () => {
             }
         }
     };
+
+    if(user.token){
+
+
+        window.onload = () => {
+            if (loading) {
+                console.log('Loading user data...');
+                return;
+            }
+
+            if (error) {
+                console.log('Login failed with GraphQL errors:', error);
+                return;
+            }
+
+            if (data) {
+                console.log('User data:', data);
+                dispatch(setUserOffers({
+                    offers: data.GetUser.offers,
+                }));
+            }
+            console.log("API call after page reload");
+        }
+    }
+
 
 
 

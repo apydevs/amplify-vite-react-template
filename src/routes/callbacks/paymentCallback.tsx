@@ -29,11 +29,6 @@ function PaymentCallback() {
             }
 
             if (data) {
-                console.log('User data:', data);
-
-                dispatch(setUserOffers({
-                    offers: data.GetUser.offers,
-                }));
                 setIsUserRehydrated(true);
             }
         };
@@ -48,6 +43,7 @@ function PaymentCallback() {
     useEffect(() => {
         // Perform redirect once Redux store is updated
         if (isUserRehydrated && userOffers && status === 'succeeded' && property) {
+
             window.location.href = `${property}?status=${status}`;
         }
     }, [isUserRehydrated, userOffers, status, property]);
