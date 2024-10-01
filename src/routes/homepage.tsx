@@ -1,4 +1,6 @@
 // import changeHero from '../assets/media/banners/heroChange.png';
+import yeoleyBg from "../assets/bg/pattents/yeoley-bg.png";
+
 export default function Homepage() {
     return (
 <>
@@ -75,14 +77,21 @@ export default function Homepage() {
 </div>
   <div className=" container max-w-7xl flex justify-center items-center w-full mx-auto lg:px-4 md:py-3 md:px-6 py-9 px-4">
       <div className="absolute h-full self-center w-screen flex flex-row justify-center -z-10">
-          <img className="h-full w-full object-cover dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/playstation-cover.png" alt="" />
-          <img className="hidden h-full w-full object-cover dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/playstation-cover-dark.png" alt="" />
-     </div>
+
+          <div className="w-screen absolute -z-10" style={{
+              backgroundImage: "url(" + yeoleyBg + ")",
+              backgroundPosition: 'center',
+              height: '100%',
+              opacity: 0.2,
+          }}>
+          </div>
+      </div>
 
 
-        <div className="w-full md:w-auto grid lg:grid-cols-3 grid-cols-1 lg:gap-3 gap-1">
-            <div className="relative group">
-                <img className="lg:block rounded-l-lg rounded-br-[3rem] hidden w-full aspect-2" src="https://images.unsplash.com/photo-1565511648977-a29ff0f25a09?q=80&w=3687&h=5550&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Private Propertie Sales" />
+      <div className="w-full md:w-auto grid lg:grid-cols-3 grid-cols-1 lg:gap-3 gap-1">
+          <div className="relative group">
+              <img className="lg:block rounded-l-lg rounded-br-[3rem] hidden w-full aspect-2"
+                   src="https://images.unsplash.com/photo-1565511648977-a29ff0f25a09?q=80&w=3687&h=5550&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Private Propertie Sales" />
                 <img className="lg:hidden rounded-l-lg rounded-br-[3rem] md:block hidden w-full" src="https://images.unsplash.com/photo-1565511648977-a29ff0f25a09?q=80&w=3288&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Private Propertie Sales" />
                 <img className="w-full md:hidden" src="https://images.unsplash.com/photo-1565511648977-a29ff0f25a09?q=80&w=3288&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Property sales" />
                 <div className="opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 group-hover:rounded-br-[3rem] absolute top-0 left-0 h-full w-full" />
