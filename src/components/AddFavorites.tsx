@@ -18,7 +18,7 @@ interface AddFavoritesProps {
 export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
     const attemptFav = usePropertyFav(slug);
 
-    const [isSelected] = useState(false);
+    const [isSelected,setIsSelected] = useState(false);
     const user = useSelector((state: RootState) => state.users.user);
 
 
@@ -39,6 +39,9 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
 
 
                 console.log('RESULT:', data);
+                if(data.addFavourite.property_id == propertyId){
+                    setIsSelected(true)
+                }
                 return; // Exit early on errors
             }
 
