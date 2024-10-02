@@ -49,10 +49,6 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
         console.log('test select')
     }
 
-    // handles removing from favourites State & Api
-    function handleDeselect(){
-        console.log('test deselect')
-    }
 
     if (user.token) {
         if (!propertyId) {
@@ -60,7 +56,7 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
             return null; // Or some fallback UI
         }
         return (   <button className={isSelected ? `text-yellow-300` : `text-red-600`}
-                           onClick={!isSelected ? handleSelectClick : handleDeselect} >
+                           onClick={handleSelectClick} >
                         <FontAwesomeIcon icon={faHeartCircle} className="font-semibold h-8 w-8 px-1 py-0.5" />
                   </button>
         );
