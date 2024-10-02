@@ -11,8 +11,11 @@ const USER_FAV_PROP = gql`
 
 
 
-export const usePropertyFav = () => {
+export const usePropertyFav = (property:string) => {
     const [favouriteProperty] = useMutation(USER_FAV_PROP, {
+        variables: {
+            property: property,
+        },
         context: {
             uri: '/profile', // This tells Apollo Client to use the REST link instead of the GraphQL link
         },

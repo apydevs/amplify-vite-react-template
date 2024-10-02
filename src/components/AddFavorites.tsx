@@ -16,7 +16,7 @@ interface AddFavoritesProps {
 }
 
 export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
-    const attemptFav = usePropertyFav();
+    const attemptFav = usePropertyFav(slug);
 
     const [isSelected] = useState(false);
     const user = useSelector((state: RootState) => state.users.user);
@@ -28,11 +28,7 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
         console.log('selected',slug,propertyId)
 
             // Trigger the mutation with correct variables
-            const {data, errors} = await attemptFav({
-                variables: {
-                    property: slug,
-                },
-            });
+            const {data, errors} = await attemptFav();
 
 
             if (errors && errors.length > 0) {
