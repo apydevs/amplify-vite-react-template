@@ -199,7 +199,10 @@ export default function PropertyDetails() {
                                                     ">{property ? `£${new Intl.NumberFormat('en-GB').format(data.property.max_cap ?? 0)}` : ''}</div>
                                                 </div>
                                                 {data.property.id ? (
-                                                        <AddFavorites propertyId={data.property.id}/>):(
+                                                        <AddFavorites
+                                                            slug={data.property.slug}
+                                                            propertyId={data.property.id}
+                                                        />):(
                                                             <span>Login</span>
                                                 )}
 

@@ -3,44 +3,65 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faDoorOpen, faHeartCircle} from "@fortawesome/pro-thin-svg-icons";
 
-// import {addFavorites, removeFavorites} from "../store/features/favorites/favouritesSlice.tsx";
-//
-// import {UserInterface} from "../interfaces/UserInterface.tsx";
-// import {AuthEvent} from "../interfaces/interfaces.tsx" ;
-// import {useDispatch, useSelector} from "react-redux";
-// import {RootState} from "../store/store.ts";
 import {useState} from "react";
+import {usePropertyFav} from "../hooks/usePropertyFav.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
 
 
 interface AddFavoritesProps {
+    slug:string;
     propertyId: string;
+
 }
 
-export default function AddFavorites({ propertyId }: AddFavoritesProps) {
-
+export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
+    const attemptFav = usePropertyFav();
 
     const [isSelected] = useState(false);
-    const [user] = useState({
-        email:'',
-        username:'',
-    });
-
+    const user = useSelector((state: RootState) => state.users.user);
 
 
     // handles adding to favourites State & Api
+    async function handleSelectClick() {
+
+        console.log('selected',slug,propertyId)
+
+            // Trigger the mutation with correct variables
+            const {data, errors} = await attemptFav({
+                variables: {
+                    property: slug,
+                },
+            });
 
 
+            if (errors && errors.length > 0) {
+                console.log(' GraphQL errors:', errors);
+                return; // Exit early on errors
+            }
+            if (data) {
+
+
+                console.log('RESULT:', data);
+                return; // Exit early on errors
+            }
+
+
+        console.log('test select')
+    }
 
     // handles removing from favourites State & Api
+    function handleDeselect(){
+        console.log('test deselect')
+    }
 
-    if (user) {
+    if (user.token) {
         if (!propertyId) {
             console.error('AddFavorites component requires a valid propertyId');
             return null; // Or some fallback UI
         }
         return (   <button className={isSelected ? `text-yellow-300` : `text-red-600`}
-                           // onClick={!isSelected ? handleSelectClick : handleDeselect}
-            >
+                           onClick={!isSelected ? handleSelectClick : handleDeselect} >
                         <FontAwesomeIcon icon={faHeartCircle} className="font-semibold h-8 w-8 px-1 py-0.5" />
                   </button>
         );

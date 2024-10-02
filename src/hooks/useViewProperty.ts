@@ -6,6 +6,7 @@ const GET_PROPERTY = gql`
         property(id: $id) {
             id
             title
+            slug
             excerpt
             description
             band
