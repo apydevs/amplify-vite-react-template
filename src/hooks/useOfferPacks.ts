@@ -22,7 +22,7 @@ const OFFER_PACKS = gql`
 export const useOfferPacks = () => {
     const { loading, error, data } =  useQuery(OFFER_PACKS, {
         context: {
-            uri: '/properties',
+            uri: '/property',
         },
     });
     return {
