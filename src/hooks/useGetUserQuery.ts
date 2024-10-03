@@ -1,8 +1,5 @@
 import {gql, useQuery} from "@apollo/client";
 
-
-
-
 const GET_USER = gql`
     query GetUser($device_name: String!) {
         GetUser(device_name: $device_name) {

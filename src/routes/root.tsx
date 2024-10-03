@@ -26,6 +26,8 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
 import ProfileButton from "../components/ProfileButton.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
 
 
 const products = [
@@ -133,6 +135,7 @@ const navigation = {
 export default function Root() {
 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const user = useSelector((state: RootState) => state.users.user);
 
 
 
@@ -219,7 +222,16 @@ export default function Root() {
                     </PopoverGroup>
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
                         <div className="text-sm font-semibold leading-6 text-gray-900">
-                        <ProfileButton/>
+                            {user.token ? (
+                                <ProfileButton />
+                            ) : (
+                                <div className="flex flex-row items-center gap-8 justify-between">
+                                    <Link to="/login">Login</Link>
+                                    <Link to="/join">Create Account</Link>
+                                </div>
+                            )}
+
+
                         </div>
                     </div>
                 </nav>
@@ -292,7 +304,16 @@ export default function Root() {
                                     <div
                                         className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                                     >
-                                      <ProfileButton/>
+
+                                        {user.token ? (
+                                            <ProfileButton />
+                                        ) : (
+                                            <div className="flex flex-row items-center gap-8 justify-between">
+                                                <Link to="/login">Logintryrty</Link>
+                                                <Link to="/join">Create Account</Link>
+                                            </div>
+                                        )}
+
                                     </div>
                                 </div>
                             </div>
