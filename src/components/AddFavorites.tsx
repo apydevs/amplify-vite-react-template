@@ -37,6 +37,7 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
             }
             if (data) {
 
+                console.log('data',data)
 
                 console.log('RESULT:', data);
                 if(data.addFavourite.property_id == propertyId){
