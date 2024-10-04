@@ -3,10 +3,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faDoorOpen, faHeartCircle} from "@fortawesome/pro-thin-svg-icons";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {usePropertyFav} from "../hooks/usePropertyFav.ts";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store.ts";
+import {addFavorites, removeFavorites} from "../store/features/favorites/favouritesSlice.tsx";
 
 
 interface AddFavoritesProps {
@@ -16,12 +17,18 @@ interface AddFavoritesProps {
 }
 
 export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
+    const dispatch = useDispatch();
     const attemptFav = usePropertyFav(slug);
 
     const [isSelected,setIsSelected] = useState(false);
     const user = useSelector((state: RootState) => state.users.user);
-
-
+    const faves = useSelector((state: RootState) => state.favorites.saved);
+    useEffect(() => {
+        console.log(faves);
+        if (faves.some(fav => fav.propertyId === propertyId)) {
+            setIsSelected(true);
+        }
+    }, [faves, propertyId]);
     // handles adding to favourites State & Api
     async function handleSelectClick() {
 
@@ -40,8 +47,18 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
                 console.log('data',data)
 
                 console.log('RESULT:', data);
-                if(data.addFavourite.property_id == propertyId){
+                if(data.addFavourite.id == propertyId){
                     setIsSelected(true)
+                    dispatch(addFavorites({
+                        propertyId:propertyId,
+                        userId:data.addFavourite.userid
+                    }))
+                }else{
+                    setIsSelected(false)
+                    dispatch(removeFavorites({
+                        propertyId:propertyId,
+                        userId:data.addFavourite.userid
+                    }))
                 }
                 return; // Exit early on errors
             }

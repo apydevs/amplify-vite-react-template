@@ -12,8 +12,9 @@ import {useEffect, useState} from "react";
 import yeoleyBg from "../../assets/bg/pattents/yeoley-bg.png";
 import { PropertyType} from "../../types/PropertyTypes.tsx";
 import { useGetProperty } from '../../hooks/useViewProperty.ts';
-import {openDraw} from "../../store/features/counter/counterSlice.ts";
+import {openDraw, openOfferDraw} from "../../store/features/counter/counterSlice.ts";
 import {useDispatch} from "react-redux";
+import OfferSideBar from "../../components/OfferSideBar.tsx";
 
 const product = {
     name: 'Basic Tee 6-Pack',
@@ -71,6 +72,7 @@ const product = {
     details:
         'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
 }
+
 export default function PropertyDetails() {
     const dispatch = useDispatch();
     const { propertyId } = useParams();
@@ -315,7 +317,7 @@ export default function PropertyDetails() {
 
                                     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-1">
                                         <div className="space-y-4">
-                                            <a href="#" title=""
+                                            <button type="button" title="Make Offers" onClick={()=>dispatch(openOfferDraw(true))}
                                                className="flex items-center justify-center rounded-lg border border-yellow-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-yellow-300 hover:text-black focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 sm:w-full"
                                                role="button">
                                                 <svg className="-ms-2 me-2 h-5 w-5" aria-hidden="true"
@@ -325,7 +327,7 @@ export default function PropertyDetails() {
                                                           d="M6 4v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2m6-16v2m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v10m6-16v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2"/>
                                                 </svg>
                                                 Make an offer
-                                            </a>
+                                            </button>
 
                                             <div onClick={()=>dispatch(openDraw(true))} title=""
                                                className="mt-4 flex w-full items-center justify-center rounded-lg bg-yellow-300 px-5 py-2.5 text-sm font-medium text-black hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
@@ -388,6 +390,7 @@ export default function PropertyDetails() {
                         </div>
                     </div>
                 </section>
+                <OfferSideBar maxOffer={property ? `${new Intl.NumberFormat('en-GB').format(data.property.max_cap ?? '0')}` : '0'}/>
             </>
         );
 

@@ -4,7 +4,8 @@ import {gql,useMutation} from "@apollo/client"
 const USER_FAV_PROP = gql`
     mutation addFavourite($property: String!) {
         addFavourite(property: $property) {
-           property_id
+           id
+           userid
         }
     }
 `;
