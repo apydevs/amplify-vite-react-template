@@ -4,11 +4,14 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store.ts";
 import { openOfferDraw } from "../store/features/counter/counterSlice.ts";
-import { useEffect, useState, useCallback } from "react";
-import debounce from 'lodash/debounce';
+import { useEffect, useState } from "react";
 
 interface OfferSidebarProps {
     maxOffer: string;
+}
+
+function numberFormat(value: number): string {
+    return new Intl.NumberFormat('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 }
 
 export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
@@ -33,44 +36,69 @@ export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
             return;
         }
 
-        // Create a copy of the offered array
+        // Generate a random offer value and set it (capping at maxOffer)
+        const randomOffer = Math.min(Math.floor(Math.random() * parsedMax) + 1000, parsedMax);
+
+        // Create a copy of the offered array and update it
         const updatedOffered = [...offered];
-        // Update the value at index i
-        updatedOffered[i] = Math.floor(Math.random() * parsedMax) + 1000;
+        updatedOffered[i] = randomOffer;
         setOffered(updatedOffered);
 
-        // Update the inputValues to reflect the new offer
+        // Set the formatted value in the input values state
         const updatedInputValues = [...inputValues];
-        updatedInputValues[i] = updatedOffered[i].toFixed(2); // Ensure it has two decimal places if needed
+        updatedInputValues[i] = numberFormat(randomOffer);
         setInputValues(updatedInputValues);
     }
-
-    // Debounced function for setting the offered array
-    const debouncedSetOffered = useCallback(
-        debounce((index: number, value: string) => {
-            const updatedOffered = [...offered];
-            updatedOffered[index] = Number(parseFloat(value).toString() || '0.00');
-            setOffered(updatedOffered);
-        }, 300),
-        [offered]
-    );
 
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement>, index: number): void {
         const { value } = event.target;
 
-        if (parseFloat(value) > max) {
-            alert('Offer amount exceeds maximum value');
-            return;
-        }
-
-        // Update the temporary local state for the input value
+        // Update the temporary local state for the input value without formatting
         const updatedInputValues = [...inputValues];
-        updatedInputValues[index] =     new Intl.NumberFormat('en-GB').format(parseFloat(value))
-        // updatedInputValues[index] =  Number(parseFloat(value) || 0.00);
+        updatedInputValues[index] = value;
         setInputValues(updatedInputValues);
+    }
 
-        // Call the debounced function to update the offered state
-        debouncedSetOffered(index, value);
+    function handleInputBlur(index: number): void {
+        let value = inputValues[index];
+
+        if (value.trim() === "") {
+            // If the value is cleared, set both the offered and inputValues to empty
+            const updatedOffered = [...offered];
+            updatedOffered[index] = 0;
+            setOffered(updatedOffered);
+
+            const updatedInputValues = [...inputValues];
+            updatedInputValues[index] = "";
+            setInputValues(updatedInputValues);
+        } else {
+            let parsedValue = parseFloat(value.replace(/,/g, ''));
+
+            // If the parsed value exceeds maxOffer, show an alert and clear the input
+            if (parsedValue > max) {
+                alert('Offer exceeds the maximum allowed value.');
+
+                // Clear the input
+                const updatedInputValues = [...inputValues];
+                updatedInputValues[index] = "";
+                setInputValues(updatedInputValues);
+
+                // Clear the offered state as well
+                const updatedOffered = [...offered];
+                updatedOffered[index] = 0;
+                setOffered(updatedOffered);
+            } else if (!isNaN(parsedValue)) {
+                // Update the offered state
+                const updatedOffered = [...offered];
+                updatedOffered[index] = parsedValue;
+                setOffered(updatedOffered);
+
+                // Update the input value state with the formatted value
+                const updatedInputValues = [...inputValues];
+                updatedInputValues[index] = numberFormat(parsedValue);
+                setInputValues(updatedInputValues);
+            }
+        }
     }
 
     return (
@@ -87,7 +115,7 @@ export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
                                 <div className="bg-[#ffe842] px-4 py-6 sm:px-6">
                                     <div className="flex items-center justify-between">
                                         <DialogTitle className="text-base font-semibold leading-6 text-black">
-                                            Place Offer
+                                            Place An Offer
                                         </DialogTitle>
                                         <div className="ml-3 flex h-7 items-center">
                                             <button
@@ -105,17 +133,21 @@ export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
                                         <p className="text-sm text-black">
                                             All offers are private, and not shown directly to anyone, whilst the listing is active.
                                         </p>
+
                                     </div>
                                 </div>
                                 <div className="relative flex-1 px-4 py-6 sm:px-6">
+                                    <p className=" absolute bottom-0 w-10/12 text-sm text-black mb-5 text-center"><span className="">Each offer is what you are willing to pay for this property.</span>
+                                        <span className="font-bold"> No Payment is required or taken </span></p>
+
                                     <p className="text-sm text-black mb-5">
-                                        You currently have a total of <strong>{user.offers}</strong> offers.<br />
+                                        You currently have a total of <strong>{user.offers}</strong> offers.<br/>
                                         <span className="mt-1">
                                             The maximum offer on this property is <strong>£{maxOffer}</strong>
                                         </span>
                                     </p>
-
-                                    <div className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-300 bg-white">
+                                    <div
+                                        className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-300 bg-white">
                                         <span className="px-3 text-gray-400"> #1</span>
                                         <span className="text-black"> £</span>
                                         <input
@@ -123,6 +155,7 @@ export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
                                             placeholder="Offer amount"
                                             value={inputValues[0]}
                                             onChange={(e) => handleInputChange(e, 0)}
+                                            onBlur={() => handleInputBlur(0)} // Format value when input loses focus
                                         />
                                         <div className="m-0.5 px-1 py-1 ">
                                             <button
@@ -142,4 +175,3 @@ export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
         </Dialog>
     );
 }
-
