@@ -3,102 +3,40 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store.ts";
-import { openOfferDraw } from "../store/features/counter/counterSlice.ts";
+import {  openOfferDraw } from "../store/features/counter/counterSlice.ts";
 import { useEffect, useState } from "react";
+import OfferInput from "./elements/offerInput.tsx";
 
 interface OfferSidebarProps {
     maxOffer: string;
 }
 
-function numberFormat(value: number): string {
-    return new Intl.NumberFormat('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-}
-
 export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
     const open = useSelector((state: RootState) => state.counter.openOfferDraw);
     const user = useSelector((state: RootState) => state.users.user);
-    const [offered, setOffered] = useState<number[]>([0]);
-    const [inputValues, setInputValues] = useState<string[]>([""]); // Temporary local state for input values
-    const [max, setMax] = useState<number>(0);
+    const [offered, setOffered] = useState<number[]>(Array.from({ length: user.offers ?? 0 }, () => 0));
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // Replace commas and parse with parseFloat to retain decimal places
         const parsedMax = parseFloat(maxOffer.replace(/,/g, ''));
-        setMax(parsedMax);
+        setOffered((prevOffered) => prevOffered.map((offer) => Math.min(parsedMax, offer))); // Ensure offered does not exceed maxOffer
     }, [maxOffer]);
 
-    function autoOffer(i: number) {
-        const parsedMax = parseFloat(maxOffer.replace(/,/g, ''));
-
-        if (isNaN(parsedMax)) {
-            console.error("Invalid maxOffer value.");
-            return;
-        }
-
-        // Generate a random offer value and set it (capping at maxOffer)
-        const randomOffer = Math.min(Math.floor(Math.random() * parsedMax) + 1000, parsedMax);
-
-        // Create a copy of the offered array and update it
+    // Callback function to handle offer value changes
+    function handleOfferChange(index: number, value: number) {
         const updatedOffered = [...offered];
-        updatedOffered[i] = randomOffer;
-        setOffered(updatedOffered);
+        updatedOffered[index] = value;
 
-        // Set the formatted value in the input values state
-        const updatedInputValues = [...inputValues];
-        updatedInputValues[i] = numberFormat(randomOffer);
-        setInputValues(updatedInputValues);
+        // Remove elements with value 0
+        setOffered(updatedOffered.filter((offer) => offer !== 0));
+        console.log(updatedOffered.filter((offer) => offer !== 0));
     }
 
-    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>, index: number): void {
-        const { value } = event.target;
-
-        // Update the temporary local state for the input value without formatting
-        const updatedInputValues = [...inputValues];
-        updatedInputValues[index] = value;
-        setInputValues(updatedInputValues);
-    }
-
-    function handleInputBlur(index: number): void {
-        let value = inputValues[index];
-
-        if (value.trim() === "") {
-            // If the value is cleared, set both the offered and inputValues to empty
-            const updatedOffered = [...offered];
-            updatedOffered[index] = 0;
-            setOffered(updatedOffered);
-
-            const updatedInputValues = [...inputValues];
-            updatedInputValues[index] = "";
-            setInputValues(updatedInputValues);
-        } else {
-            let parsedValue = parseFloat(value.replace(/,/g, ''));
-
-            // If the parsed value exceeds maxOffer, show an alert and clear the input
-            if (parsedValue > max) {
-                alert('Offer exceeds the maximum allowed value.');
-
-                // Clear the input
-                const updatedInputValues = [...inputValues];
-                updatedInputValues[index] = "";
-                setInputValues(updatedInputValues);
-
-                // Clear the offered state as well
-                const updatedOffered = [...offered];
-                updatedOffered[index] = 0;
-                setOffered(updatedOffered);
-            } else if (!isNaN(parsedValue)) {
-                // Update the offered state
-                const updatedOffered = [...offered];
-                updatedOffered[index] = parsedValue;
-                setOffered(updatedOffered);
-
-                // Update the input value state with the formatted value
-                const updatedInputValues = [...inputValues];
-                updatedInputValues[index] = numberFormat(parsedValue);
-                setInputValues(updatedInputValues);
-            }
-        }
+    function handleSubmitOffer() {
+        const validOffers = offered.filter((offer) => offer !== 0 && offer !== null && offer !== undefined);
+        const offerCount = validOffers.length;
+        console.log("Valid Offers:", validOffers);
+        console.log("Offer Count:", offerCount);
     }
 
     return (
@@ -133,38 +71,41 @@ export default function OfferSideBar({ maxOffer }: OfferSidebarProps) {
                                         <p className="text-sm text-black">
                                             All offers are private, and not shown directly to anyone, whilst the listing is active.
                                         </p>
-
                                     </div>
                                 </div>
                                 <div className="relative flex-1 px-4 py-6 sm:px-6">
-                                    <p className=" absolute bottom-0 w-10/12 text-sm text-black mb-5 text-center"><span className="">Each offer is what you are willing to pay for this property.</span>
-                                        <span className="font-bold"> No Payment is required or taken </span></p>
+                                    <p className="absolute bottom-0 w-10/12 text-sm text-black mb-5 text-center">
+                                        <span className="">Each offer is what you are willing to pay for this property.</span>
+                                        <span className="font-bold">
+                                            No Payment is required or taken upon placing offers
+                                            <span className="underline cursor-pointer"> More Info</span>
+                                        </span>
+                                    </p>
 
                                     <p className="text-sm text-black mb-5">
-                                        You currently have a total of <strong>{user.offers}</strong> offers.<br/>
+                                        You currently have a total of <strong>{user.offers}</strong> offers.<br />
                                         <span className="mt-1">
                                             The maximum offer on this property is <strong>£{maxOffer}</strong>
                                         </span>
                                     </p>
-                                    <div
-                                        className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-300 bg-white">
-                                        <span className="px-3 text-gray-400"> #1</span>
-                                        <span className="text-black"> £</span>
-                                        <input
-                                            className="m-1 pr-4 py-4 w-full max-w-xl border-y-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0"
-                                            placeholder="Offer amount"
-                                            value={inputValues[0]}
-                                            onChange={(e) => handleInputChange(e, 0)}
-                                            onBlur={() => handleInputBlur(0)} // Format value when input loses focus
-                                        />
-                                        <div className="m-0.5 px-1 py-1 ">
-                                            <button
-                                                onClick={() => autoOffer(0)}
-                                                className="border-2 border-yellow-300 rounded-2xl px-4 py-2 hover:bg-black hover:text-white hover:border-gray-200"
-                                            >
-                                                Auto
-                                            </button>
-                                        </div>
+
+                                    <div className="space-y-2">
+                                        {Array.from({ length: user.offers ?? 0 }, (_, index) => (
+                                            <OfferInput
+                                                key={index}
+                                                maxOffer={maxOffer}
+                                                index={index}
+                                                onOfferChange={handleOfferChange}
+                                            />
+                                        ))}
+
+                                        {(user.offers && user.offers > 0 && (
+                                            <div onClick={handleSubmitOffer} title="save offers"
+                                                 className="mt-24 flex w-full items-center justify-center rounded-lg bg-yellow-300 px-5 py-2.5 text-sm font-medium text-black hover:bg-black hover:text-white focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
+                                                 role="button">
+                                                Submit Offers
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
