@@ -60,7 +60,7 @@ export const handleSuccessNotify = (value: string | number, name: string): objec
     // Use toast notification for validation error
     toast.success(` ${value} `, {
         position: "top-right",
-        autoClose: 10000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

@@ -20,6 +20,7 @@ const USER_FAV_PROP = gql`
                 favourites {
                     slug
                     title
+                    
                 }
                 offers
                 message

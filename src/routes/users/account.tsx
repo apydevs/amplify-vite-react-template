@@ -9,6 +9,7 @@ import {setLogout} from "../../store/features/user/userSlice.ts";
 interface FavouriteType {
     propertyId: string;
     slug: string;
+    title:string
     // Add other fields for Property as needed
 }
 
@@ -66,7 +67,7 @@ function Account() {
 
                 <div className="flex items-center justify-between items-center ">
                     <div className="border-b pb-5">
-                        <div className="text-gray-800 text-xs font-semibold text-center border-2 border-black  p-2 h-20 w-20 ">Saved<br/>Properties<br/><span className="text-2xl mx-auto self-center mt-3">{favorites.length}</span></div>
+                        <div className="text-gray-800 text-xs font-semibold text-center border-2 border-black  p-2 h-36 w-28 mb-10 ">Saved<br/>Properties<br/><span className="text-2xl mx-auto self-center mt-3">{favorites.length}</span></div>
                     </div>
 
                     <div className="flex items-stretch items-center w-full overflow-hidden overflow-x-auto scrollbar-hidden no-scrollbar border-b pb-5">
@@ -78,13 +79,13 @@ function Account() {
 
                             {favorites && favorites.length > 0 ? (
                                 favorites.map((propertyObj, index) => (
-                                    <Link key={index} to={`/search/properties/${propertyObj.slug}`} className="w-20 h-20">
+                                    <Link key={index} to={`/search/properties/${propertyObj.slug}`} className="w-28 h-36 mb-10 mx-auto">
                                         <img
                                             alt={propertyObj.propertyId}
-                                            className="object-cover w-full h-full rounded"
+                                            className="object-cover w-full h-full rounded mx-auto"
                                             src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"
                                         />
-                                        {propertyObj.propertyId}
+                                        <p className="text-sm text-wrap text-center">{propertyObj.title}</p>
                                     </Link>
                                 ))
                             ) : (
