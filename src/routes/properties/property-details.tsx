@@ -108,7 +108,7 @@ export default function PropertyDetails() {
                             <div
                                 className=" w-full mx-auto mt-6 max-w-7xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
                                 <div className="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-                                    <Link to={`/search/properties/${product.name}/gallery#&gid=ReactGridGallery&pid=1`}>
+                                        <Link to={`/search/properties/${product.name}/gallery#&gid=ReactGridGallery&pid=1`}>
                                         <img
                                             alt={product.images[0].alt}
                                             src={product.images[0].src}

@@ -2,8 +2,8 @@ import { gql, useQuery } from '@apollo/client';
 
 // Define the GraphQL query
 const GET_PROPERTY = gql`
-    query getProperty($id: ID!) {
-        property(id: $id) {
+    query getProperty($slug: String!) {
+        property(slug: $slug) {
             id
             title
             slug
@@ -24,9 +24,10 @@ const GET_PROPERTY = gql`
 `;
 
 export const useGetProperty = (propertyId:string | undefined) => {
+
     // Execute the query using useQuery hook
     const { loading, error, data } = useQuery(GET_PROPERTY, {
-        variables: { id: propertyId },
+        variables: { slug: propertyId },
         context: {
             uri: '/property', // Example context (optional, depends on API setup)
         },
