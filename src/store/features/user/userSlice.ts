@@ -13,6 +13,11 @@ export interface userStateObj {
     account: string | null
     offers: number | null,
     device_name:string | null
+    favourites: favourites | null
+}
+export interface favourites {
+    title: string | null,
+    slug: string | null
 }
 
 const initialState: userState = {
@@ -21,6 +26,7 @@ const initialState: userState = {
         email: null,
         token: null,
         account: null,
+        favourites: null,
         offers:  0,
         device_name:null
     }
@@ -40,6 +46,7 @@ export const userSlice = createSlice({
             state.user.account = action.payload.account
             state.user.offers = action.payload.offers
             state.user.device_name = action.payload.device_name
+            state.user.favourites = action.payload.favourites
         },
         setUserOffers: (state, action: PayloadAction<UserOffers>) => {
             state.user.offers = action.payload.offers
@@ -57,7 +64,8 @@ export const userSlice = createSlice({
                 token: null,
                 account: null,
                 offers: 0,
-                device_name:null
+                device_name:null,
+                favourites:null
             }
         },
     }

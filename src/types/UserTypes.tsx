@@ -11,10 +11,15 @@ export interface UserTypeQL {
     name: string | null,
     token: string | null,
     account: string | null,
-    offers: number | null
-    device_name: string | null
+    offers: number | null,
+    device_name: string | null,
+    favourites:favourites
 }
 
+export interface favourites {
+    title: string | null,
+    slug: string | null
+}
 export interface UserOffers {
     offers: number | null
 }

@@ -59,7 +59,8 @@ const LoginComponent = () => {
                     token: user.token,
                     account: user.account.type,
                     offers: user.offers,
-                    device_name:user.device_name
+                    device_name:user.device_name,
+                    favourites:user.favourites
                 }));
 
                 // Dispatch user locations

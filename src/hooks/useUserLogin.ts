@@ -16,6 +16,10 @@ const LOGIN_USER = gql`
                 account {
                     type
                 }
+                favourites {
+                    slug
+                    title
+                }
                 offers
                 message
                 

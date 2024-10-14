@@ -1,30 +1,44 @@
 
 import {useDispatch, useSelector} from "react-redux";
 import { RootState } from '../../store/store.ts';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {setLogout} from "../../store/features/user/userSlice.ts";
 
 
-
+interface FavouriteType {
+    propertyId: string;
+    slug: string;
+    // Add other fields for Property as needed
+}
 
 function Account() {
     const user = useSelector((state: RootState) => state.users.user);
     const dispatch = useDispatch();
+    const [favorites, setFavorites] = useState<FavouriteType[]>([]);
 
 
-    const favorites = useSelector((state: RootState) => state.favorites.saved)
+
+
+    //const favorites = useSelector((state: RootState) => state.favorites.saved ?? [])
 
     useEffect(() => {
-    }, []); // Depend on informationId to re-fetch when it changes
+        // Ensure that user.favourites is an array before setting the state
+        if (user && Array.isArray(user.favourites)) {
+            setFavorites(user.favourites);
+        } else {
+            setFavorites([]); // Fallback to an empty array if favourites is null/undefined
+        }
+    }, [user]); // Depend on user to update when it changes
 
-    async function handleDetete() {
-        favorites.map(async (propertyObj) =>{
-               const id = propertyObj.id
-            if(id){ /* empty */ }
 
-        })
-    }
+    // async function handleDetete() {
+    //     favorites.map(async (propertyObj) =>{
+    //            const slug = propertyObj.slug
+    //             if(slug){ /* empty */ }
+    //
+    //     })
+    // }
 
     async function signOut(){
         dispatch(setLogout())
@@ -55,20 +69,27 @@ function Account() {
                         <div className="text-gray-800 text-xs font-semibold text-center border-2 border-black  p-2 h-20 w-20 ">Saved<br/>Properties<br/><span className="text-2xl mx-auto self-center mt-3">{favorites.length}</span></div>
                     </div>
 
-                    <div className="flex items-stretch w-full overflow-hidden overflow-x-auto scrollbar-hidden no-scrollbar border-b pb-5">
+                    <div className="flex items-stretch items-center w-full overflow-hidden overflow-x-auto scrollbar-hidden no-scrollbar border-b pb-5">
                         <div className="h-100 border-l mx-4"></div>
                         <div className="flex flex-nowrap  space-x-1.5 space-x-1.5">
 
 
-                            {favorites.map((propertyObj,index) => (
-                                    <Link key={index} to={`/search/properties/${propertyObj.propertyId}`} className="w-20 h-20">
-                                        <img  alt={propertyObj.propertyId}
-                                              className="object-cover w-full h-full rounded"
-                                              src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"/>
+
+
+                            {favorites && favorites.length > 0 ? (
+                                favorites.map((propertyObj, index) => (
+                                    <Link key={index} to={`/search/properties/${propertyObj.slug}`} className="w-20 h-20">
+                                        <img
+                                            alt={propertyObj.propertyId}
+                                            className="object-cover w-full h-full rounded"
+                                            src="https://imgyeoley.s3.eu-west-2.amazonaws.com/profile-photos/3-bedroom-detached-house-for-saleref83852bd2-aa43-4ce5-8a46-6987a7c21134/e6112e9f-ff3e-4a0f-bb8f-7510c136d650.jpg"
+                                        />
                                         {propertyObj.propertyId}
                                     </Link>
-                                ))}
-                            <button onClick={handleDetete} className="text-red-500 text-xs w-20 h-20 px-2 py-1  rounded">Remove All</button>
+                                ))
+                            ) : (
+                                <div className="h-20 w-full pt-5 ">No favourites saved.</div> // You can customize this message as needed
+                            )}
 
                         </div>
                     </div>

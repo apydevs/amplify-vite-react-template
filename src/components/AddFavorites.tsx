@@ -8,6 +8,7 @@ import {usePropertyFav} from "../hooks/usePropertyFav.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store.ts";
 import {addFavorites, removeFavorites} from "../store/features/favorites/favouritesSlice.tsx";
+import {setUserDetails} from "../store/features/user/userSlice.ts";
 
 
 interface AddFavoritesProps {
@@ -15,6 +16,12 @@ interface AddFavoritesProps {
     propertyId: string;
 
 }
+interface FavouriteType {
+    propertyId: string;
+    slug: string;
+    // Add other fields for Property as needed
+}
+
 
 export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
     const dispatch = useDispatch();
@@ -22,13 +29,22 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
 
     const [isSelected,setIsSelected] = useState(false);
     const user = useSelector((state: RootState) => state.users.user);
-    const faves = useSelector((state: RootState) => state.favorites.saved);
+    const [favorites, setFavorites] = useState<FavouriteType[]>([]);
+
     useEffect(() => {
-        console.log(faves);
-        if (faves.some(fav => fav.propertyId === propertyId)) {
+        // Ensure that user.favourites is an array before setting the state
+        if (user && Array.isArray(user.favourites)) {
+            setFavorites(user.favourites);
+        } else {
+            setFavorites([]); // Fallback to an empty array if favourites is null/undefined
+        }
+    }, [user]); // Depend on user to update when it changes
+
+    useEffect(() => {
+        if (favorites.some(fav => fav.slug === slug)) {
             setIsSelected(true);
         }
-    }, [faves, propertyId]);
+    }, [favorites, slug]);
     // handles adding to favourites State & Api
     async function handleSelectClick() {
 
@@ -46,19 +62,30 @@ export default function AddFavorites({slug, propertyId }: AddFavoritesProps) {
 
                 console.log('data',data)
 
+
                 console.log('RESULT:', data);
-                if(data.addFavourite.id == propertyId){
+                if(data.addFavourite.slug == propertyId){
                     setIsSelected(true)
-                    dispatch(addFavorites({
-                        propertyId:propertyId,
-                        userId:data.addFavourite.userid
-                    }))
+                    dispatch(setUserDetails({
+                        email: data.addFavourite.user.email,
+                        name: data.addFavourite.user.name,
+                        token: data.addFavourite.user.token,
+                        account: data.addFavourite.user.account.type,
+                        offers: data.addFavourite.user.offers,
+                        device_name:data.addFavourite.user.device_name,
+                        favourites:data.addFavourite.user.favourites
+                    }));
                 }else{
                     setIsSelected(false)
-                    dispatch(removeFavorites({
-                        propertyId:propertyId,
-                        userId:data.addFavourite.userid
-                    }))
+                    dispatch(setUserDetails({
+                        email: data.addFavourite.user.email,
+                        name: data.addFavourite.user.name,
+                        token: data.addFavourite.user.token,
+                        account: data.addFavourite.user.account.type,
+                        offers: data.addFavourite.user.offers,
+                        device_name:data.addFavourite.user.device_name,
+                        favourites:data.addFavourite.user.favourites
+                    }));
                 }
                 return; // Exit early on errors
             }
