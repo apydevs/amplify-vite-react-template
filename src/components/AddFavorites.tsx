@@ -7,7 +7,6 @@ import {useEffect, useState} from "react";
 import {usePropertyFav} from "../hooks/usePropertyFav.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store.ts";
-import {addFavorites, removeFavorites} from "../store/features/favorites/favouritesSlice.tsx";
 import {setUserDetails} from "../store/features/user/userSlice.ts";
 
 
