@@ -189,15 +189,15 @@ export default function PropertyDetails() {
                                     </div>
 
                                     <div className="mt-4 min-w-0 flex-1 sm:mt-0">
-                                        <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">{data.property.title} </h1>
+                                        <h1 className="mb-3 text-2xl font-semibold text-gray-900 dark:text-white">{data.property.title} </h1>
 
                                         <div className="flex flex-row items-start justify-between">
 
                                             <div className="flex flex-col md:flex-row justify-start">
                                                 <div
-                                                    className=" flex flex-col justify-start me-2 rounded-xl  px-2.5 py-1 text-lg font-medium text-gray-900 dark:bg-yellow-900 dark:text-yellow-300  hover:bg-black hover:text-white">
+                                                    className=" flex flex-col justify-start me-2 rounded-xl  px-2.5 py-1 text-lg font-medium text-gray-900 dark:bg-yellow-900 dark:text-yellow-300  hover:text-yellow-300 hover:font-extrabold hover:animate-pulse">
                                                    <div className="text-sm">Max Offer </div>
-                                                    <div className="font-semibold underline underline-yellow-300
+                                                    <div className="font-semibold
                                                     ">{property ? `£${new Intl.NumberFormat('en-GB').format(data.property.max_cap ?? 0)}` : ''}</div>
                                                 </div>
                                                 {data.property.id ? (
@@ -317,9 +317,10 @@ export default function PropertyDetails() {
 
                                     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-1">
                                         <div className="space-y-4">
-                                            <button type="button" title="Make Offers" onClick={()=>dispatch(openOfferDraw(true))}
-                                               className="flex items-center justify-center rounded-lg border border-yellow-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-yellow-300 hover:text-black focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 sm:w-full"
-                                               role="button">
+                                            <button type="button" title="Make Offers"
+                                                    onClick={() => dispatch(openOfferDraw(true))}
+                                                    className="flex items-center justify-center rounded-lg border border-yellow-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-yellow-300 hover:text-black focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 sm:w-full"
+                                                    role="button">
                                                 <svg className="-ms-2 me-2 h-5 w-5" aria-hidden="true"
                                                      xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      fill="none" viewBox="0 0 24 24">
@@ -329,9 +330,9 @@ export default function PropertyDetails() {
                                                 Make an offer
                                             </button>
 
-                                            <div onClick={()=>dispatch(openDraw(true))} title=""
-                                               className="mt-4 flex w-full items-center justify-center rounded-lg bg-yellow-300 px-5 py-2.5 text-sm font-medium text-black hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
-                                               role="button">
+                                            <div onClick={() => dispatch(openDraw(true))} title=""
+                                                 className="mt-4 flex w-full items-center justify-center rounded-lg bg-yellow-300 px-5 py-2.5 text-sm font-medium text-black hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
+                                                 role="button">
                                                 <svg className="-ms-2 me-2 h-5 w-5" aria-hidden="true"
                                                      xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      fill="none" viewBox="0 0 24 24">
@@ -343,11 +344,10 @@ export default function PropertyDetails() {
                                                 Buy Offer Packs
                                             </div>
 
-                                            <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                                Available at a lower price from
-                                                <a href="#" title=""
-                                                   className="font-medium text-primary-700 underline hover:no-underline dark:text-primary-500">other
-                                                    sellers</a>.
+
+
+                                            <p className="text-sm font-normal text-gray-500 dark:text-gray-400 text-center">
+                                                Excusive offer packs maybe available.
                                             </p>
                                         </div>
 

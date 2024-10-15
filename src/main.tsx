@@ -27,6 +27,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, ApolloLink } fro
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Join from "./routes/auth/join.tsx";
 import PaymentCallback from "./routes/callbacks/paymentCallback.tsx";
+import Page from "./routes/page.tsx";
 
 
 
@@ -123,6 +124,11 @@ const router = createBrowserRouter([
             {
                 path: "/information",
                 element: <Information />,
+                errorElement: <ErrorPage />,
+            },
+            {
+                path: "/pages/:informationId",
+                element: <Page/>,
                 errorElement: <ErrorPage />,
             },
             {

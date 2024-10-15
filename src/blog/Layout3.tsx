@@ -1,4 +1,5 @@
 'use client'
+import DOMPurify from 'dompurify';
 const timeline = [
     {
         name: 'Founded company',
@@ -58,9 +59,52 @@ const jobOpenings = [
         location: 'San Francisco, CA',
     },
 ]
+interface Layout3Props {
+    title?: string;
+    slug?: string;
+    layout?: string;
+    keywords?: string;
+    metaDescription?: string;
+    socialLinkImageUrl?: string;
+    headerImageUrl?: string;
+    headerTitle?: string;
+    headerSubtitle?: string;
+    headerLink?: string;
+    author?: { name: string; bio: string } | null;
+    tags?: string[];
+    status?: string | null;
+    contentLead?: string;
+    contentMain?: string;
+    contentAction?: string;
+    contentSummary?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
 
-export default function Example() {
-
+export default function Layout3(
+    {
+        title = 'Default Title',
+        slug = 'default-slug',
+        layout = 'default-layout',
+        keywords = '',
+        metaDescription = '',
+        socialLinkImageUrl = '',
+        headerImageUrl = '',
+        headerTitle = 'Welcome',
+        headerSubtitle = '',
+        headerLink = '#',
+        author = null,
+        tags = [],
+        status = 'draft',
+        contentLead = '',
+        contentMain = '',
+        contentAction = '',
+        contentSummary = '',
+        createdAt = '',
+        updatedAt = '',
+                                }: Layout3Props) {
+    const contentLeadMarkup = { __html: contentLead };
+    const contentMainMarkup = { __html: contentMain };
 
     return (
         <div className="bg-white">
@@ -72,16 +116,14 @@ export default function Example() {
                         aria-hidden="true"
                         className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:-mr-80 lg:-mr-96"
                     />
-                    <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:px-8">
+                    <div className="mx-auto max-w-7xl px-6 py-16 sm:py-16 lg:px-8">
                         <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-16">
                             <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:col-span-2 xl:col-auto">
-                                We’re a passionate group of people working from around the world to build the future of ecommerce.
+                                {headerTitle ?? " We’re a passionate group of people working from around the world to build the future of ecommerce."}
                             </h1>
                             <div className="mt-6 max-w-xl lg:mt-0 xl:col-end-1 xl:row-start-1">
                                 <p className="text-lg leading-8 text-gray-600">
-                                    Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt
-                                    amet fugiat veniam occaecat fugiat aliqua. Anim aute id magna aliqua ad ad non deserunt sunt. Qui
-                                    irure qui lorem cupidatat commodo.
+                                    {headerSubtitle}
                                 </p>
                             </div>
                             <img
@@ -183,14 +225,12 @@ export default function Example() {
                     <div className="mx-auto max-w-7xl px-6 lg:flex lg:px-8">
                         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:min-w-full lg:max-w-none lg:flex-none lg:gap-y-8">
                             <div className="lg:col-end-1 lg:w-full lg:max-w-lg lg:pb-8">
-                                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our people</h2>
+                                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" dangerouslySetInnerHTML={contentLeadMarkup}></h2>
                                 <p className="mt-6 text-xl leading-8 text-gray-600">
                                     Quasi est quaerat. Sit molestiae et. Provident ad dolorem occaecati eos iste. Soluta rerum quidem
                                     minus ut molestiae velit error quod. Excepturi quidem expedita molestias quas.
                                 </p>
-                                <p className="mt-6 text-base leading-7 text-gray-600">
-                                    Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt
-                                    amet fugiat veniam occaecat fugiat. Quasi aperiam sit non sit neque reprehenderit.
+                                <p className="mt-6 text-base leading-7 text-gray-600" dangerouslySetInnerHTML={contentMainMarkup}>
                                 </p>
                             </div>
                             <div className="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">

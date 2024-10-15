@@ -45,7 +45,7 @@ export default function OfferInput({ maxOffer, index, onOfferChange }: OfferInpu
     }
 
     function handleInputBlur() {
-        let parsedValue = parseFloat(inputValue.replace(/,/g, ''));
+        const parsedValue = parseFloat(inputValue.replace(/,/g, ''));
 
         if (isNaN(parsedValue) || parsedValue === 0) {
             // Clear the value if it's invalid or zero
@@ -65,25 +65,25 @@ export default function OfferInput({ maxOffer, index, onOfferChange }: OfferInpu
     }
 
     return (
-        <div className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-300 bg-white">
-            <span className="px-3 text-gray-400"> #{index + 1}</span>
-            <span className="text-black"> £</span>
-            <input
-                className="m-1 pr-4 py-4 w-full max-w-xl border-y-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0"
-                placeholder="Offer amount"
-                value={inputValue}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur} // Format value when input loses focus
-            />
-            <div className="m-0.5 px-1 py-1 ">
-                <button
-                    onClick={autoOffer}
-                    className="border-2 border-yellow-300 rounded-2xl px-4 py-2 hover:bg-black hover:text-white hover:border-gray-200"
-                >
-                    Auto
-                </button>
+        <>
+            <div className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-300 bg-white">
+                <span className="px-3 text-gray-400"> #{index + 1}</span>
+                <span className="text-black"> £</span>
+                <input
+                    className="offerAmount m-1 pr-4 py-4 w-full max-w-xl border-y-0 border-yellow-300 focus:outline-none ring-0 focus:ring-0"
+                    placeholder="Offer amount"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur} // Format value when input loses focus
+                />
+                <div className="m-0.5 px-1 py-1">
+                    <button
+                        onClick={autoOffer}
+                        className="border-2 border-yellow-300 rounded-2xl px-4 py-2 hover:bg-black hover:text-white hover:border-gray-200">
+                        Auto
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
-
