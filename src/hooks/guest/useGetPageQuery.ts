@@ -5,13 +5,17 @@ const GET_PAGE = gql`
         page(slug: $slug) {
                 title,
                 slug,
+                meta_description
                 layout,
             header_title,
             header_subtitle,
-
+            author {
+                name
+            }
             content_lead,
             content_main
             content_action
+            content_summary
             }
         
         }

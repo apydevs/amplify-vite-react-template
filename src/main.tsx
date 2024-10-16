@@ -28,6 +28,7 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Join from "./routes/auth/join.tsx";
 import PaymentCallback from "./routes/callbacks/paymentCallback.tsx";
 import Page from "./routes/page.tsx";
+import {HelmetProvider} from "react-helmet-async";
 
 
 
@@ -168,15 +169,17 @@ const router = createBrowserRouter([
 
 ]);
 
-
+const helmetContext = {};
 ReactDOM.hydrateRoot(document.getElementById('root')!,
     <React.StrictMode>
       <Provider store={store}>
+          <HelmetProvider context={helmetContext}>
           <PersistGate loading={null} persistor={persistor}>
               <ApolloProvider client={client}>
                 <RouterProvider router={router} />
             </ApolloProvider>
           </PersistGate>
+          </HelmetProvider>
       </Provider>
   </React.StrictMode>
 );
